@@ -19,11 +19,11 @@ Team Name: Seattle Group!
 
 Update your Team member Names here (Up to 4).
 
-1. Siyan Ma
-2. Brian Morenus
-3. *my name is...*
-4. 
-5. Zidi Xia
+1. Minhao Liu
+2. Siyan Ma
+3. Brian Morenus
+4. Zidi Xia
+5. Yaokai Yu
 
 ## Assignment Milestones
 
