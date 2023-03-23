@@ -15,15 +15,15 @@ You will have some flexibility and creativity in how the overall game making eng
 
 ## Team
 
-Team Name: *Edit this to something cool here*
+Team Name: Seattle Group!
 
-*TODO*:
 Update your Team member Names here (Up to 4).
 
-1. *my name is...*
-2. *my name is...*
+1. Siyan Ma
+2. Brian Morenus
 3. *my name is...*
-4. *my name is...*
+4. 
+5. Zidi Xia
 
 ## Assignment Milestones
 
