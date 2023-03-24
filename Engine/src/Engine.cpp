@@ -3,11 +3,13 @@
 #include "TransformComponent.hpp"
 #include "ControllerComponent.hpp"
 #include "GameObject.hpp"
+#include "ResourceManager.hpp"
 #include "TileMap.hpp"
 #include <map>
 #include <string>
 #include <memory>
 #include <iterator>
+#include <filesystem>
 
 #define CHARACTERS 1
 
@@ -104,5 +106,12 @@ void Engine::InitializeGraphicsSubSystem(){
     mRenderer = new SDLGraphicsEngineRenderer(1280,720);
     if(nullptr == mRenderer){
         exit(1);
+    }
+}
+
+void Engine::InitializeResourceSubSystem(){
+    std::string imageDirPath = "images/";
+    for (const auto & imageFileEntry : std::filesystem::directory_iterator(imageDirPath)) {
+        ResourceManager::GetInstance().LoadResource(imageFileEntry.path());
     }
 }

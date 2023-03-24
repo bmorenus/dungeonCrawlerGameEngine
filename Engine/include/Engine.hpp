@@ -55,6 +55,11 @@ public:
      */
 	void InitializeGraphicsSubSystem();
 
+    /**
+     * Request to startup the Resource Manager and load all images in directory
+     */
+	void InitializeResourceSubSystem();
+
 
 private:
     // Engine Subsystem
