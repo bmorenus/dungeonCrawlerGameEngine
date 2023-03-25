@@ -34,7 +34,7 @@ void Engine::Render(){
 
 void Engine::MainGameLoop(){
     bool quit = false;
-    
+
     while(!quit){
         Input(&quit);
         SDL_Delay(250); // Frame capping hack
