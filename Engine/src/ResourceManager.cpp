@@ -5,14 +5,14 @@
 #include <string>
 
 ResourceManager::ResourceManager(){
-    std::cout << "Created" << std::endl;
+    std::cout << "Resource Manager Created" << std::endl;
 }
 
 ResourceManager::ResourceManager(ResourceManager const&){
 }
 
 ResourceManager::~ResourceManager(){
-    std::cout << "Destroyed" <<  std::endl; 
+    std::cout << "Resource ManagerDestroyed" <<  std::endl; 
 }
 
 ResourceManager& ResourceManager::GetInstance() {

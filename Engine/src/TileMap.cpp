@@ -18,44 +18,44 @@ TileMap::TileMap(std::string tileSheetFileName, int rows, int cols, int _TileWid
         SDL_Log("No valid renderer found");
     }
 
-    m_Rows = rows;
-    m_Cols = cols;
-    m_TileWidth = _TileWidth;
-    m_TileHeight = _TileHeight;
-    m_MapX = _mapX;
-    m_MapY = _mapY;
+    mRows = rows;
+    mCols = cols;
+    mTileWidth = _TileWidth;
+    mTileHeight = _TileHeight;
+    mMapX = _mapX;
+    mMapY = _mapY;
     // Load the TileMap Image
     // This is the image that will get
     // sliced into smaller subsections of individual tiles.
-    m_TileSpriteSheet = SDL_LoadBMP(tileSheetFileName.c_str());
+    mTileSpriteSheet = SDL_LoadBMP(tileSheetFileName.c_str());
 	
-    if(nullptr == m_TileSpriteSheet){
+    if(nullptr == mTileSpriteSheet){
            SDL_Log("Failed to allocate surface");
     }else{
-        m_Texture = SDL_CreateTextureFromSurface(ren, m_TileSpriteSheet);
+        mTexture = SDL_CreateTextureFromSurface(ren, mTileSpriteSheet);
     }
 
     // Setup the TileMap array
     // This sets each tile to '0'
-    m_Tiles = new int[m_MapX*m_MapY];
-    for(int i=0; i < m_MapX*m_MapY; i++){
-        m_Tiles[i] = -1; // Default value is no tile.
+    mTiles = new int[mMapX*mMapY];
+    for(int i=0; i < mMapX*mMapY; i++){
+        mTiles[i] = -1; // Default value is no tile.
     }
 }
 
 TileMap::~TileMap(){
-    SDL_DestroyTexture(m_Texture);
-    delete[] m_Tiles;
+    SDL_DestroyTexture(mTexture);
+    delete[] mTiles;
 }
 
 // Helper function to gegenerate a simlpe map
 void TileMap::GenerateSimpleMap(){
-    for(int y= 0; y < m_MapY; y++){
-        for(int x= 0; x < m_MapX; x++){
+    for(int y= 0; y < mMapY; y++){
+        for(int x= 0; x < mMapX; x++){
            if(y==0){ 
                 SetTile(x,y,12);
            }
-           if(y==m_MapY-1){ 
+           if(y==mMapY-1){ 
                 SetTile(x,y,0);
            }
        }
@@ -63,8 +63,8 @@ void TileMap::GenerateSimpleMap(){
 }
 
 void TileMap::PrintMap(){
-    for(int y= 0; y < m_MapY; y++){
-        for(int x= 0; x < m_MapX; x++){
+    for(int y= 0; y < mMapY; y++){
+        for(int x= 0; x < mMapX; x++){
             std::cout << std::setw(3) << GetTileType(x,y);
        }
          std::cout << "\n";
@@ -73,13 +73,13 @@ void TileMap::PrintMap(){
 
 // Sets a tile a certain type
 void TileMap::SetTile(int x, int y, int type){
-    m_Tiles[y * m_MapX + x] = type;
+    mTiles[y * mMapX + x] = type;
 }
 
 
 // Returns what the tile is at a specific position.
 int TileMap::GetTileType(int x, int y){
-    return m_Tiles[y * m_MapX + x];
+    return mTiles[y * mMapX + x];
 }
 
 // render TileMap
@@ -89,23 +89,23 @@ void TileMap::Render(SDL_Renderer* ren){
     }
     
     SDL_Rect Src, Dest;
-    for(int y= 0; y < m_MapY; y++){
-        for(int x= 0; x < m_MapX; x++){
+    for(int y= 0; y < mMapY; y++){
+        for(int x= 0; x < mMapX; x++){
             int currentTile = GetTileType(x,y);
             if(currentTile > -1 ){
                 // Reverse lookup, given the tile type
                 // and then figuring out how to select it
                 // from the texture atlas.
-                Src.x = (currentTile % m_Cols) * m_TileWidth;
-                Src.y = (currentTile / m_Rows) * m_TileHeight;
-                Src.w = m_TileWidth; 
-                Src.h = m_TileHeight; 
+                Src.x = (currentTile % mCols) * mTileWidth;
+                Src.y = (currentTile / mRows) * mTileHeight;
+                Src.w = mTileWidth; 
+                Src.h = mTileHeight; 
                 // Render our Tile at this location
-                Dest.x = x*m_TileWidth;
-                Dest.y = y*m_TileHeight;
-                Dest.w = m_TileWidth;
-                Dest.h = m_TileHeight;
-                SDL_RenderCopy(ren, m_Texture, &Src, &Dest);
+                Dest.x = x*mTileWidth;
+                Dest.y = y*mTileHeight;
+                Dest.w = mTileWidth;
+                Dest.h = mTileHeight;
+                SDL_RenderCopy(ren, mTexture, &Src, &Dest);
             }
         }
     }

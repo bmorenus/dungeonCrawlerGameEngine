@@ -3,19 +3,19 @@
 #include <string>
 
 SceneManager::SceneManager(){
-    std::cout << "Created" << std::endl;
+    std::cout << "Scene Manager Created" << std::endl;
 }
 
 SceneManager::SceneManager(SceneManager const&){
 }
 
 SceneManager::~SceneManager(){
-    std::cout << "Destroyed" <<  std::endl; 
+    std::cout << "Scene Manager Destroyed" <<  std::endl; 
 }
 
 SceneManager& SceneManager::GetInstance() {
-    static SceneManager* s_instance = new SceneManager;
-    return *s_instance;
+    static SceneManager* sInstance = new SceneManager;
+    return *sInstance;
 }
 
 void SceneManager::Initialize(SDL_Renderer* renderer) {
