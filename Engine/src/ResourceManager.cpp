@@ -12,7 +12,7 @@ ResourceManager::ResourceManager(ResourceManager const&){
 }
 
 ResourceManager::~ResourceManager(){
-    std::cout << "Resource ManagerDestroyed" <<  std::endl; 
+    std::cout << "Resource Manager Destroyed" <<  std::endl; 
 }
 
 ResourceManager& ResourceManager::GetInstance() {
