@@ -10,17 +10,18 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <filesystem>
 
 class ResourceManager{
 
 public:
     static ResourceManager& GetInstance();
 
-    void LoadResource(std::string image_filename);
+    void LoadResource(std::string imageFilename);
     
-    std::shared_ptr<SDL_Surface> GetResource(std::string image_filename);
+    std::shared_ptr<SDL_Surface> GetResource(std::string imageFilename);
 
-    int StartUp();
+    void Initialize(std::string imageDirPath);
 
 private:
 	ResourceManager();

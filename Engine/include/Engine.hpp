@@ -9,6 +9,9 @@
 #include <time.h>
 
 #include "IGraphicsEngineRenderer.hpp"
+#include "ResourceManager.hpp"
+#include "SceneManager.hpp"
+
 
 /**
  * This class sets up the main game engine
@@ -54,6 +57,16 @@ public:
      * Request to startup the Graphics Subsystem
      */
 	void InitializeGraphicsSubSystem();
+
+    /**
+     * Request to startup the Resource Manager and load all images in directory
+     */
+	void InitializeResourceSubSystem();
+
+    /**
+     * Request to startup the Scene Manager and set scene renderer
+     */
+	void InitializeSceneManagerSubSystem();
 
 
 private:

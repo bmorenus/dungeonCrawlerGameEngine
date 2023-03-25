@@ -29,15 +29,15 @@ class GameObject{
         SDL_Renderer* GetRenderer();
     
     private:
-        int m_velocity;
-        int m_x;
+        int mVelocity;
+        int mX;
         int frame;
-        SDL_Renderer* m_renderer;
-        std::vector<SDL_Event> m_events;
-        std::vector<Component*> m_components;
-        ControllerComponent m_controllerComponent;
-        TransformComponent m_transformComponent;
-        SpriteComponent m_spriteComponent;
+        SDL_Renderer* mRenderer;
+        std::vector<SDL_Event> mEvents;
+        std::vector<Component*> mComponents;
+        ControllerComponent mControllerComponent;
+        TransformComponent mTransformComponent;
+        SpriteComponent mSpriteComponent;
 };
 
 

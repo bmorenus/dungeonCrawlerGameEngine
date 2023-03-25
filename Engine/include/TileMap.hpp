@@ -44,20 +44,20 @@ public:
 private:
     // Dimensions of our TileMap and individual tiles.
     // Used for spiltting up the sprite sheet
-    int m_Rows;
-    int m_Cols;      
+    int mRows;
+    int mCols;      
     // How big each tile is.
-    int m_TileWidth;
-    int m_TileHeight;
+    int mTileWidth;
+    int mTileHeight;
     // size of our tilemap
-    int m_MapX;
-    int m_MapY; 
+    int mMapX;
+    int mMapY; 
     // Where our TileMap is rendered
     // An SDL Surface contains pixel data to draw our TileMap
-    SDL_Surface *m_TileSpriteSheet;
-    SDL_Texture *m_Texture;
+    SDL_Surface *mTileSpriteSheet;
+    SDL_Texture *mTexture;
     // Stores our tile types
-    int* m_Tiles;
+    int* mTiles;
 };
 
 #endif

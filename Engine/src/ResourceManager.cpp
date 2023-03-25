@@ -5,14 +5,14 @@
 #include <string>
 
 ResourceManager::ResourceManager(){
-    std::cout << "Created" << std::endl;
+    std::cout << "Resource Manager Created" << std::endl;
 }
 
 ResourceManager::ResourceManager(ResourceManager const&){
 }
 
 ResourceManager::~ResourceManager(){
-    std::cout << "Destroyed" <<  std::endl; 
+    std::cout << "Resource Manager Destroyed" <<  std::endl; 
 }
 
 ResourceManager& ResourceManager::GetInstance() {
@@ -20,29 +20,35 @@ ResourceManager& ResourceManager::GetInstance() {
     return *s_instance;
 }
 
-void ResourceManager::LoadResource(std::string image_filename){
+void ResourceManager::Initialize(std::string imageDirPath) {
+    for (const auto & imageFileEntry : std::filesystem::directory_iterator(imageDirPath)) {
+        ResourceManager::GetInstance().LoadResource(imageFileEntry.path());
+    }
+}
+
+void ResourceManager::LoadResource(std::string imageFilename){
     std::unordered_map<std::string, std::shared_ptr<SDL_Surface>>::iterator it; 
-    it = mResourceMap.find(image_filename);
+    it = mResourceMap.find(imageFilename);
 
     if (it == mResourceMap.end()) {
-        SDL_Surface* spriteSheet = SDL_LoadBMP(image_filename.c_str());
+        SDL_Surface* spriteSheet = SDL_LoadBMP(imageFilename.c_str());
         std::shared_ptr<SDL_Surface> spriteSheetPtr = 
             std::make_shared<SDL_Surface>(*spriteSheet);
 
-        mResourceMap.insert({image_filename, spriteSheetPtr});
+        mResourceMap.insert({imageFilename, spriteSheetPtr});
 
-        std::cout << "New copy of " << image_filename << " has been loaded\n";
+        std::cout << "New copy of " << imageFilename << " has been loaded\n";
     } else {
         std::cout << "Resource has already been loaded\n"; 
     }
 }
 
-std::shared_ptr<SDL_Surface> ResourceManager::GetResource(std::string image_filename){
+std::shared_ptr<SDL_Surface> ResourceManager::GetResource(std::string imageFilename){
     std::unordered_map<std::string, std::shared_ptr<SDL_Surface>>::iterator it; 
-    it = mResourceMap.find(image_filename);
+    it = mResourceMap.find(imageFilename);
 
     if (it != mResourceMap.end()) {
-        std::cout << "Retrieved saved copy of " << image_filename << " from GetResource\n"; 
+        std::cout << "Retrieved saved copy of " << imageFilename << " from GetResource\n"; 
         return it->second;
     } else {
         std::cout << "The desired SDL_Surface has not yet been loaded.\n";

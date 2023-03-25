@@ -1,9 +1,4 @@
 #include "Engine.hpp"
-#include "SpriteComponent.hpp"
-#include "TransformComponent.hpp"
-#include "ControllerComponent.hpp"
-#include "GameObject.hpp"
-#include "TileMap.hpp"
 #include <map>
 #include <string>
 #include <memory>
@@ -105,4 +100,14 @@ void Engine::InitializeGraphicsSubSystem(){
     if(nullptr == mRenderer){
         exit(1);
     }
+}
+
+void Engine::InitializeResourceSubSystem(){
+    std::string imageDirPath = "images/";
+    ResourceManager::GetInstance().Initialize(imageDirPath);
+}
+
+void Engine::InitializeSceneManagerSubSystem(){
+    SceneManager::GetInstance().Initialize(
+        dynamic_cast<SDLGraphicsEngineRenderer*>(mRenderer)->GetRenderer());
 }
