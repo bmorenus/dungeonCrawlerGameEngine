@@ -3,7 +3,6 @@
 #include <string>
 #include <memory>
 #include <iterator>
-#include <filesystem>
 
 #define CHARACTERS 1
 
@@ -105,9 +104,7 @@ void Engine::InitializeGraphicsSubSystem(){
 
 void Engine::InitializeResourceSubSystem(){
     std::string imageDirPath = "images/";
-    for (const auto & imageFileEntry : std::filesystem::directory_iterator(imageDirPath)) {
-        ResourceManager::GetInstance().LoadResource(imageFileEntry.path());
-    }
+    ResourceManager::GetInstance().Initialize(imageDirPath);
 }
 
 void Engine::InitializeSceneManagerSubSystem(){
