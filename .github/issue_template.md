@@ -16,8 +16,8 @@
 
 Scope the work for this issue and keep overall track of your progress 
 
-- [] Action_Item_1
-- [] Action_Item_2
+- [ ] Action_Item_1
+- [ ] Action_Item_2
 
 -->
 
