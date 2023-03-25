@@ -1,5 +1,5 @@
-#ifndef SDLGRAPHICSPROGRAM
-#define SDLGRAPHICSPROGRAM
+#ifndef ENGINE_HPP
+#define ENGINE_HPP
 
 #include <iostream>
 #include <string>
@@ -72,7 +72,7 @@ public:
 private:
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
-    IGraphicsEngineRenderer* mRenderer = nullptr;
+    IGraphicsEngineRenderer* mGraphicsEngineRenderer = nullptr;
 };
 
 #endif
