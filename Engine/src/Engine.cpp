@@ -1,10 +1,4 @@
 #include "Engine.hpp"
-#include "SpriteComponent.hpp"
-#include "TransformComponent.hpp"
-#include "ControllerComponent.hpp"
-#include "GameObject.hpp"
-#include "ResourceManager.hpp"
-#include "TileMap.hpp"
 #include <map>
 #include <string>
 #include <memory>
@@ -114,4 +108,9 @@ void Engine::InitializeResourceSubSystem(){
     for (const auto & imageFileEntry : std::filesystem::directory_iterator(imageDirPath)) {
         ResourceManager::GetInstance().LoadResource(imageFileEntry.path());
     }
+}
+
+void Engine::InitializeSceneManagerSubSystem(){
+    SceneManager::GetInstance().Initialize(
+        dynamic_cast<SDLGraphicsEngineRenderer*>(mRenderer)->GetRenderer());
 }
