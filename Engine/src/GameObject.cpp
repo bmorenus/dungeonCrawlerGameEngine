@@ -13,7 +13,7 @@ GameObject::~GameObject(){
     }
 }
 
-void GameObject::AddEvent(SDL_Event e){
+void GameObject::AddEvent(SDL_Event& e){
     mEvents.push_back(e);
 }
 void GameObject::Update(int frame){

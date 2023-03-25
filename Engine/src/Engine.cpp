@@ -4,12 +4,6 @@
 #include <memory>
 #include <iterator>
 
-#define CHARACTERS 1
-
-GameObject* character;
-
-TileMap* myTileMap;
-
 Engine::Engine(){
 }
 
@@ -19,85 +13,55 @@ Engine::~Engine(){
 void Engine::Input(bool *quit){
     SDL_Event e;
     SDL_StartTextInput();
-      while(SDL_PollEvent( &e ) != 0){
+    while(SDL_PollEvent( &e ) != 0) {
         if(e.type == SDL_QUIT){
-          *quit = true;
+            *quit = true;
         }
-        character->AddEvent(e);
-      }
+        SceneManager::GetInstance().AcceptInput(e);
+    }
 }
 
-void Engine::Update()
-{
-    static int frame = 0;
-    frame++;
-    if(frame>6){
-        frame=0;
-    }
-    
-    character->Update(frame);
+void Engine::Update() {
+    SceneManager::GetInstance().Update();
 }
 
 void Engine::Render(){
-    mRenderer->SetRenderDrawColor(110, 130,170,0xFF);
-    mRenderer->RenderClear();
-    SDL_Renderer* renderer = dynamic_cast<SDLGraphicsEngineRenderer*>(mRenderer)->GetRenderer();
-    character->Render(renderer);
-    myTileMap->Render(renderer);
-    mRenderer->RenderPresent();
+    mGraphicsEngineRenderer->SetRenderDrawColor(110, 130, 170, 0xFF);
+    mGraphicsEngineRenderer->RenderClear();
+    SceneManager::GetInstance().Render();
+    mGraphicsEngineRenderer->RenderPresent();
 }
 
 void Engine::MainGameLoop(){
     bool quit = false;
 
     while(!quit){
-      Input(&quit);
-      SDL_Delay(250); // Frame capping hack
-      Update();
-      Render();
+        Input(&quit);
+        SDL_Delay(250); // Frame capping hack
+        Update();
+        Render();
     }
     SDL_StopTextInput();
 }
 
 void Engine::Start(){
-    if(mRenderer!=nullptr){
+    if(mGraphicsEngineRenderer!=nullptr){
         std::cout << "Initializing Graphics Subsystem\n";
     }else{
         std::cout << "No Graphics Subsystem initialized\n";
     }
-
-    SDL_Renderer* renderer  = dynamic_cast<SDLGraphicsEngineRenderer*>(mRenderer)->GetRenderer();
-    ControllerComponent* controllerComponent = new ControllerComponent();
-    TransformComponent* transformComponent = new TransformComponent();
-    SpriteComponent* spriteComponent = new SpriteComponent();
-    spriteComponent->LoadImage("./images/sprite.bmp", renderer);
-
-    character = new GameObject(renderer);
-    character->AddComponent(controllerComponent);
-    character->AddComponent(transformComponent);
-    character->AddComponent(spriteComponent);
-
-    myTileMap = new TileMap("./images/Tiles1.bmp",8,8,64,64,20,11,renderer);
-    myTileMap->GenerateSimpleMap();
-    myTileMap->PrintMap();
-
 }
 
 void Engine::Shutdown(){
-    if(nullptr!=mRenderer){
-        delete mRenderer;
+    if(nullptr!=mGraphicsEngineRenderer){
+        delete mGraphicsEngineRenderer;
     } 
-
-    if(nullptr!=myTileMap){
-        delete myTileMap;
-    }
-
-    delete character;
+    SceneManager::GetInstance().Shutdown();
 }
 
 void Engine::InitializeGraphicsSubSystem(){
-    mRenderer = new SDLGraphicsEngineRenderer(1280,720);
-    if(nullptr == mRenderer){
+    mGraphicsEngineRenderer = new SDLGraphicsEngineRenderer(1280,720);
+    if(nullptr == mGraphicsEngineRenderer){
         exit(1);
     }
 }
@@ -109,5 +73,5 @@ void Engine::InitializeResourceSubSystem(){
 
 void Engine::InitializeSceneManagerSubSystem(){
     SceneManager::GetInstance().Initialize(
-        dynamic_cast<SDLGraphicsEngineRenderer*>(mRenderer)->GetRenderer());
+        dynamic_cast<SDLGraphicsEngineRenderer*>(mGraphicsEngineRenderer)->GetRenderer());
 }

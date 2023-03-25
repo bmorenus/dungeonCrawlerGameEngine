@@ -1,8 +1,13 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
-#include <vector>
-#include <SDL.h>
+#if defined(LINUX) || defined(MINGW)
+    #include <SDL2/SDL.h>
+#else 
+    #include <SDL.h>
+#endif
+#include <vector> 
+
 #include "ControllerComponent.hpp"
 #include "TransformComponent.hpp"
 #include "SpriteComponent.hpp"
@@ -13,7 +18,7 @@ class GameObject{
         GameObject(SDL_Renderer* renderer);
         ~GameObject();
 
-        void AddEvent(SDL_Event e);
+        void AddEvent(SDL_Event& e);
         void Update(int frame);
         void Render(SDL_Renderer* renderer);
 
@@ -26,7 +31,6 @@ class GameObject{
         SpriteComponent GetSpriteComponent();
         void AddComponent(Component* component);
         std::vector<SDL_Event> GetEvents();
-        SDL_Renderer* GetRenderer();
     
     private:
         int mVelocity;

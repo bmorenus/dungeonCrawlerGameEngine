@@ -23,7 +23,19 @@ public:
 
     void Initialize(SDL_Renderer* renderer);
 
-    void AddGameObject(GameObject& gameObject);
+    void AcceptInput(SDL_Event& e);
+
+    void Render();
+
+    void Update();
+
+    void AddTestGameObjects();
+
+    void AddDynamicGameObject(GameObject* gameObject);
+
+    void AddStaticGameObject(TileMap* tileMap);
+
+    void Shutdown();
 
 private:
 	SceneManager();
@@ -34,8 +46,9 @@ private:
 
     void operator=(SceneManager const&);
     
-    std::vector<GameObject> mGameObjects;
-    SDL_Renderer* mRenderer;
+    std::vector<GameObject*> mDynamicGameObjects;
+    std::vector<TileMap*> mStaticGameObjects;
+    SDL_Renderer* mRenderer = nullptr;
 };
 
 
