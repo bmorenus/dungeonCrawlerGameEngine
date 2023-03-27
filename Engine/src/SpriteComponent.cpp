@@ -2,14 +2,11 @@
 #include "GameObject.hpp"
 #include <iostream>
 
-SpriteComponent::SpriteComponent(){
+SpriteComponent::SpriteComponent(SDL_Texture* texture){
+    mTexture = texture;
 }
 
 SpriteComponent::~SpriteComponent(){
-// TODO: Make sure spritesheet and mTexture are destroyed
-// but is this the right place?
-    SDL_FreeSurface(mSpriteSheet);
-    mSpriteSheet = nullptr;
     SDL_DestroyTexture(mTexture);
 }
 
@@ -45,14 +42,4 @@ void SpriteComponent::Update(GameObject& gameObject, int frame){
 
 void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer){
     SDL_RenderCopy(renderer, mTexture, &mSrc, &mDest);
-}
-
-void SpriteComponent::LoadImage(std::string filePath, SDL_Renderer* renderer){
-    mSpriteSheet = SDL_LoadBMP(filePath.c_str());
-    if(nullptr == mSpriteSheet){
-           SDL_Log("Failed to allocate surface");
-    }else{
-        SDL_Log("Allocated a bunch of memory to create identical game character");
-        mTexture = SDL_CreateTextureFromSurface(renderer, mSpriteSheet);
-    }
 }

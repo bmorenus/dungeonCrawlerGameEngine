@@ -43,10 +43,6 @@ void GameObject::SetX(int x) {
     mX = x; 
 }
 
-SpriteComponent GameObject::GetSpriteComponent() {
-    return mSpriteComponent;
-}
-
 void GameObject::AddComponent(Component* component) {
     mComponents.push_back(component);
 }

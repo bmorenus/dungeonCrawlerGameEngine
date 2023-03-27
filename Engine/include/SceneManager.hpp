@@ -7,6 +7,7 @@
     #include <SDL.h>
 #endif
 
+#include "ResourceManager.hpp"
 #include "GameObject.hpp"
 #include "SpriteComponent.hpp"
 #include "TransformComponent.hpp"
@@ -29,6 +30,10 @@ public:
 
     void Update();
 
+    GameObject* CreateGameObject();
+
+    SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
+
     void AddTestGameObjects();
 
     void AddDynamicGameObject(GameObject* gameObject);
@@ -45,6 +50,8 @@ private:
     SceneManager(SceneManager const&);
 
     void operator=(SceneManager const&);
+
+    SDL_Texture* CreateTexture(std::string spritesheetFile);
     
     std::vector<GameObject*> mDynamicGameObjects;
     std::vector<TileMap*> mStaticGameObjects;
