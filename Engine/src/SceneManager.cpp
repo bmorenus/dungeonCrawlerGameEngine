@@ -1,16 +1,17 @@
 #include "SceneManager.hpp"
+
 #include <iostream>
 #include <string>
 
-SceneManager::SceneManager(){
+SceneManager::SceneManager() {
     std::cout << "Scene Manager Created" << std::endl;
 }
 
-SceneManager::SceneManager(SceneManager const&){
+SceneManager::SceneManager(SceneManager const&) {
 }
 
-SceneManager::~SceneManager(){
-    std::cout << "Scene Manager Destroyed" <<  std::endl; 
+SceneManager::~SceneManager() {
+    std::cout << "Scene Manager Destroyed" << std::endl;
 }
 
 SceneManager& SceneManager::GetInstance() {
@@ -68,7 +69,7 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
 void SceneManager::AddTestGameObjects() {
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
-    SpriteComponent* spriteComponent = CreateSpriteComponent("images/sprite.bmp");
+    SpriteComponent* spriteComponent = CreateSpriteComponent("./images/sprite.bmp");
 
     GameObject* testCharacter = CreateGameObject();
     testCharacter->AddComponent(controllerComponent);
@@ -77,7 +78,7 @@ void SceneManager::AddTestGameObjects() {
 
     AddDynamicGameObject(testCharacter);
 
-    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp",8,8,64,64,20,11,mRenderer);
+    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp", 8, 8, 64, 64, 20, 11, mRenderer);
     testTileMap->GenerateSimpleMap();
 
     AddStaticGameObject(testTileMap);
@@ -92,10 +93,10 @@ void SceneManager::AcceptInput(SDL_Event& e) {
 void SceneManager::Update() {
     static int frame = 0;
     frame++;
-    if(frame>6){
-        frame=0;
+    if (frame > 6) {
+        frame = 0;
     }
-    
+
     for (GameObject* gameObject : mDynamicGameObjects) {
         gameObject->Update(frame);
     }
