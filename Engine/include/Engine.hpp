@@ -1,23 +1,26 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <fstream>
 #include <stdlib.h>
 #include <time.h>
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 #include "IGraphicsEngineRenderer.hpp"
 #include "ResourceManager.hpp"
 #include "SceneManager.hpp"
-
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer.h"
 
 /**
  * This class sets up the main game engine
  */
-class Engine{
-public:
+class Engine {
+   public:
     /**
      * Constructor of Engine
      */
@@ -29,7 +32,7 @@ public:
     /**
      * Input engine
      */
-    void Input(bool *quit);
+    void Input(bool* quit);
     /**
      * Per frame update
      */
@@ -37,7 +40,7 @@ public:
     /**
      * Per frame render. Renders everything
      */
-    void Render();
+    void Render(ImGuiIO& mIo);
     /**
      * Main Game Loop that runs forever
      */
@@ -56,23 +59,24 @@ public:
     /**
      * Request to startup the Graphics Subsystem
      */
-	void InitializeGraphicsSubSystem();
+    int InitializeGraphicsSubSystem();
 
     /**
      * Request to startup the Resource Manager and load all images in directory
      */
-	void InitializeResourceSubSystem();
+    void InitializeResourceSubSystem();
 
     /**
      * Request to startup the Scene Manager and set scene renderer
      */
-	void InitializeSceneManagerSubSystem();
+    void InitializeSceneManagerSubSystem();
 
-
-private:
+   private:
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
     IGraphicsEngineRenderer* mGraphicsEngineRenderer = nullptr;
+    SDL_Window* mWindow;
+    SDL_Renderer* mRenderer;
 };
 
 #endif
