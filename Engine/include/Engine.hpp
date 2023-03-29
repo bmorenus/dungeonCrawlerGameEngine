@@ -77,6 +77,7 @@ class Engine {
     IGraphicsEngineRenderer* mGraphicsEngineRenderer = nullptr;
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
+    SDL_Texture* mScreenTexture;
 };
 
 #endif

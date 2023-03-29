@@ -1,29 +1,30 @@
 #include "GameObject.hpp"
+
 #include <iostream>
 
-GameObject::GameObject(SDL_Renderer* renderer){
+GameObject::GameObject(SDL_Renderer* renderer) {
     mX = 20;
     mVelocity = 5;
     mRenderer = renderer;
 }
 
-GameObject::~GameObject(){
+GameObject::~GameObject() {
     for (int i = 0; i < mComponents.size(); i++) {
         delete (mComponents[i]);
     }
 }
 
-void GameObject::AddEvent(SDL_Event& e){
+void GameObject::AddEvent(SDL_Event& e) {
     mEvents.push_back(e);
 }
-void GameObject::Update(int frame){
+void GameObject::Update(int frame) {
     for (int i = 0; i < mComponents.size(); i++) {
         mComponents[i]->Update(*this, frame);
     }
 }
-void GameObject::Render(SDL_Renderer* renderer){
+void GameObject::Render(SDL_Renderer* renderer, SDL_Texture* texture) {
     for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Render(*this, renderer);
+        mComponents[i]->Render(*this, renderer, texture);
     }
 }
 
@@ -40,7 +41,7 @@ int GameObject::GetX() {
 }
 
 void GameObject::SetX(int x) {
-    mX = x; 
+    mX = x;
 }
 
 void GameObject::AddComponent(Component* component) {
