@@ -5,32 +5,22 @@
 #include <memory>
 #include <string>
 
-<<<<<<< HEAD
 bool show_demo_window = true;
 bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-=======
->>>>>>> morenus-apply-c++-google-format
 Engine::Engine() {
 }
 
 Engine::~Engine() {
 }
 
-<<<<<<< HEAD
 void Engine::Input(bool* quit) {
     SDL_Event e;
     SDL_StartTextInput();
     while (SDL_PollEvent(&e) != 0) {
         ImGui_ImplSDL2_ProcessEvent(&e);
 
-=======
-void Engine::Input(bool *quit) {
-    SDL_Event e;
-    SDL_StartTextInput();
-    while (SDL_PollEvent(&e) != 0) {
->>>>>>> morenus-apply-c++-google-format
         if (e.type == SDL_QUIT) {
             *quit = true;
         }
@@ -46,17 +36,11 @@ void Engine::Update() {
     SceneManager::GetInstance().Update();
 }
 
-<<<<<<< HEAD
 void Engine::Render(ImGuiIO& mIo) {
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     SDL_SetRenderTarget(mRenderer, mScreenTexture);
-=======
-void Engine::Render() {
-    mGraphicsEngineRenderer->SetRenderDrawColor(110, 130, 170, 0xFF);
-    mGraphicsEngineRenderer->RenderClear();
->>>>>>> morenus-apply-c++-google-format
     SceneManager::GetInstance().Render();
     ImGui::NewFrame();
     if (show_demo_window)
@@ -81,7 +65,6 @@ void Engine::Render() {
 void Engine::MainGameLoop() {
     bool quit = false;
 
-<<<<<<< HEAD
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -101,22 +84,13 @@ void Engine::MainGameLoop() {
     while (!quit) {
         Input(&quit);
         SDL_Delay(100);  // Frame capping hack
-=======
-    while (!quit) {
-        Input(&quit);
-        SDL_Delay(250);  // Frame capping hack
->>>>>>> morenus-apply-c++-google-format
         Update();
         Render(mIo);
     }
 }
 
 void Engine::Start() {
-<<<<<<< HEAD
     if (mRenderer != nullptr) {
-=======
-    if (mGraphicsEngineRenderer != nullptr) {
->>>>>>> morenus-apply-c++-google-format
         std::cout << "Initializing Graphics Subsystem\n";
     } else {
         std::cout << "No Graphics Subsystem initialized\n";
@@ -124,12 +98,6 @@ void Engine::Start() {
 }
 
 void Engine::Shutdown() {
-<<<<<<< HEAD
-=======
-    if (nullptr != mGraphicsEngineRenderer) {
-        delete mGraphicsEngineRenderer;
-    }
->>>>>>> morenus-apply-c++-google-format
     SceneManager::GetInstance().Shutdown();
     // ImGui Cleanup
     ImGui_ImplSDLRenderer_Shutdown();
@@ -141,7 +109,6 @@ void Engine::Shutdown() {
     SDL_Quit();
 }
 
-<<<<<<< HEAD
 int Engine::InitializeGraphicsSubSystem() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
         SDL_Log("Error: %s\n", SDL_GetError());
@@ -155,12 +122,6 @@ int Engine::InitializeGraphicsSubSystem() {
     if (mRenderer == NULL) {
         SDL_Log("Error creating SDL_Renderer!");
         return 0;
-=======
-void Engine::InitializeGraphicsSubSystem() {
-    mGraphicsEngineRenderer = new SDLGraphicsEngineRenderer(1280, 720);
-    if (nullptr == mGraphicsEngineRenderer) {
-        exit(1);
->>>>>>> morenus-apply-c++-google-format
     }
     return 1;
 }
@@ -171,10 +132,5 @@ void Engine::InitializeResourceSubSystem() {
 }
 
 void Engine::InitializeSceneManagerSubSystem() {
-<<<<<<< HEAD
     SceneManager::GetInstance().Initialize(mRenderer);
-=======
-    SceneManager::GetInstance().Initialize(
-        dynamic_cast<SDLGraphicsEngineRenderer *>(mGraphicsEngineRenderer)->GetRenderer());
->>>>>>> morenus-apply-c++-google-format
 }
