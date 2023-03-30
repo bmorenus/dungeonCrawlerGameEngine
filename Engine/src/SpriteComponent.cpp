@@ -1,17 +1,19 @@
 #include "SpriteComponent.hpp"
-#include "GameObject.hpp"
+
 #include <iostream>
 
-SpriteComponent::SpriteComponent(SDL_Texture* texture){
+#include "GameObject.hpp"
+
+SpriteComponent::SpriteComponent(SDL_Texture* texture) {
     mTexture = texture;
 }
 
-SpriteComponent::~SpriteComponent(){
+SpriteComponent::~SpriteComponent() {
     SDL_DestroyTexture(mTexture);
 }
 
 // Set the sprite position
-void SpriteComponent::SetPosition(int x, int y){
+void SpriteComponent::SetPosition(int x, int y) {
     mPosition.x = x;
     mPosition.y = y;
 }
@@ -20,15 +22,15 @@ int SpriteComponent::GetX() {
     return mPosition.x;
 }
 
-void SpriteComponent::Update(GameObject& gameObject, int frame){
+void SpriteComponent::Update(GameObject& gameObject, int frame) {
     // The part of the image that we want to render
     mCurrentFrame = frame;
-    if(mCurrentFrame>6){
-        mCurrentFrame=0;
+    if (mCurrentFrame > 6) {
+        mCurrentFrame = 0;
     }
 
     // The frame of the sprite sheet to be rendered.
-    mSrc.x = mCurrentFrame*75;
+    mSrc.x = mCurrentFrame * 75;
     mSrc.y = 0;
     mSrc.w = 75;
     mSrc.h = 87;
@@ -40,6 +42,6 @@ void SpriteComponent::Update(GameObject& gameObject, int frame){
     mDest.h = 128;
 }
 
-void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer){
+void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, mTexture, &mSrc, &mDest);
 }
