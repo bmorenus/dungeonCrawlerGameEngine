@@ -82,8 +82,8 @@ int TileMap::GetTileType(int x, int y) {
 }
 
 // render TileMap
-void TileMap::Render(SDL_Renderer* ren, SDL_Texture* texture) {
-    if (nullptr == ren) {
+void TileMap::Render(SDL_Renderer* renderer) {
+    if (nullptr == renderer) {
         SDL_Log("No valid renderer found");
     }
 
@@ -104,8 +104,7 @@ void TileMap::Render(SDL_Renderer* ren, SDL_Texture* texture) {
                 Dest.y = y * mTileHeight;
                 Dest.w = mTileWidth;
                 Dest.h = mTileHeight;
-                SDL_RenderCopy(ren, mTexture, &Src, &Dest);
-                SDL_SetRenderTarget(ren, texture);
+                SDL_RenderCopy(renderer, mTexture, &Src, &Dest);
             }
         }
     }

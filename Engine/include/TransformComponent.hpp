@@ -10,7 +10,7 @@ class TransformComponent : public Component {
     TransformComponent();
     ~TransformComponent();
     void Update(GameObject& gameObject, int frame) override;
-    void Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) override;
+    void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
    private:
 };

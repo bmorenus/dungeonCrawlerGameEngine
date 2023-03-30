@@ -40,6 +40,7 @@ void Engine::Render(ImGuiIO& mIo) {
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
+    SDL_SetRenderTarget(mRenderer, mScreenTexture);
     SceneManager::GetInstance().Render();
     ImGui::NewFrame();
     if (show_demo_window)
@@ -86,7 +87,6 @@ void Engine::MainGameLoop() {
         Update();
         Render(mIo);
     }
-    // SDL_StopTextInput();
 }
 
 void Engine::Start() {
@@ -98,11 +98,8 @@ void Engine::Start() {
 }
 
 void Engine::Shutdown() {
-    if (nullptr != mGraphicsEngineRenderer) {
-        delete mGraphicsEngineRenderer;
-    }
-    // SceneManager::GetInstance().Shutdown();
-    // Cleanup
+    SceneManager::GetInstance().Shutdown();
+    // ImGui Cleanup
     ImGui_ImplSDLRenderer_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
@@ -113,22 +110,11 @@ void Engine::Shutdown() {
 }
 
 int Engine::InitializeGraphicsSubSystem() {
-    mGraphicsEngineRenderer = new SDLGraphicsEngineRenderer(1280, 720);
-    if (nullptr == mGraphicsEngineRenderer) {
-        exit(1);
-    }
-    // Setup SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
-        printf("Error: %s\n", SDL_GetError());
-        return -1;
+        SDL_Log("Error: %s\n", SDL_GetError());
+        return 0;
     }
 
-    // From 2.0.18: Enable native IME.
-#ifdef SDL_HINT_IME_SHOW_UI
-    SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
-#endif
-
-    // Create window with SDL_Renderer graphics context
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     mWindow = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
@@ -137,6 +123,7 @@ int Engine::InitializeGraphicsSubSystem() {
         SDL_Log("Error creating SDL_Renderer!");
         return 0;
     }
+    return 1;
 }
 
 void Engine::InitializeResourceSubSystem() {
@@ -145,5 +132,5 @@ void Engine::InitializeResourceSubSystem() {
 }
 
 void Engine::InitializeSceneManagerSubSystem() {
-    SceneManager::GetInstance().Initialize(mRenderer, mScreenTexture);
+    SceneManager::GetInstance().Initialize(mRenderer);
 }

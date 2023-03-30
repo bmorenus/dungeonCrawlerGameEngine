@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Component.hpp"
-#include "IGraphicsEngineRenderer.hpp"
 #include "TinyMath.hpp"
 
 /**
@@ -36,7 +35,7 @@ class SpriteComponent : public Component {
     /**
      * Render the sprite
      */
-    void Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) override;
+    void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
    private:
     Vec2D mPosition;

@@ -9,7 +9,6 @@
 #include <sstream>
 #include <string>
 
-#include "IGraphicsEngineRenderer.hpp"
 #include "ResourceManager.hpp"
 #include "SceneManager.hpp"
 #include "imgui.h"
@@ -74,7 +73,6 @@ class Engine {
    private:
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
-    IGraphicsEngineRenderer* mGraphicsEngineRenderer = nullptr;
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     SDL_Texture* mScreenTexture;

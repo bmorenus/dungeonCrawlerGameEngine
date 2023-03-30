@@ -20,7 +20,7 @@ class GameObject {
 
     void AddEvent(SDL_Event& e);
     void Update(int frame);
-    void Render(SDL_Renderer* renderer, SDL_Texture* texture);
+    void Render(SDL_Renderer* renderer);
 
     int GetVelocity();
     void SetVelocity(int velocity);

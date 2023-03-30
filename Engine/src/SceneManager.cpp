@@ -19,9 +19,8 @@ SceneManager& SceneManager::GetInstance() {
     return *sInstance;
 }
 
-void SceneManager::Initialize(SDL_Renderer* renderer, SDL_Texture* screenTexture) {
+void SceneManager::Initialize(SDL_Renderer* renderer) {
     mRenderer = renderer;
-    mScreenTexture = screenTexture;
     AddTestGameObjects();
 }
 
@@ -105,9 +104,9 @@ void SceneManager::Update() {
 
 void SceneManager::Render() {
     for (TileMap* tileMap : mStaticGameObjects) {
-        tileMap->Render(mRenderer, mScreenTexture);
+        tileMap->Render(mRenderer);
     }
     for (GameObject* gameObject : mDynamicGameObjects) {
-        gameObject->Render(mRenderer, mScreenTexture);
+        gameObject->Render(mRenderer);
     }
 }

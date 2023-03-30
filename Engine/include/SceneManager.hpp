@@ -21,7 +21,7 @@ class SceneManager {
    public:
     static SceneManager& GetInstance();
 
-    void Initialize(SDL_Renderer* renderer, SDL_Texture* texture);
+    void Initialize(SDL_Renderer* renderer);
 
     void AcceptInput(SDL_Event& e);
 
@@ -55,7 +55,6 @@ class SceneManager {
     std::vector<GameObject*> mDynamicGameObjects;
     std::vector<TileMap*> mStaticGameObjects;
     SDL_Renderer* mRenderer = nullptr;
-    SDL_Texture* mScreenTexture = nullptr;
 };
 
 #endif

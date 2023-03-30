@@ -17,5 +17,5 @@ void TransformComponent::Update(GameObject& gameObject, int frame) {
     gameObject.SetX(gameObjectX + gameObjectVelocity);
 }
 
-void TransformComponent::Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) {
+void TransformComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
 }

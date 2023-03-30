@@ -12,7 +12,7 @@ class ControllerComponent : public Component {
     ControllerComponent();
     ~ControllerComponent();
     void Update(GameObject& gameObject, int frame) override;
-    void Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) override;
+    void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
    private:
     const float ACCELERATION = 1;

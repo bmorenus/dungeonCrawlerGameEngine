@@ -29,5 +29,5 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
     }
 }
 
-void ControllerComponent::Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) {
+void ControllerComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
 }

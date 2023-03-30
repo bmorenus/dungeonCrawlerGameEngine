@@ -42,7 +42,6 @@ void SpriteComponent::Update(GameObject& gameObject, int frame) {
     mDest.h = 128;
 }
 
-void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) {
+void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, mTexture, &mSrc, &mDest);
-    SDL_SetRenderTarget(renderer, texture);
 }

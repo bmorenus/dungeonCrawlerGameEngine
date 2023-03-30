@@ -10,7 +10,7 @@ class Component {
     Component();
     virtual ~Component();
     virtual void Update(GameObject& gameObject, int frame) = 0;
-    virtual void Render(GameObject& gameObject, SDL_Renderer* renderer, SDL_Texture* texture) = 0;
+    virtual void Render(GameObject& gameObject, SDL_Renderer* renderer) = 0;
 };
 
 #endif

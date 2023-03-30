@@ -22,9 +22,9 @@ void GameObject::Update(int frame) {
         mComponents[i]->Update(*this, frame);
     }
 }
-void GameObject::Render(SDL_Renderer* renderer, SDL_Texture* texture) {
+void GameObject::Render(SDL_Renderer* renderer) {
     for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Render(*this, renderer, texture);
+        mComponents[i]->Render(*this, renderer);
     }
 }
 
