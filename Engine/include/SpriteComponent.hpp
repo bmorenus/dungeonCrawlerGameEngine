@@ -4,6 +4,10 @@
 #include <string>
 
 #include "Component.hpp"
+<<<<<<< HEAD
+=======
+#include "IGraphicsEngineRenderer.hpp"
+>>>>>>> morenus-apply-c++-google-format
 #include "TinyMath.hpp"
 
 /**

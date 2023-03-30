@@ -9,11 +9,17 @@
 #include <sstream>
 #include <string>
 
+<<<<<<< HEAD
 #include "ResourceManager.hpp"
 #include "SceneManager.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer.h"
+=======
+#include "IGraphicsEngineRenderer.hpp"
+#include "ResourceManager.hpp"
+#include "SceneManager.hpp"
+>>>>>>> morenus-apply-c++-google-format
 
 /**
  * This class sets up the main game engine
@@ -58,7 +64,11 @@ class Engine {
     /**
      * Request to startup the Graphics Subsystem
      */
+<<<<<<< HEAD
     int InitializeGraphicsSubSystem();
+=======
+    void InitializeGraphicsSubSystem();
+>>>>>>> morenus-apply-c++-google-format
 
     /**
      * Request to startup the Resource Manager and load all images in directory
