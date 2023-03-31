@@ -15,6 +15,7 @@
 #include "ResourceManager.hpp"
 #include "SpriteComponent.hpp"
 #include "TileMap.hpp"
+#include "TileMapComponent.hpp"
 #include "TransformComponent.hpp"
 
 class SceneManager {
@@ -29,15 +30,15 @@ class SceneManager {
 
     void Update();
 
-    GameObject* CreateGameObject();
+    GameObject* CreateGameObject(int xPos, int yPos, int frame);
+
+    TileMapComponent* CreateTileMapComponent(std::string spritesheetFile);
 
     SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
 
     void AddTestGameObjects();
 
-    void AddDynamicGameObject(GameObject* gameObject);
-
-    void AddStaticGameObject(TileMap* tileMap);
+    void AddGameObject(GameObject* gameObject);
 
     void Shutdown();
 
@@ -52,9 +53,9 @@ class SceneManager {
 
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
-    std::vector<GameObject*> mDynamicGameObjects;
-    std::vector<TileMap*> mStaticGameObjects;
+    std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
+    TileMapComponent* mTileMapComponent = nullptr;
 };
 
 #endif

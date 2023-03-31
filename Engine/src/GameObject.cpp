@@ -2,16 +2,16 @@
 
 #include <iostream>
 
-GameObject::GameObject(SDL_Renderer* renderer) {
-    mX = 20;
+GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int frame) {
+    mXPos = xPos;
+    mYPos = yPos;
+    mFrame = frame;
     mVelocity = 5;
     mRenderer = renderer;
 }
 
 GameObject::~GameObject() {
-    for (int i = 0; i < mComponents.size(); i++) {
-        delete (mComponents[i]);
-    }
+    // Make components a shared pointer
 }
 
 void GameObject::AddEvent(SDL_Event& e) {
@@ -37,11 +37,27 @@ void GameObject::SetVelocity(int velocity) {
 }
 
 int GameObject::GetX() {
-    return mX;
+    return mXPos;
 }
 
-void GameObject::SetX(int x) {
-    mX = x;
+void GameObject::SetX(int xPos) {
+    mXPos = xPos;
+}
+
+int GameObject::GetY() {
+    return mYPos;
+}
+
+void GameObject::SetY(int yPos) {
+    mYPos = yPos;
+}
+
+int GameObject::GetFrame() {
+    return mFrame;
+}
+
+void GameObject::SetFrame(int frame) {
+    mFrame = frame;
 }
 
 void GameObject::AddComponent(Component* component) {

@@ -12,36 +12,31 @@ SpriteComponent::~SpriteComponent() {
     SDL_DestroyTexture(mTexture);
 }
 
-// Set the sprite position
-void SpriteComponent::SetPosition(int x, int y) {
-    mPosition.x = x;
-    mPosition.y = y;
-}
-
-int SpriteComponent::GetX() {
-    return mPosition.x;
-}
-
 void SpriteComponent::Update(GameObject& gameObject, int frame) {
-    // The part of the image that we want to render
-    mCurrentFrame = frame;
-    if (mCurrentFrame > 6) {
-        mCurrentFrame = 0;
+    int currentFrame = gameObject.GetFrame();
+    if (currentFrame > 6) {
+        gameObject.SetFrame(0);
+    } else {
+        gameObject.SetFrame(currentFrame + 1);
     }
-
-    // The frame of the sprite sheet to be rendered.
-    mSrc.x = mCurrentFrame * 75;
-    mSrc.y = 0;
-    mSrc.w = 75;
-    mSrc.h = 87;
-
-    // Where the rectangle will be rendered at.
-    mDest.x = gameObject.GetX();
-    mDest.y = 200;
-    mDest.w = 128;
-    mDest.h = 128;
 }
 
 void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
-    SDL_RenderCopy(renderer, mTexture, &mSrc, &mDest);
+    SDL_Rect src, dest;
+
+    int currentFrame = gameObject.GetFrame();
+    int xPos = gameObject.GetX();
+    int yPos = gameObject.GetY();
+
+    src.x = currentFrame * 75;
+    src.y = 0;
+    src.w = 75;
+    src.h = 87;
+
+    dest.x = xPos;
+    dest.y = yPos;
+    dest.w = 128;
+    dest.h = 128;
+
+    SDL_RenderCopy(renderer, mTexture, &src, &dest);
 }
