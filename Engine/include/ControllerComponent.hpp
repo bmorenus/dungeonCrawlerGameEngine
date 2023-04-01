@@ -15,6 +15,8 @@ class ControllerComponent : public Component {
     void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
    private:
+    void ResetEvents(GameObject& gameObject);
+
     const float ACCELERATION = 1;
 };
 

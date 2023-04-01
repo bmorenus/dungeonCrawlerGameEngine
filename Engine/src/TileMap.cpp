@@ -45,6 +45,7 @@ TileMap::TileMap(std::string tileSheetFileName, int rows, int cols, int _TileWid
 
 TileMap::~TileMap() {
     SDL_DestroyTexture(mTexture);
+    std::cout << "Deleting TileMap" << std::endl;
     delete[] mTiles;
 }
 
@@ -104,7 +105,6 @@ void TileMap::Render(SDL_Renderer* renderer) {
                 Dest.y = y * mTileHeight;
                 Dest.w = mTileWidth;
                 Dest.h = mTileHeight;
-                SDL_RenderCopy(renderer, mTexture, &Src, &Dest);
             }
         }
     }

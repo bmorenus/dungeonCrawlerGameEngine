@@ -3,6 +3,13 @@
 #include <iostream>
 #include <string>
 
+int ROWS = 8;
+int COLS = 8;
+int TILE_WIDTH = 32;
+int TILE_HEIGHT = 32;
+int MAP_X = 20;
+int MAP_Y = 11;
+
 SceneManager::SceneManager() {
     std::cout << "Scene Manager Created" << std::endl;
 }
@@ -25,25 +32,19 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
 }
 
 void SceneManager::Shutdown() {
-    for (GameObject* gameObject : mDynamicGameObjects) {
+    delete mTileMapComponent;
+
+    for (GameObject* gameObject : mGameObjects) {
         delete gameObject;
     }
-
-    for (TileMap* tileMap : mStaticGameObjects) {
-        delete tileMap;
-    }
 }
 
-void SceneManager::AddDynamicGameObject(GameObject* gameObject) {
-    mDynamicGameObjects.push_back(gameObject);
+void SceneManager::AddGameObject(GameObject* gameObject) {
+    mGameObjects.push_back(gameObject);
 }
 
-void SceneManager::AddStaticGameObject(TileMap* tileMap) {
-    mStaticGameObjects.push_back(tileMap);
-}
-
-GameObject* SceneManager::CreateGameObject() {
-    GameObject* gameObject = new GameObject(mRenderer);
+GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int frame) {
+    GameObject* gameObject = new GameObject(mRenderer, xPos, yPos, frame);
     return gameObject;
 }
 
@@ -51,6 +52,12 @@ SpriteComponent* SceneManager::CreateSpriteComponent(std::string spritesheetFile
     SDL_Texture* texture = CreateTexture(spritesheetFile);
     SpriteComponent* spriteComponent = new SpriteComponent(texture);
     return spriteComponent;
+}
+
+TileMapComponent* SceneManager::CreateTileMapComponent(std::string spritesheetFile) {
+    SDL_Texture* texture = CreateTexture(spritesheetFile);
+    TileMapComponent* tileMapComponent = new TileMapComponent(texture, TILE_WIDTH, TILE_HEIGHT, COLS, ROWS);
+    return tileMapComponent;
 }
 
 SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
@@ -69,23 +76,38 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
 void SceneManager::AddTestGameObjects() {
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
-    SpriteComponent* spriteComponent = CreateSpriteComponent("./images/sprite.bmp");
+    SpriteComponent* spriteComponent = CreateSpriteComponent(
+        "./images/sprite.bmp");
 
-    GameObject* testCharacter = CreateGameObject();
+    GameObject* testCharacter = CreateGameObject(100, 100, 0);
     testCharacter->AddComponent(controllerComponent);
     testCharacter->AddComponent(transformComponent);
     testCharacter->AddComponent(spriteComponent);
 
-    AddDynamicGameObject(testCharacter);
+    AddGameObject(testCharacter);
 
-    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp", 8, 8, 32, 32, 20, 11, mRenderer);
+    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp", ROWS, COLS,
+                                       TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
+                                       mRenderer);
     testTileMap->GenerateSimpleMap();
 
-    AddStaticGameObject(testTileMap);
+    mTileMapComponent = CreateTileMapComponent("./images/Tiles1.bmp");
+
+    for (int yPos = 0; yPos < MAP_Y; yPos++) {
+        for (int xPos = 0; xPos < MAP_X; xPos++) {
+            int currentTile = testTileMap->GetTileType(xPos, yPos);
+            if (currentTile > -1) {
+                GameObject* gameObject = CreateGameObject(xPos, yPos, currentTile);
+                gameObject->AddComponent(mTileMapComponent);
+                AddGameObject(gameObject);
+            }
+        }
+    }
+    delete testTileMap;
 }
 
 void SceneManager::AcceptInput(SDL_Event& e) {
-    for (GameObject* gameObject : mDynamicGameObjects) {
+    for (GameObject* gameObject : mGameObjects) {
         gameObject->AddEvent(e);
     }
 }
@@ -97,16 +119,13 @@ void SceneManager::Update() {
         frame = 0;
     }
 
-    for (GameObject* gameObject : mDynamicGameObjects) {
+    for (GameObject* gameObject : mGameObjects) {
         gameObject->Update(frame);
     }
 }
 
 void SceneManager::Render() {
-    for (TileMap* tileMap : mStaticGameObjects) {
-        tileMap->Render(mRenderer);
-    }
-    for (GameObject* gameObject : mDynamicGameObjects) {
+    for (GameObject* gameObject : mGameObjects) {
         gameObject->Render(mRenderer);
     }
 }

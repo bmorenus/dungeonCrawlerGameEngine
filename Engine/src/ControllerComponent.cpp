@@ -27,7 +27,12 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
             }
         }
     }
+    ResetEvents(gameObject);
 }
 
 void ControllerComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
+}
+
+void ControllerComponent::ResetEvents(GameObject& gameObject) {
+    gameObject.GetEvents().clear();
 }

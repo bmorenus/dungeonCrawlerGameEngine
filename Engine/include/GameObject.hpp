@@ -15,7 +15,7 @@
 
 class GameObject {
    public:
-    GameObject(SDL_Renderer* renderer);
+    GameObject(SDL_Renderer* renderer, int xPos, int yPos, int frame);
     ~GameObject();
 
     void AddEvent(SDL_Event& e);
@@ -26,15 +26,23 @@ class GameObject {
     void SetVelocity(int velocity);
 
     int GetX();
-    void SetX(int x);
+    void SetX(int xPos);
+
+    int GetY();
+    void SetY(int yPos);
+
+    int GetFrame();
+    void SetFrame(int frame);
 
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
 
    private:
     int mVelocity;
-    int mX;
-    int frame;
+    int mXPos;
+    int mYPos;
+    int mFrame;
+
     SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;
     std::vector<Component*> mComponents;
