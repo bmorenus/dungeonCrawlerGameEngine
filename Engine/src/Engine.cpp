@@ -24,11 +24,13 @@ void Engine::Input(bool* quit) {
         if (e.type == SDL_QUIT) {
             *quit = true;
         }
-        if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE && e.window.windowID == SDL_GetWindowID(mWindow)) {
+        if (e.type == SDL_WINDOWEVENT &&
+            e.window.event == SDL_WINDOWEVENT_CLOSE &&
+            e.window.windowID == SDL_GetWindowID(mWindow)) {
             *quit = true;
         }
 
-        SceneManager::GetInstance().AcceptInput(e);
+        SceneManager::GetInstance().AcceptInput(e, mScreenEditorPos);
     }
 }
 
@@ -37,7 +39,6 @@ void Engine::Update() {
 }
 
 void Engine::Render(ImGuiIO& mIo) {
-    // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     SDL_SetRenderTarget(mRenderer, mScreenTexture);
@@ -45,15 +46,14 @@ void Engine::Render(ImGuiIO& mIo) {
     ImGui::NewFrame();
     if (show_demo_window)
         ImGui::ShowDemoWindow(&show_demo_window);
-
     {
-        ImGui::Begin("Scene Editor");
+        ImGui::Begin("Scene Editor", NULL, ImGuiWindowFlags_NoTitleBar);
         ImGui::Image(mScreenTexture, ImVec2(640, 360));
+        mScreenEditorPos = ImGui::GetWindowPos();
         ImGui::End();
     }
     SDL_SetRenderTarget(mRenderer, NULL);
 
-    // Rendering
     ImGui::Render();
     SDL_RenderSetScale(mRenderer, mIo.DisplayFramebufferScale.x, mIo.DisplayFramebufferScale.y);
     SDL_SetRenderDrawColor(mRenderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
@@ -80,6 +80,7 @@ void Engine::MainGameLoop() {
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(mWindow, mRenderer);
     ImGui_ImplSDLRenderer_Init(mRenderer);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     while (!quit) {
         Input(&quit);

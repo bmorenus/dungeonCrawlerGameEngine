@@ -28,9 +28,6 @@ void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     int cols = mTileMap->GetCols();
     int rows = mTileMap->GetRows();
 
-    // std::cout << "cols: " << cols << std::endl;
-    // std::cout << "rows: " << rows << std::endl;
-
     int frame = gameObject.GetFrame();
     int xPos = gameObject.GetX();
     int yPos = gameObject.GetY();
@@ -40,8 +37,8 @@ void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     src.w = width;
     src.h = height;
 
-    dest.x = (xPos - (xPos % width));
-    dest.y = (yPos - (yPos % height));
+    dest.x = (xPos - (xPos % width)) - 9;
+    dest.y = (yPos - (yPos % height)) - 14;
     dest.w = width;
     dest.h = height;
 

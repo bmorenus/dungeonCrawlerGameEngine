@@ -108,7 +108,21 @@ void SceneManager::AddTestGameObjects() {
     }
 }
 
-void SceneManager::AcceptInput(SDL_Event& e) {
+void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
+    if (e.type == SDL_MOUSEBUTTONDOWN) {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        std::cout << "x: " << x << std::endl;
+        std::cout << "y: " << y << std::endl;
+        std::cout << "x-fix: " << x - screenEditorPos.x << std::endl;
+        std::cout << "y-fix: " << y - screenEditorPos.y << std::endl;
+        GameObject* gameObject = CreateGameObject(x - screenEditorPos.x,
+                                                  y - screenEditorPos.y,
+                                                  12);
+        gameObject->AddComponent(mTileMapComponent);
+        AddGameObject(gameObject);
+    }
+
     for (GameObject* gameObject : mGameObjects) {
         gameObject->AddEvent(e);
     }

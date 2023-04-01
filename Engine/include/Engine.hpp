@@ -76,6 +76,7 @@ class Engine {
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     SDL_Texture* mScreenTexture;
+    ImVec2 mScreenEditorPos;
 };
 
 #endif
