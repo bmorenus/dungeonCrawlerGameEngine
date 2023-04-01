@@ -8,9 +8,8 @@
 /**
  * This is a minimal implementation of a TileMap
  */
-class TileMap{
-public:
-    
+class TileMap {
+   public:
     /**
      * Constructor for a tilemap
      */
@@ -41,21 +40,21 @@ public:
      */
     void Render(SDL_Renderer* ren);
 
-private:
+   private:
     // Dimensions of our TileMap and individual tiles.
     // Used for spiltting up the sprite sheet
     int mRows;
-    int mCols;      
+    int mCols;
     // How big each tile is.
     int mTileWidth;
     int mTileHeight;
     // size of our tilemap
     int mMapX;
-    int mMapY; 
+    int mMapY;
     // Where our TileMap is rendered
     // An SDL Surface contains pixel data to draw our TileMap
-    SDL_Surface *mTileSpriteSheet;
-    SDL_Texture *mTexture;
+    SDL_Surface* mTileSpriteSheet;
+    SDL_Texture* mTexture;
     // Stores our tile types
     int* mTiles;
 };

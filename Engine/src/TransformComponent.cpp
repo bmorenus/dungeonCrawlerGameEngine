@@ -1,20 +1,21 @@
+#include "TransformComponent.hpp"
+
 #include <iostream>
 
-#include "TransformComponent.hpp"
-#include "SpriteComponent.hpp"
 #include "GameObject.hpp"
+#include "SpriteComponent.hpp"
 
-TransformComponent::TransformComponent(){
+TransformComponent::TransformComponent() {
 }
 
-TransformComponent::~TransformComponent(){
+TransformComponent::~TransformComponent() {
 }
 
-void TransformComponent::Update(GameObject& gameObject, int frame){
+void TransformComponent::Update(GameObject& gameObject, int frame) {
     int gameObjectX = gameObject.GetX();
-    int gameObjectVelocity =  gameObject.GetVelocity();
+    int gameObjectVelocity = gameObject.GetVelocity();
     gameObject.SetX(gameObjectX + gameObjectVelocity);
 }
 
-void TransformComponent::Render(GameObject& gameObject, SDL_Renderer* renderer){
+void TransformComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
 }

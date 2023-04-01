@@ -6,15 +6,13 @@
 class GameObject;
 
 class TransformComponent : public Component {
-    public:
-        TransformComponent();
-        ~TransformComponent();
-        void Update(GameObject& gameObject, int frame) override;
-        void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
+   public:
+    TransformComponent();
+    ~TransformComponent();
+    void Update(GameObject& gameObject, int frame) override;
+    void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
-    private:
-
+   private:
 };
-
 
 #endif

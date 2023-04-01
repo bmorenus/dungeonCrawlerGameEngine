@@ -1,11 +1,12 @@
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <fstream>
+#include "IGraphicsEngineRenderer.hpp"
+
 #include <stdlib.h>
 #include <time.h>
 
-#include "IGraphicsEngineRenderer.hpp"
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
 ///////////////////////////////////////////////////////////////////
 /// (Other Render implementations here (e.g. Direct3D)
 ///////////////////////////////////////////////////////////////////
@@ -15,23 +16,23 @@
 ///////////////////////////////////////////////////////////////////
 /// SDLGraphicsEngineRenderer Implementation
 //////////////////////////////////////////////////////////////////
-SDLGraphicsEngineRenderer::SDLGraphicsEngineRenderer(int w, int h) : IGraphicsEngineRenderer(w,h){
-   	srand(time(nullptr));
+SDLGraphicsEngineRenderer::SDLGraphicsEngineRenderer(int w, int h) : IGraphicsEngineRenderer(w, h) {
+    srand(time(nullptr));
 
-    if(SDL_Init(SDL_INIT_EVERYTHING)< 0){
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
         exit(1);
     }
 
-    mWindow = SDL_CreateWindow( "Lab", 100, 100, mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN );
+    mWindow = SDL_CreateWindow("Lab", 100, 100, mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN);
 
-    if( nullptr == mWindow){
+    if (nullptr == mWindow) {
         std::cerr << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
         exit(1);
     }
 
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
-    if( nullptr == mRenderer ){
+    if (nullptr == mRenderer) {
         std::cerr << "Renderer could not be created! SDL Error: " << SDL_GetError() << "\n";
         exit(1);
     }
@@ -39,34 +40,34 @@ SDLGraphicsEngineRenderer::SDLGraphicsEngineRenderer(int w, int h) : IGraphicsEn
     std::cout << "No SDL errors Detected in during init\n\n";
 }
 
-SDLGraphicsEngineRenderer::~SDLGraphicsEngineRenderer(){
+SDLGraphicsEngineRenderer::~SDLGraphicsEngineRenderer() {
     SDL_DestroyRenderer(mRenderer);
-    SDL_DestroyWindow( mWindow );
+    SDL_DestroyWindow(mWindow);
 
     mRenderer = nullptr;
     mWindow = nullptr;
-    
+
     SDL_Quit();
 }
 
-void SDLGraphicsEngineRenderer::SetRenderDrawColor(int r, int g, int b, int a){
-    SDL_SetRenderDrawColor(mRenderer, r,g,b,a);
+void SDLGraphicsEngineRenderer::SetRenderDrawColor(int r, int g, int b, int a) {
+    SDL_SetRenderDrawColor(mRenderer, r, g, b, a);
 }
 
-void SDLGraphicsEngineRenderer::RenderClear(){
+void SDLGraphicsEngineRenderer::RenderClear() {
     SDL_RenderClear(mRenderer);
 }
 
-void SDLGraphicsEngineRenderer::RenderPresent(){
-    SDL_RenderPresent(mRenderer); 
+void SDLGraphicsEngineRenderer::RenderPresent() {
+    SDL_RenderPresent(mRenderer);
 }
 
 // Get Pointer to Window
-SDL_Window* SDLGraphicsEngineRenderer::GetWindow(){
-  return mWindow;
+SDL_Window* SDLGraphicsEngineRenderer::GetWindow() {
+    return mWindow;
 }
 
 // Get Pointer to Renderer
-SDL_Renderer* SDLGraphicsEngineRenderer::GetRenderer(){
-  return mRenderer;
+SDL_Renderer* SDLGraphicsEngineRenderer::GetRenderer() {
+    return mRenderer;
 }

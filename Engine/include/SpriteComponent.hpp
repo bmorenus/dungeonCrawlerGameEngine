@@ -3,9 +3,9 @@
 
 #include <string>
 
+#include "Component.hpp"
 #include "IGraphicsEngineRenderer.hpp"
 #include "TinyMath.hpp"
-#include "Component.hpp"
 
 /**
  * A small class to demonstrate loading sprites.
@@ -14,9 +14,8 @@
  */
 class GameObject;
 
-class SpriteComponent : public Component{
-public:
-
+class SpriteComponent : public Component {
+   public:
     /**
      * Constructor
      */
@@ -35,19 +34,19 @@ public:
      */
     void Update(GameObject& gameObject, int frame) override;
     /**
-     * Render the sprite 
+     * Render the sprite
      */
     void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
-private:
-    Vec2D           mPosition;
-	unsigned int    mCurrentFrame{0};
-	unsigned int    mLastFrame{7};
+   private:
+    Vec2D mPosition;
+    unsigned int mCurrentFrame{0};
+    unsigned int mLastFrame{7};
     // An SDL Surface contains pixel data to draw an image
-	SDL_Texture*    mTexture = nullptr;
+    SDL_Texture* mTexture = nullptr;
 
-	SDL_Rect        mSrc;
-	SDL_Rect        mDest;
+    SDL_Rect mSrc;
+    SDL_Rect mDest;
 };
 
 #endif
