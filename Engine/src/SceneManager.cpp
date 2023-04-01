@@ -90,7 +90,6 @@ void SceneManager::AddTestGameObjects() {
                                        TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
                                        mRenderer);
     testTileMap->GenerateSimpleMap();
-    testTileMap->PrintMap();
 
     mTileMapComponent = CreateTileMapComponent("./images/Tiles1.bmp");
 
