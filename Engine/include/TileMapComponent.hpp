@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Component.hpp"
+#include "TileMap.hpp"
 #include "TinyMath.hpp"
 
 class GameObject;
@@ -13,7 +14,7 @@ class TileMapComponent : public Component {
     /**
      * Constructor
      */
-    TileMapComponent(SDL_Texture* texture, int tileWidth, int tileHeight, int cols, int rows);
+    TileMapComponent(SDL_Texture* texture, TileMap* tileMap);
     /**
      * Constructor
      */
@@ -29,6 +30,7 @@ class TileMapComponent : public Component {
 
    private:
     SDL_Texture* mTexture = nullptr;
+    TileMap* mTileMap = nullptr;
     int mTileWidth = -1;
     int mTileHeight = -1;
     int mCols = -1;

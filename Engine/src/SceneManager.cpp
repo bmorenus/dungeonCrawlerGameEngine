@@ -56,7 +56,8 @@ SpriteComponent* SceneManager::CreateSpriteComponent(std::string spritesheetFile
 
 TileMapComponent* SceneManager::CreateTileMapComponent(std::string spritesheetFile) {
     SDL_Texture* texture = CreateTexture(spritesheetFile);
-    TileMapComponent* tileMapComponent = new TileMapComponent(texture, TILE_WIDTH, TILE_HEIGHT, COLS, ROWS);
+    TileMapComponent* tileMapComponent = new TileMapComponent(texture,
+                                                              mTileMap);
     return tileMapComponent;
 }
 
@@ -86,24 +87,25 @@ void SceneManager::AddTestGameObjects() {
 
     AddGameObject(testCharacter);
 
-    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp", ROWS, COLS,
-                                       TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
-                                       mRenderer);
-    testTileMap->GenerateSimpleMap();
+    mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
+                           mRenderer);
+
+    mTileMap->GenerateSimpleMap();
 
     mTileMapComponent = CreateTileMapComponent("./images/Tiles1.bmp");
 
     for (int yPos = 0; yPos < MAP_Y; yPos++) {
         for (int xPos = 0; xPos < MAP_X; xPos++) {
-            int currentTile = testTileMap->GetTileType(xPos, yPos);
+            int currentTile = mTileMap->GetTileType(xPos, yPos);
             if (currentTile > -1) {
-                GameObject* gameObject = CreateGameObject(xPos, yPos, currentTile);
+                GameObject* gameObject = CreateGameObject(xPos * TILE_WIDTH,
+                                                          yPos * TILE_HEIGHT,
+                                                          currentTile);
                 gameObject->AddComponent(mTileMapComponent);
                 AddGameObject(gameObject);
             }
         }
     }
-    delete testTileMap;
 }
 
 void SceneManager::AcceptInput(SDL_Event& e) {

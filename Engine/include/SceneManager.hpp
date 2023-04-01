@@ -55,6 +55,7 @@ class SceneManager {
 
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
+    TileMap* mTileMap = nullptr;
     TileMapComponent* mTileMapComponent = nullptr;
 };
 

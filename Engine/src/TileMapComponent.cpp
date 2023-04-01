@@ -4,12 +4,13 @@
 
 #include "GameObject.hpp"
 
-TileMapComponent::TileMapComponent(SDL_Texture* texture, int tileWidth, int tileHeight, int cols, int rows) {
+TileMapComponent::TileMapComponent(SDL_Texture* texture, TileMap* tileMap) {
     mTexture = texture;
-    mTileWidth = tileWidth;
-    mTileHeight = tileHeight;
-    mCols = cols;
-    mRows = rows;
+    mTileMap = tileMap;
+    // mTileWidth = tileWidth;
+    // mTileHeight = tileHeight;
+    // mCols = cols;
+    // mRows = rows;
 }
 
 TileMapComponent::~TileMapComponent() {
@@ -22,19 +23,27 @@ void TileMapComponent::Update(GameObject& gameObject, int frame) {
 void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     SDL_Rect src, dest;
 
+    int width = mTileMap->GetTileWidth();
+    int height = mTileMap->GetTileHeight();
+    int cols = mTileMap->GetCols();
+    int rows = mTileMap->GetRows();
+
+    // std::cout << "cols: " << cols << std::endl;
+    // std::cout << "rows: " << rows << std::endl;
+
     int frame = gameObject.GetFrame();
     int xPos = gameObject.GetX();
     int yPos = gameObject.GetY();
 
-    src.x = (frame % mCols) * mTileWidth;
-    src.y = (frame / mRows) * mTileHeight;
-    src.w = mTileWidth;
-    src.h = mTileHeight;
+    src.x = (frame % cols) * width;
+    src.y = (frame / rows) * height;
+    src.w = width;
+    src.h = height;
 
-    dest.x = xPos * mTileWidth;
-    dest.y = yPos * mTileHeight;
-    dest.w = mTileWidth;
-    dest.h = mTileHeight;
+    dest.x = (xPos - (xPos % width));
+    dest.y = (yPos - (yPos % height));
+    dest.w = width;
+    dest.h = height;
 
     SDL_RenderCopy(renderer, mTexture, &src, &dest);
 }
