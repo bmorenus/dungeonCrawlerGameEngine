@@ -17,7 +17,8 @@ class TileMap {
     /**
      * Constructor for a tilemap
      */
-    TileMap(std::string tileSheetFileName, int rows, int cols, int _TileWidth, int _TileHeight, int _mapX, int _mapY, SDL_Renderer* ren);
+    TileMap(int rows, int cols, int _TileWidth, int _TileHeight, int _mapX,
+            int _mapY, SDL_Renderer* ren);
     /**
      * Destructor for a tilemap
      */
@@ -39,10 +40,18 @@ class TileMap {
      * Return the tile type at an x and y position
      */
     int GetTileType(int x, int y);
-    /**
-     * Draw all of the tiles in the tilemap
-     */
-    void Render(SDL_Renderer* renderer);
+
+    int GetRows();
+
+    int GetCols();
+
+    int GetTileWidth();
+
+    int GetTileHeight();
+
+    int GetTileCols();
+
+    int GetTileRows();
 
    private:
     // Dimensions of our TileMap and individual tiles.

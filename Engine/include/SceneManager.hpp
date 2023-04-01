@@ -17,6 +17,9 @@
 #include "TileMap.hpp"
 #include "TileMapComponent.hpp"
 #include "TransformComponent.hpp"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer.h"
 
 class SceneManager {
    public:
@@ -24,7 +27,7 @@ class SceneManager {
 
     void Initialize(SDL_Renderer* renderer);
 
-    void AcceptInput(SDL_Event& e);
+    void AcceptInput(SDL_Event& e, ImVec2 screenEditorPos);
 
     void Render();
 
@@ -55,6 +58,7 @@ class SceneManager {
 
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
+    TileMap* mTileMap = nullptr;
     TileMapComponent* mTileMapComponent = nullptr;
 };
 
