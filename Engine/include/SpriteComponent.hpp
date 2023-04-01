@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Component.hpp"
-#include "IGraphicsEngineRenderer.hpp"
 #include "TinyMath.hpp"
 
 /**

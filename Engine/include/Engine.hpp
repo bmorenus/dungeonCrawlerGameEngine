@@ -9,9 +9,11 @@
 #include <sstream>
 #include <string>
 
-#include "IGraphicsEngineRenderer.hpp"
 #include "ResourceManager.hpp"
 #include "SceneManager.hpp"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer.h"
 
 /**
  * This class sets up the main game engine
@@ -37,7 +39,7 @@ class Engine {
     /**
      * Per frame render. Renders everything
      */
-    void Render();
+    void Render(ImGuiIO& mIo);
     /**
      * Main Game Loop that runs forever
      */
@@ -56,7 +58,7 @@ class Engine {
     /**
      * Request to startup the Graphics Subsystem
      */
-    void InitializeGraphicsSubSystem();
+    int InitializeGraphicsSubSystem();
 
     /**
      * Request to startup the Resource Manager and load all images in directory
@@ -71,7 +73,9 @@ class Engine {
    private:
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
-    IGraphicsEngineRenderer* mGraphicsEngineRenderer = nullptr;
+    SDL_Window* mWindow;
+    SDL_Renderer* mRenderer;
+    SDL_Texture* mScreenTexture;
 };
 
 #endif

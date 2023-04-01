@@ -1,9 +1,13 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <string>
+#if defined(LINUX) || defined(MINGW)
+#include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
 
-#include "IGraphicsEngineRenderer.hpp"
+#include <string>
 
 /**
  * This is a minimal implementation of a TileMap
@@ -38,7 +42,7 @@ class TileMap {
     /**
      * Draw all of the tiles in the tilemap
      */
-    void Render(SDL_Renderer* ren);
+    void Render(SDL_Renderer* renderer);
 
    private:
     // Dimensions of our TileMap and individual tiles.

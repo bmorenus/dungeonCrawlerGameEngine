@@ -78,7 +78,7 @@ void SceneManager::AddTestGameObjects() {
 
     AddDynamicGameObject(testCharacter);
 
-    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp", 8, 8, 64, 64, 20, 11, mRenderer);
+    TileMap* testTileMap = new TileMap("./images/Tiles1.bmp", 8, 8, 32, 32, 20, 11, mRenderer);
     testTileMap->GenerateSimpleMap();
 
     AddStaticGameObject(testTileMap);
@@ -103,11 +103,10 @@ void SceneManager::Update() {
 }
 
 void SceneManager::Render() {
-    for (GameObject* gameObject : mDynamicGameObjects) {
-        gameObject->Render(mRenderer);
-    }
-
     for (TileMap* tileMap : mStaticGameObjects) {
         tileMap->Render(mRenderer);
+    }
+    for (GameObject* gameObject : mDynamicGameObjects) {
+        gameObject->Render(mRenderer);
     }
 }
