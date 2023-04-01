@@ -4,13 +4,12 @@
 
 #include "GameObject.hpp"
 
+int X_BORDER_PX_SIZE = 9;
+int Y_BORDER_PX_SIZE = 14;
+
 TileMapComponent::TileMapComponent(SDL_Texture* texture, TileMap* tileMap) {
     mTexture = texture;
     mTileMap = tileMap;
-    // mTileWidth = tileWidth;
-    // mTileHeight = tileHeight;
-    // mCols = cols;
-    // mRows = rows;
 }
 
 TileMapComponent::~TileMapComponent() {
@@ -37,8 +36,8 @@ void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     src.w = width;
     src.h = height;
 
-    dest.x = (xPos - (xPos % width)) - 9;
-    dest.y = (yPos - (yPos % height)) - 14;
+    dest.x = (xPos - (xPos % width)) - X_BORDER_PX_SIZE;
+    dest.y = (yPos - (yPos % height)) - Y_BORDER_PX_SIZE;
     dest.w = width;
     dest.h = height;
 
