@@ -28,7 +28,6 @@ class GameObject{
         int GetX();
         void SetX(int x);
 
-        SpriteComponent GetSpriteComponent();
         void AddComponent(Component* component);
         std::vector<SDL_Event> GetEvents();
     
@@ -41,7 +40,6 @@ class GameObject{
         std::vector<Component*> mComponents;
         ControllerComponent mControllerComponent;
         TransformComponent mTransformComponent;
-        SpriteComponent mSpriteComponent;
 };
 
 

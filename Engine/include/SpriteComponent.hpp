@@ -20,7 +20,7 @@ public:
     /**
      * Constructor
      */
-    SpriteComponent();
+    SpriteComponent(SDL_Texture* texture);
     /**
      * Constructor
      */
@@ -38,18 +38,13 @@ public:
      * Render the sprite 
      */
     void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
-    /**
-     * Load a sprite
-     */
-    void LoadImage(std::string filePath,SDL_Renderer* renderer);
 
 private:
     Vec2D           mPosition;
 	unsigned int    mCurrentFrame{0};
 	unsigned int    mLastFrame{7};
     // An SDL Surface contains pixel data to draw an image
-	SDL_Surface*    mSpriteSheet =  nullptr;
-	SDL_Texture*    mTexture     =  nullptr;
+	SDL_Texture*    mTexture = nullptr;
 
 	SDL_Rect        mSrc;
 	SDL_Rect        mDest;
