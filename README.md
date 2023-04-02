@@ -19,7 +19,7 @@ Team Name: Seattle Group!
 
 Update your Team member Names here (Up to 4).
 
-1. Minhao Liu
+1. Minghao Liu
 2. Siyan Ma
 3. Brian Morenus
 4. Zidi Xia
