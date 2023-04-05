@@ -9,7 +9,8 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mWidth = width;
     mHeight = height;
     mFrame = frame;
-    mVelocity = 0;
+    mXVelocity = 0;
+    mYVelocity = 0;
     mRenderer = renderer;
 }
 
@@ -31,12 +32,20 @@ void GameObject::Render(SDL_Renderer* renderer) {
     }
 }
 
-int GameObject::GetVelocity() {
-    return mVelocity;
+int GameObject::GetXVelocity() {
+    return mXVelocity;
 }
 
-void GameObject::SetVelocity(int velocity) {
-    mVelocity = velocity;
+void GameObject::SetXVelocity(int velocity) {
+    mXVelocity = velocity;
+}
+
+int GameObject::GetYVelocity() {
+    return mYVelocity;
+}
+
+void GameObject::SetYVelocity(int velocity) {
+    mYVelocity = velocity;
 }
 
 int GameObject::GetCollisionDirection() {

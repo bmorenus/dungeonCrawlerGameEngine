@@ -22,8 +22,11 @@ class GameObject {
     void Update(int frame);
     void Render(SDL_Renderer* renderer);
 
-    int GetVelocity();
-    void SetVelocity(int velocity);
+    int GetXVelocity();
+    void SetXVelocity(int velocity);
+
+    int GetYVelocity();
+    void SetYVelocity(int velocity);
 
     int GetX();
     void SetX(int xPos);
@@ -44,7 +47,8 @@ class GameObject {
     std::vector<SDL_Event> GetEvents();
 
    private:
-    int mVelocity;
+    int mXVelocity;
+    int mYVelocity;
     int mXPos;
     int mYPos;
     int mWidth;

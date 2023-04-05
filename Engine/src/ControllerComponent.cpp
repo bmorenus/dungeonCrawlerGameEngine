@@ -18,34 +18,66 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
 
     if (currentKey[SDL_SCANCODE_D]) {
         if (collisionDirection != 1) {
-            if (gameObject.GetVelocity() <= 0) {
-                gameObject.SetVelocity(gameObject.GetVelocity() + 5);
+            if (gameObject.GetXVelocity() <= 0) {
+                gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
             }
         } else {
-            if (gameObject.GetVelocity() > 0) {
-                gameObject.SetVelocity(gameObject.GetVelocity() - 5);
+            if (gameObject.GetXVelocity() > 0) {
+                gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
             }
         }
     }
     if (!currentKey[SDL_SCANCODE_D]) {
-        if (gameObject.GetVelocity() > 0) {
-            gameObject.SetVelocity(gameObject.GetVelocity() - 5);
+        if (gameObject.GetXVelocity() > 0) {
+            gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
         }
     }
     if (currentKey[SDL_SCANCODE_A]) {
         if (collisionDirection != 2) {
-            if (gameObject.GetVelocity() >= 0) {
-                gameObject.SetVelocity(gameObject.GetVelocity() - 5);
+            if (gameObject.GetXVelocity() >= 0) {
+                gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
             }
         } else {
-            if (gameObject.GetVelocity() < 0) {
-                gameObject.SetVelocity(gameObject.GetVelocity() + 5);
+            if (gameObject.GetXVelocity() < 0) {
+                gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
             }
         }
     }
     if (!currentKey[SDL_SCANCODE_A]) {
-        if (gameObject.GetVelocity() < 0) {
-            gameObject.SetVelocity(gameObject.GetVelocity() + 5);
+        if (gameObject.GetXVelocity() < 0) {
+            gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
+        }
+    }
+    if (currentKey[SDL_SCANCODE_S]) {
+        if (collisionDirection != 3) {
+            if (gameObject.GetYVelocity() <= 0) {
+                gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
+            }
+        } else {
+            if (gameObject.GetYVelocity() > 0) {
+                gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
+            }
+        }
+    }
+    if (!currentKey[SDL_SCANCODE_S]) {
+        if (gameObject.GetYVelocity() > 0) {
+            gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
+        }
+    }
+    if (currentKey[SDL_SCANCODE_W]) {
+        if (collisionDirection != 4) {
+            if (gameObject.GetYVelocity() >= 0) {
+                gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
+            }
+        } else {
+            if (gameObject.GetYVelocity() < 0) {
+                gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
+            }
+        }
+    }
+    if (!currentKey[SDL_SCANCODE_W]) {
+        if (gameObject.GetYVelocity() < 0) {
+            gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
         }
     }
 
