@@ -21,7 +21,7 @@ class TileMapComponent : public Component {
     /**
      * Update the tile position and frame
      */
-    void Update(GameObject& gameObject, int frame) override;
+    void Update(GameObject& gameObject) override;
     /**
      * Render the tile map
      */

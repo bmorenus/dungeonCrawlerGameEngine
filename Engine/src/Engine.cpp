@@ -124,6 +124,7 @@ int Engine::InitializeGraphicsSubSystem() {
         SDL_Log("Error creating SDL_Renderer!");
         return 0;
     }
+    std::cout << "Graphics System Initialized" << std::endl;
     return 1;
 }
 

@@ -10,8 +10,8 @@ int TILE_HEIGHT = 32;
 int MAP_X = 20;
 int MAP_Y = 11;
 
-int TEMP_WIDTH = 32;
-int TEMP_HEIGHT = 32;
+int TEMP_WIDTH = 50;
+int TEMP_HEIGHT = 50;
 
 SceneManager::SceneManager() {
     std::cout << "Scene Manager Created" << std::endl;
@@ -79,13 +79,49 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
     return nullptr;
 }
 
+void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
+    // Left Standing Frame
+    Frame* left_standing = new Frame(1, 8, 22, 21, true);
+
+    // Right Standing Frame
+    Frame* right_standing = new Frame(1, 8, 22, 21, false);
+
+    // Forward Standing Frame
+    Frame* forward_standing = new Frame(49, 8, 22, 21, false);
+
+    // Backward Standing Frame
+    Frame* backward_standing = new Frame(73, 8, 22, 21, false);
+
+    // Left Standing Sequence
+    std::vector<Frame*> left_standing_sequence;
+    left_standing_sequence.push_back(left_standing);
+    spriteComponent->AddFrameSequence("left_standing", left_standing_sequence);
+
+    // Right Standing Sequence
+    std::vector<Frame*> right_standing_sequence;
+    right_standing_sequence.push_back(right_standing);
+    spriteComponent->AddFrameSequence("right_standing", right_standing_sequence);
+
+    // Forward Standing Sequence
+    std::vector<Frame*> forward_standing_sequence;
+    forward_standing_sequence.push_back(forward_standing);
+    spriteComponent->AddFrameSequence("forward_standing", forward_standing_sequence);
+
+    // Backward Standing Sequence
+    std::vector<Frame*> backward_standing_sequence;
+    backward_standing_sequence.push_back(backward_standing);
+    spriteComponent->AddFrameSequence("backward_standing", backward_standing_sequence);
+}
+
 void SceneManager::AddTestGameObjects() {
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
     mCollisionComponent = new CollisionComponent();
     SpriteComponent* spriteComponent = CreateSpriteComponent(
-        "./images/sprite.bmp");
+        "./images/linkSprite.bmp");
 
+    std::cout << "Sprite Component created" << std::endl;
+    AddTestFrameSequences(spriteComponent);
     GameObject* testCharacter = CreateGameObject(100, 100, TEMP_WIDTH,
                                                  TEMP_HEIGHT, 0);
     testCharacter->AddComponent(controllerComponent);
@@ -121,6 +157,7 @@ void SceneManager::AddTestGameObjects() {
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
+    std::cout << "Accepting Input" << std::endl;
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
         SDL_GetMouseState(&x, &y);
@@ -140,19 +177,16 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
 }
 
 void SceneManager::Update() {
-    static int frame = 0;
-    frame++;
-    if (frame > 6) {
-        frame = 0;
-    }
-
+    std::cout << "Updating" << std::endl;
     for (GameObject* gameObject : mGameObjects) {
-        gameObject->Update(frame);
+        gameObject->Update();
     }
 }
 
 void SceneManager::Render() {
+    std::cout << "Rendering" << std::endl;
     for (GameObject* gameObject : mGameObjects) {
         gameObject->Render(mRenderer);
     }
+    std::cout << "Done Rendering" << std::endl;
 }

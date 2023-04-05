@@ -16,7 +16,7 @@ TileMapComponent::~TileMapComponent() {
     SDL_DestroyTexture(mTexture);
 }
 
-void TileMapComponent::Update(GameObject& gameObject, int frame) {
+void TileMapComponent::Update(GameObject& gameObject) {
 }
 
 void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {

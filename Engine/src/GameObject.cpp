@@ -23,9 +23,9 @@ GameObject::~GameObject() {
 void GameObject::AddEvent(SDL_Event& e) {
     mEvents.push_back(e);
 }
-void GameObject::Update(int frame) {
+void GameObject::Update() {
     for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Update(*this, frame);
+        mComponents[i]->Update(*this);
     }
 }
 void GameObject::Render(SDL_Renderer* renderer) {
@@ -89,6 +89,14 @@ int GameObject::GetFrame() {
 
 void GameObject::SetFrame(int frame) {
     mFrame = frame;
+}
+
+std::string GameObject::GetSequence() {
+    return mSequence;
+}
+
+void GameObject::SetSequence(std::string sequence) {
+    mSequence = sequence;
 }
 
 void GameObject::AddComponent(Component* component) {

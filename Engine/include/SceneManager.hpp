@@ -42,6 +42,7 @@ class SceneManager {
     SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
 
     void AddTestGameObjects();
+    void AddTestFrameSequences(SpriteComponent* spriteComponent);
 
     void AddGameObject(GameObject* gameObject);
 
