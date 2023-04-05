@@ -28,43 +28,50 @@ void PhysicsManager::AddCollisionObject(GameObject* collisionObject) {
     mGameObjects.push_back(collisionObject);
 }
 
-int PhysicsManager::GetCollisionDirection(GameObject* object1) {
+int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
+    int* collisions = new int[4]();
+
     for (GameObject* object2 : mGameObjects) {
+        // Collision is occuring to the right of the object
         if (((object1->GetX() + object1->GetWidth()) > (object2->GetX() - 5)) &&
             ((object1->GetX() + object1->GetWidth()) < (object2->GetX() + 5))) {
             std::cout << "cond 1" << std::endl;
             if ((object1->GetY() > (object2->GetY() - object2->GetHeight())) &&
                 (object1->GetY() < (object2->GetY() + object2->GetHeight()))) {
-                return 1;
+                collisions[0] = 1;
             };
         }
 
+        // Collision is occuring to the left of the object
         if ((object1->GetX() > (object2->GetX() + object2->GetWidth() - 5)) &&
             (object1->GetX() < (object2->GetX() + object2->GetWidth()) + 5)) {
             std::cout << "cond 2" << std::endl;
             if ((object1->GetY() > (object2->GetY() - object2->GetHeight())) &&
                 (object1->GetY() < (object2->GetY() + object2->GetHeight()))) {
-                return 2;
+                collisions[1] = 1;
             }
         }
 
+        // Collision is occuring below the object
         if (((object1->GetY() + object1->GetHeight()) > (object2->GetY() - 5)) &&
             (object1->GetY() + object1->GetHeight()) < (object2->GetY() + 5)) {
             std::cout << "cond 3" << std::endl;
             if ((object1->GetX() > (object2->GetX() - object2->GetWidth())) &&
                 (object1->GetX() < (object2->GetX() + object2->GetWidth()))) {
-                return 3;
+                collisions[2] = 1;
             }
         }
 
+        // Collision is occuring above the object
         if (((object1->GetY() - 5) < (object2->GetY() + object2->GetHeight())) &&
             ((object1->GetY() + 5) > (object2->GetY() + object2->GetHeight()))) {
             std::cout << "cond 4" << std::endl;
             if ((object1->GetX() > (object2->GetX() - object2->GetWidth())) &&
                 (object1->GetX() < (object2->GetX() + object2->GetWidth()))) {
-                return 4;
+                collisions[3] = 1;
             };
         }
     }
-    return 0;
+
+    return collisions;
 }

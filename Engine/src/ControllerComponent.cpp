@@ -14,10 +14,10 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
     std::vector<SDL_Event> events = gameObject.GetEvents();
 
     const Uint8* currentKey = SDL_GetKeyboardState(NULL);
-    int collisionDirection = gameObject.GetCollisionDirection();
+    int* collisionDirection = gameObject.GetCollisionDirections();
 
     if (currentKey[SDL_SCANCODE_D]) {
-        if (collisionDirection != 1) {
+        if (collisionDirection[0] != 1) {
             if (gameObject.GetXVelocity() <= 0) {
                 gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
             }
@@ -33,7 +33,7 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
         }
     }
     if (currentKey[SDL_SCANCODE_A]) {
-        if (collisionDirection != 2) {
+        if (collisionDirection[1] != 1) {
             if (gameObject.GetXVelocity() >= 0) {
                 gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
             }
@@ -49,7 +49,7 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
         }
     }
     if (currentKey[SDL_SCANCODE_S]) {
-        if (collisionDirection != 3) {
+        if (collisionDirection[2] != 1) {
             if (gameObject.GetYVelocity() <= 0) {
                 gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
             }
@@ -65,7 +65,7 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
         }
     }
     if (currentKey[SDL_SCANCODE_W]) {
-        if (collisionDirection != 4) {
+        if (collisionDirection[3] != 1) {
             if (gameObject.GetYVelocity() >= 0) {
                 gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
             }

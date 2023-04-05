@@ -22,7 +22,7 @@ class PhysicsManager {
 
     void AddCollisionObject(GameObject* collisionObject);
 
-    int GetCollisionDirection(GameObject* object1);
+    int* GetCollisionDirections(GameObject* object1);
 
    private:
     PhysicsManager();

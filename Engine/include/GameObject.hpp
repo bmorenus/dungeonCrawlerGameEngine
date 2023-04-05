@@ -40,8 +40,8 @@ class GameObject {
     int GetFrame();
     void SetFrame(int frame);
 
-    int GetCollisionDirection();
-    void SetCollisionDirection(int collisionDirection);
+    int* GetCollisionDirections();
+    void SetCollisionDirections(int* collisionDirection);
 
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
@@ -54,7 +54,7 @@ class GameObject {
     int mWidth;
     int mHeight;
     int mFrame;
-    int mCollisionDirection;
+    int* mCollisionDirection;
 
     SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;
