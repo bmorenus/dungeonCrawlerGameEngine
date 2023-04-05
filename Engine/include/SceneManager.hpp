@@ -10,8 +10,10 @@
 #include <string>
 #include <vector>
 
+#include "CollisionComponent.hpp"
 #include "ControllerComponent.hpp"
 #include "GameObject.hpp"
+#include "PhysicsManager.hpp"
 #include "ResourceManager.hpp"
 #include "SpriteComponent.hpp"
 #include "TileMap.hpp"
@@ -33,7 +35,7 @@ class SceneManager {
 
     void Update();
 
-    GameObject* CreateGameObject(int xPos, int yPos, int frame);
+    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, int frame);
 
     TileMapComponent* CreateTileMapComponent(std::string spritesheetFile);
 
@@ -60,6 +62,7 @@ class SceneManager {
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;
     TileMapComponent* mTileMapComponent = nullptr;
+    CollisionComponent* mCollisionComponent = nullptr;
 };
 
 #endif

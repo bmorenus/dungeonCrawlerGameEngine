@@ -13,20 +13,42 @@ ControllerComponent::~ControllerComponent() {
 void ControllerComponent::Update(GameObject& gameObject, int frame) {
     std::vector<SDL_Event> events = gameObject.GetEvents();
 
-    for (SDL_Event e : events) {
-        if (e.type == SDL_KEYDOWN) {
-            if (e.key.keysym.sym == SDLK_a) {
-                if (gameObject.GetVelocity() > 0) {
-                    gameObject.SetVelocity(gameObject.GetVelocity() * -ACCELERATION);
-                }
+    const Uint8* currentKey = SDL_GetKeyboardState(NULL);
+    int collisionDirection = gameObject.GetCollisionDirection();
+
+    if (currentKey[SDL_SCANCODE_D]) {
+        if (collisionDirection != 1) {
+            if (gameObject.GetVelocity() <= 0) {
+                gameObject.SetVelocity(gameObject.GetVelocity() + 5);
             }
-            if (e.key.keysym.sym == SDLK_d) {
-                if (gameObject.GetVelocity() < 0) {
-                    gameObject.SetVelocity(gameObject.GetVelocity() * -ACCELERATION);
-                }
+        } else {
+            if (gameObject.GetVelocity() > 0) {
+                gameObject.SetVelocity(gameObject.GetVelocity() - 5);
             }
         }
     }
+    if (!currentKey[SDL_SCANCODE_D]) {
+        if (gameObject.GetVelocity() > 0) {
+            gameObject.SetVelocity(gameObject.GetVelocity() - 5);
+        }
+    }
+    if (currentKey[SDL_SCANCODE_A]) {
+        if (collisionDirection != 2) {
+            if (gameObject.GetVelocity() >= 0) {
+                gameObject.SetVelocity(gameObject.GetVelocity() - 5);
+            }
+        } else {
+            if (gameObject.GetVelocity() < 0) {
+                gameObject.SetVelocity(gameObject.GetVelocity() + 5);
+            }
+        }
+    }
+    if (!currentKey[SDL_SCANCODE_A]) {
+        if (gameObject.GetVelocity() < 0) {
+            gameObject.SetVelocity(gameObject.GetVelocity() + 5);
+        }
+    }
+
     ResetEvents(gameObject);
 }
 

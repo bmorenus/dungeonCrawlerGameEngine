@@ -2,11 +2,14 @@
 
 #include <iostream>
 
-GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int frame) {
+GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
+                       int height, int frame) {
     mXPos = xPos;
     mYPos = yPos;
+    mWidth = width;
+    mHeight = height;
     mFrame = frame;
-    mVelocity = 5;
+    mVelocity = 0;
     mRenderer = renderer;
 }
 
@@ -36,6 +39,14 @@ void GameObject::SetVelocity(int velocity) {
     mVelocity = velocity;
 }
 
+int GameObject::GetCollisionDirection() {
+    return mCollisionDirection;
+}
+
+void GameObject::SetCollisionDirection(int collisionDirection) {
+    mCollisionDirection = collisionDirection;
+}
+
 int GameObject::GetX() {
     return mXPos;
 }
@@ -50,6 +61,14 @@ int GameObject::GetY() {
 
 void GameObject::SetY(int yPos) {
     mYPos = yPos;
+}
+
+int GameObject::GetWidth() {
+    return mWidth;
+}
+
+int GameObject::GetHeight() {
+    return mHeight;
 }
 
 int GameObject::GetFrame() {
