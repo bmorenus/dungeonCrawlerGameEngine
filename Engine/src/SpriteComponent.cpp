@@ -13,12 +13,6 @@ SpriteComponent::~SpriteComponent() {
 }
 
 void SpriteComponent::Update(GameObject& gameObject) {
-    int currentFrame = gameObject.GetFrame();
-    if (currentFrame > 6) {
-        gameObject.SetFrame(0);
-    } else {
-        gameObject.SetFrame(currentFrame + 1);
-    }
 }
 
 void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
@@ -39,10 +33,11 @@ void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     }
 
     int frameIndex = gameObject.GetFrame();
+    std::cout << "Frame index before: " << frameIndex << std::endl;
     if (frameIndex >= frameSequence.size()) {
         frameIndex = 0;
     }
-    std::cout << "Frame index: " << frameIndex << std::endl;
+    std::cout << "Frame index after: " << frameIndex << std::endl;
     std::cout << "Frame sequence size: " << frameSequence.size() << std::endl;
     Frame* frame = frameSequence[frameIndex];
     gameObject.SetFrame(frameIndex + 1);

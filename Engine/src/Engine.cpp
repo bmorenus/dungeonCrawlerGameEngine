@@ -84,7 +84,7 @@ void Engine::MainGameLoop() {
 
     while (!quit) {
         Input(&quit);
-        SDL_Delay(10);  // Frame capping hack
+        SDL_Delay(100);  // Frame capping hack
         Update();
         Render(mIo);
     }

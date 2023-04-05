@@ -16,15 +16,36 @@ void ControllerComponent::Update(GameObject& gameObject) {
     const Uint8* currentKey = SDL_GetKeyboardState(NULL);
     int* collisionDirection = gameObject.GetCollisionDirections();
 
+    for (SDL_Event e : events) {
+        if (e.type == SDL_KEYUP) {
+            switch (e.key.keysym.sym) {
+                case SDLK_d:
+                    gameObject.SetSequence("right_standing");
+                    break;
+                case SDLK_a:
+                    gameObject.SetSequence("left_standing");
+                    break;
+                case SDLK_w:
+                    gameObject.SetSequence("backward_standing");
+                    break;
+                case SDLK_s:
+                    gameObject.SetSequence("forward_standing");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     if (currentKey[SDL_SCANCODE_D]) {
-        gameObject.SetSequence("right_standing");
+        gameObject.SetSequence("right_walking");
         if (collisionDirection[0] != 1) {
             gameObject.SetXVelocity(2);
         } else {
             gameObject.SetXVelocity(0);
         }
     } else if (currentKey[SDL_SCANCODE_A]) {
-        gameObject.SetSequence("left_standing");
+        gameObject.SetSequence("left_walking");
         if (collisionDirection[1] != 1) {
             gameObject.SetXVelocity(-2);
         } else {
@@ -35,14 +56,14 @@ void ControllerComponent::Update(GameObject& gameObject) {
     };
 
     if (currentKey[SDL_SCANCODE_S]) {
-        gameObject.SetSequence("forward_standing");
+        gameObject.SetSequence("forward_walking");
         if (collisionDirection[2] != 1) {
             gameObject.SetYVelocity(2);
         } else {
             gameObject.SetYVelocity(0);
         }
     } else if (currentKey[SDL_SCANCODE_W]) {
-        gameObject.SetSequence("backward_standing");
+        gameObject.SetSequence("backward_walking");
         if (collisionDirection[3] != 1) {
             gameObject.SetYVelocity(-2);
         } else {

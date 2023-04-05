@@ -92,6 +92,18 @@ void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
     // Backward Standing Frame
     Frame* backward_standing = new Frame(73, 8, 22, 21, false);
 
+    // Left Walking Frame
+    Frame* left_walking = new Frame(25, 8, 22, 21, true);
+
+    // Right Walking Frame
+    Frame* right_walking = new Frame(25, 8, 22, 21, false);
+
+    // Forward Walking Frame
+    Frame* forward_walking = new Frame(49, 32, 22, 21, false);
+
+    // Backward Walking Frame
+    Frame* backward_walking = new Frame(73, 56, 22, 21, false);
+
     // Left Standing Sequence
     std::vector<Frame*> left_standing_sequence;
     left_standing_sequence.push_back(left_standing);
@@ -111,6 +123,30 @@ void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
     std::vector<Frame*> backward_standing_sequence;
     backward_standing_sequence.push_back(backward_standing);
     spriteComponent->AddFrameSequence("backward_standing", backward_standing_sequence);
+
+    // Left Walking Sequence
+    std::vector<Frame*> left_walking_sequence;
+    left_walking_sequence.push_back(left_standing);
+    left_walking_sequence.push_back(left_walking);
+    spriteComponent->AddFrameSequence("left_walking", left_walking_sequence);
+
+    // Right Walking Sequence
+    std::vector<Frame*> right_walking_sequence;
+    right_walking_sequence.push_back(right_standing);
+    right_walking_sequence.push_back(right_walking);
+    spriteComponent->AddFrameSequence("right_walking", right_walking_sequence);
+
+    // Forward Walking Sequence
+    std::vector<Frame*> forward_walking_sequence;
+    forward_walking_sequence.push_back(forward_standing);
+    forward_walking_sequence.push_back(forward_walking);
+    spriteComponent->AddFrameSequence("forward_walking", forward_walking_sequence);
+
+    // Backward Walking Sequence
+    std::vector<Frame*> backward_walking_sequence;
+    backward_walking_sequence.push_back(backward_standing);
+    backward_walking_sequence.push_back(backward_walking);
+    spriteComponent->AddFrameSequence("backward_walking", backward_walking_sequence);
 }
 
 void SceneManager::AddTestGameObjects() {
