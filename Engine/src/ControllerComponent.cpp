@@ -18,67 +18,34 @@ void ControllerComponent::Update(GameObject& gameObject, int frame) {
 
     if (currentKey[SDL_SCANCODE_D]) {
         if (collisionDirection[0] != 1) {
-            if (gameObject.GetXVelocity() <= 0) {
-                gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
-            }
+            gameObject.SetXVelocity(2);
         } else {
-            if (gameObject.GetXVelocity() > 0) {
-                gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
-            }
+            gameObject.SetXVelocity(0);
         }
-    }
-    if (!currentKey[SDL_SCANCODE_D]) {
-        if (gameObject.GetXVelocity() > 0) {
-            gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
-        }
-    }
-    if (currentKey[SDL_SCANCODE_A]) {
+    } else if (currentKey[SDL_SCANCODE_A]) {
         if (collisionDirection[1] != 1) {
-            if (gameObject.GetXVelocity() >= 0) {
-                gameObject.SetXVelocity(gameObject.GetXVelocity() - 5);
-            }
+            gameObject.SetXVelocity(-2);
         } else {
-            if (gameObject.GetXVelocity() < 0) {
-                gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
-            }
+            gameObject.SetXVelocity(0);
         }
-    }
-    if (!currentKey[SDL_SCANCODE_A]) {
-        if (gameObject.GetXVelocity() < 0) {
-            gameObject.SetXVelocity(gameObject.GetXVelocity() + 5);
-        }
-    }
+    } else {
+        gameObject.SetXVelocity(0);
+    };
+
     if (currentKey[SDL_SCANCODE_S]) {
         if (collisionDirection[2] != 1) {
-            if (gameObject.GetYVelocity() <= 0) {
-                gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
-            }
+            gameObject.SetYVelocity(2);
         } else {
-            if (gameObject.GetYVelocity() > 0) {
-                gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
-            }
+            gameObject.SetYVelocity(0);
         }
-    }
-    if (!currentKey[SDL_SCANCODE_S]) {
-        if (gameObject.GetYVelocity() > 0) {
-            gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
-        }
-    }
-    if (currentKey[SDL_SCANCODE_W]) {
+    } else if (currentKey[SDL_SCANCODE_W]) {
         if (collisionDirection[3] != 1) {
-            if (gameObject.GetYVelocity() >= 0) {
-                gameObject.SetYVelocity(gameObject.GetYVelocity() - 5);
-            }
+            gameObject.SetYVelocity(-2);
         } else {
-            if (gameObject.GetYVelocity() < 0) {
-                gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
-            }
+            gameObject.SetYVelocity(0);
         }
-    }
-    if (!currentKey[SDL_SCANCODE_W]) {
-        if (gameObject.GetYVelocity() < 0) {
-            gameObject.SetYVelocity(gameObject.GetYVelocity() + 5);
-        }
+    } else {
+        gameObject.SetYVelocity(0);
     }
 
     ResetEvents(gameObject);
