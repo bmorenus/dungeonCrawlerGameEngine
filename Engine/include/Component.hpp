@@ -9,7 +9,7 @@ class Component {
    public:
     Component();
     virtual ~Component();
-    virtual void Update(GameObject& gameObject, int frame) = 0;
+    virtual void Update(GameObject& gameObject) = 0;
     virtual void Render(GameObject& gameObject, SDL_Renderer* renderer) = 0;
 };
 

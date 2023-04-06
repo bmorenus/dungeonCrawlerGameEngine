@@ -11,7 +11,7 @@ TransformComponent::TransformComponent() {
 TransformComponent::~TransformComponent() {
 }
 
-void TransformComponent::Update(GameObject& gameObject, int frame) {
+void TransformComponent::Update(GameObject& gameObject) {
     int gameObjectX = gameObject.GetX();
     int gameObjectY = gameObject.GetY();
 

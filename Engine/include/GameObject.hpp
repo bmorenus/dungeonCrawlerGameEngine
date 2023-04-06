@@ -15,12 +15,16 @@
 
 class GameObject {
    public:
-    GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width, int height, int frame);
+    GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
+               int height, int frame);
     ~GameObject();
 
     void AddEvent(SDL_Event& e);
-    void Update(int frame);
+    void Update();
     void Render(SDL_Renderer* renderer);
+
+    int GetSpeed();
+    void SetSpeed(int speed);
 
     int GetXVelocity();
     void SetXVelocity(int velocity);
@@ -40,6 +44,9 @@ class GameObject {
     int GetFrame();
     void SetFrame(int frame);
 
+    std::string GetSequence();
+    void SetSequence(std::string sequence);
+
     int* GetCollisionDirections();
     void SetCollisionDirections(int* collisionDirection);
 
@@ -49,11 +56,13 @@ class GameObject {
    private:
     int mXVelocity;
     int mYVelocity;
+    int mSpeed;
     int mXPos;
     int mYPos;
     int mWidth;
     int mHeight;
     int mFrame;
+    std::string mSequence = "forward_standing";
     int* mCollisionDirection;
 
     SDL_Renderer* mRenderer;

@@ -11,6 +11,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mFrame = frame;
     mXVelocity = 0;
     mYVelocity = 0;
+    mSpeed = 2;
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
 }
@@ -23,9 +24,9 @@ GameObject::~GameObject() {
 void GameObject::AddEvent(SDL_Event& e) {
     mEvents.push_back(e);
 }
-void GameObject::Update(int frame) {
+void GameObject::Update() {
     for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Update(*this, frame);
+        mComponents[i]->Update(*this);
     }
 }
 void GameObject::Render(SDL_Renderer* renderer) {
@@ -89,6 +90,22 @@ int GameObject::GetFrame() {
 
 void GameObject::SetFrame(int frame) {
     mFrame = frame;
+}
+
+std::string GameObject::GetSequence() {
+    return mSequence;
+}
+
+void GameObject::SetSequence(std::string sequence) {
+    mSequence = sequence;
+}
+
+int GameObject::GetSpeed() {
+    return mSpeed;
+}
+
+void GameObject::SetSpeed(int speed) {
+    mSpeed = speed;
 }
 
 void GameObject::AddComponent(Component* component) {
