@@ -13,6 +13,9 @@ int MAP_Y = 11;
 int TEMP_WIDTH = 50;
 int TEMP_HEIGHT = 50;
 
+int X_BORDER_PX_SIZE = 9;
+int Y_BORDER_PX_SIZE = 14;
+
 SceneManager::SceneManager() {
     std::cout << "Scene Manager Created" << std::endl;
 }
@@ -173,33 +176,27 @@ void SceneManager::AddTestGameObjects() {
     mTileMap->GenerateSimpleMap();
 
     mTileMapComponent = CreateTileMapComponent("./images/Tiles1.bmp");
-
-    for (int yPos = 0; yPos < MAP_Y; yPos++) {
-        for (int xPos = 0; xPos < MAP_X; xPos++) {
-            int currentTile = mTileMap->GetTileType(xPos, yPos);
-            if (currentTile > -1) {
-                GameObject* gameObject = CreateGameObject(xPos * TILE_WIDTH,
-                                                          yPos * TILE_HEIGHT,
-                                                          TEMP_WIDTH,
-                                                          TEMP_HEIGHT,
-                                                          currentTile);
-                gameObject->AddComponent(mTileMapComponent);
-                PhysicsManager::GetInstance().AddCollisionObject(gameObject);
-                AddGameObject(gameObject);
-            }
-        }
-    }
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
         SDL_GetMouseState(&x, &y);
-        GameObject* gameObject = CreateGameObject(x - screenEditorPos.x,
-                                                  y - screenEditorPos.y,
-                                                  TEMP_WIDTH,
-                                                  TEMP_HEIGHT,
+
+        int screenPositionX = x - screenEditorPos.x;
+        int screenPositionY = y - screenEditorPos.y;
+
+        int positionX = ((screenPositionX - (screenPositionX % TILE_WIDTH)) -
+                         X_BORDER_PX_SIZE + (TILE_WIDTH / 2));
+        int positionY = ((screenPositionY - (screenPositionY % TILE_HEIGHT)) -
+                         Y_BORDER_PX_SIZE + (TILE_HEIGHT / 2));
+
+        GameObject* gameObject = CreateGameObject(positionX,
+                                                  positionY,
+                                                  TILE_WIDTH,
+                                                  TILE_HEIGHT,
                                                   12);
+
         gameObject->AddComponent(mTileMapComponent);
         PhysicsManager::GetInstance().AddCollisionObject(gameObject);
         AddGameObject(gameObject);

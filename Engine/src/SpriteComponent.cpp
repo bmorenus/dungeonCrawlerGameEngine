@@ -47,7 +47,7 @@ void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     }
 
     dest.x = xPos - (gameObject.GetWidth() / 2);
-    dest.y = yPos - (gameObject.GetWidth() / 2);
+    dest.y = yPos - (gameObject.GetHeight() / 2);
     dest.w = gameObject.GetWidth();
     dest.h = gameObject.GetHeight();
 
@@ -58,7 +58,6 @@ void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
                      0,
                      NULL,
                      flip);
-    // SDL_RenderCopy(renderer, mTexture, &src, &dest);
 }
 
 void SpriteComponent::AddFrameSequence(std::string name,
