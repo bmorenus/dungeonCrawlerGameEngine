@@ -23,11 +23,11 @@ SpriteComponent::~SpriteComponent(){
 
 // Set the sprite position
 void SpriteComponent::receive(int message1, int message2){
-    if (message1 == 225) {
+    if (message1 == 211) {
       mDest.x = message2;
-    } else if  (message1 == 226) {
+    } else if  (message1 == 212) {
       mDest.y = message2;
-    } else if  (message1 == 227) {
+    } else if  (message1 == 213) {
       mCurrentFrame = message2;
       if(mCurrentFrame>6){
           mCurrentFrame=0;
