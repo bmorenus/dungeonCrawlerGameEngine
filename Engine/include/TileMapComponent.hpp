@@ -5,7 +5,6 @@
 
 #include "Component.hpp"
 #include "TileMap.hpp"
-#include "TinyMath.hpp"
 
 class GameObject;
 

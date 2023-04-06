@@ -2,16 +2,22 @@
 
 #include <iostream>
 
-GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int frame) {
+GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
+                       int height, int frame) {
     mXPos = xPos;
     mYPos = yPos;
+    mWidth = width;
+    mHeight = height;
     mFrame = frame;
-    mVelocity = 5;
+    mXVelocity = 0;
+    mYVelocity = 0;
+    mCollisionDirection = new int[4]();
     mRenderer = renderer;
 }
 
 GameObject::~GameObject() {
     // Make components a shared pointer
+    delete mCollisionDirection;
 }
 
 void GameObject::AddEvent(SDL_Event& e) {
@@ -28,12 +34,29 @@ void GameObject::Render(SDL_Renderer* renderer) {
     }
 }
 
-int GameObject::GetVelocity() {
-    return mVelocity;
+int GameObject::GetXVelocity() {
+    return mXVelocity;
 }
 
-void GameObject::SetVelocity(int velocity) {
-    mVelocity = velocity;
+void GameObject::SetXVelocity(int velocity) {
+    mXVelocity = velocity;
+}
+
+int GameObject::GetYVelocity() {
+    return mYVelocity;
+}
+
+void GameObject::SetYVelocity(int velocity) {
+    mYVelocity = velocity;
+}
+
+int* GameObject::GetCollisionDirections() {
+    return mCollisionDirection;
+}
+
+void GameObject::SetCollisionDirections(int* collisionDirection) {
+    std::copy(collisionDirection, collisionDirection + 4, mCollisionDirection);
+    delete collisionDirection;
 }
 
 int GameObject::GetX() {
@@ -50,6 +73,14 @@ int GameObject::GetY() {
 
 void GameObject::SetY(int yPos) {
     mYPos = yPos;
+}
+
+int GameObject::GetWidth() {
+    return mWidth;
+}
+
+int GameObject::GetHeight() {
+    return mHeight;
 }
 
 int GameObject::GetFrame() {

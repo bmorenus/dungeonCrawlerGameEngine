@@ -26,6 +26,7 @@ struct Vec2D {
             float w{0};  // 'w' is a third hidden component that could be used
                          // to determine if this is being used as a vector or a point
                          // If w=0 then a vector, if w=1 then a point
+                         // DO not use 'w' for any computation however.
         };
         float data[3];  // for convenience if you want to access as 'data' or pass Vec2D as an array
     };
@@ -37,7 +38,9 @@ struct Vec2D {
     // The "Real" constructor we want to use.
     // This initializes the values x,y, and the 'w' value
     Vec2D(float _x = 0, float _y = 0, float _w = 0) {
-        // TODO:
+        x = _x;
+        y = _y;
+        w = _w;
     }
 
     // Index operator, allowing us to access the individual
@@ -66,127 +69,125 @@ struct Vec2D {
     // Multiplication Operator
     // Multiply vector by a uniform-scalar.
     Vec2D& operator*=(float s) {
-        // TODO:
+        assert(data[2] == 0);
+
+        data[0] = data[0] * s;
+        data[1] = data[1] * s;
         return (*this);
     }
 
     // Division Operator
     Vec2D& operator/=(float s) {
-        // TODO:
+        assert(data[2] == 0);
 
+        if (s == 0) {
+            throw std::invalid_argument("Cannot divide by zero");
+        }
+
+        data[0] = data[0] / s;
+        data[1] = data[1] / s;
         return (*this);
     }
 
     // Addition operator
     Vec2D& operator+=(const Vec2D& v) {
-        // TODO:
+        // Assert that a and b are not both point-vectors
+        assert(!(data[2] == 1 && v[2] == 1));
+
+        data[0] = data[0] + v[0];
+        data[1] = data[0] + v[1];
+
+        // If either vector is a point-vector, the result is a point-vector
+        if (data[2] == 1 || v[2] == 1) {
+            data[2] = 1;
+        }
 
         return (*this);
     }
 
     // Subtraction operator
     Vec2D& operator-=(const Vec2D& v) {
-        // TODO:
+        data[0] = data[0] - v[0];
+        data[1] = data[1] - v[1];
+
+        // If either vector is a point-vector, the result is a point-vector
+        if (data[2] == 1 || v[2] == 1) {
+            data[2] = 1;
+        }
 
         return (*this);
-    }
-
-    // Determines if this Vec2D represents a point.
-    bool IsAPoint() const {
-        if (1 == w) {
-            return true;
-        }
-        return false;
-    }
-
-    // Determines if this Vec2D represents a vector.
-    bool IsAVector() const {
-        if (0 == w) {
-            return true;
-        }
-        return false;
-    }
-
-    // Determine if the Vec2D is potentially in an invalid state.
-    // This could occur for instance after trying to add a point and a point together.
-    bool IsValid() const {
-        if (w != 0.0f || w != 1.0f) {
-            return true;
-        }
-        return false;
     }
 };
 
 // Compute the dot product of a Vec2D
 inline float Dot(const Vec2D& a, const Vec2D& b) {
-    // TODO:
-    return 0;
-}
-
-// Test for equality
-// NOTE: Comparing floats is somewhat tricky, meaning that
-//       you will want to take the fabs(lhs.x - lhs.y) < 0.00001
-//       of each component to see if they are 'close enough'
-inline bool operator==(const Vec2D& lhs, const Vec2D& rhs) {
-    bool result = true;
-    // TODO
-    return result;
+    return (a[0] * b[0]) + (a[1] * b[1]);
 }
 
 // Multiplication of a vector by a scalar values
 inline Vec2D operator*(const Vec2D& v, float s) {
-    // TODO:
+    assert(v[2] == 0);
+
     Vec2D vec;
+    vec.x = v.x * s;
+    vec.y = v.y * s;
+    vec.w = v.w;
     return vec;
 }
 
 // Division of a vector by a scalar value.
 inline Vec2D operator/(const Vec2D& v, float s) {
-    // TODO:
+    assert(v[2] == 0);
+
+    if (s == 0) {
+        throw std::invalid_argument("Cannot divide by zero");
+    }
+
     Vec2D vec;
+    vec.x = v.x / s;
+    vec.y = v.y / s;
+    vec.w = v.w;
     return vec;
 }
 
 // Negation of a vector
 // Use Case: Sometimes it is handy to apply a force in an opposite direction
 inline Vec2D operator-(const Vec2D& v) {
-    // TODO:
     Vec2D vec;
+    vec.x = v.x * -1;
+    vec.y = v.y * -1;
+    vec.w = v.w;
     return vec;
 }
 
 // Return the magnitude of a vector
 inline float Magnitude(const Vec2D& v) {
-    // TODO:
-    return 0;
-}
-
-// Add two vectors together
-inline Vec2D operator+(const Vec2D& a, const Vec2D& b) {
-    // TODO:
-    Vec2D vec;
-    return vec;
-}
-
-// Subtract two vectors
-inline Vec2D operator-(const Vec2D& a, const Vec2D& b) {
-    // TODO:
-    Vec2D vec;
-    return vec;
-}
-
-// Vector Projection
-inline Vec2D Project(const Vec2D& a, const Vec2D& b) {
-    // TODO:
-    Vec2D vec;
-    return vec;
+    return sqrt(pow(v.x, 2) + pow(v.y, 2));
 }
 
 // Set a vectors magnitude to 1
 // Note: This is NOT generating a normal vector
 inline Vec2D Normalize(const Vec2D& v) {
-    // TODO:
+    assert(v.w == 0);
+
     Vec2D vec;
+    float magnitude = Magnitude(v);
+    vec.x = v.x / magnitude;
+    vec.y = v.y / magnitude;
+    vec.w = v.w;
+    return vec;
+}
+
+// Vector Projection
+inline Vec2D Project(const Vec2D& a, const Vec2D& b) {
+    assert(a.w == 0 && b.w == 0);
+
+    Vec2D vec;
+    float scalarProj = Dot(a, b) / Magnitude(b);
+    Vec2D uB = Normalize(b);
+
+    vec.x = uB.x * scalarProj;
+    vec.y = uB.y * scalarProj;
     return vec;
 }
 
@@ -195,8 +196,8 @@ inline Vec2D Normalize(const Vec2D& v) {
 // For 2D cross product, this will yield a scalar.
 // You should write this to yield a scalar value.
 inline float CrossProduct(const Vec2D& a, const Vec2D& b) {
-    // TODO:
     float result;
+    result = (a.x * b.y) - (a.y * b.x);
     return result;
 }
 
@@ -229,18 +230,19 @@ struct Matrix3D {
     }
 
     // TODO: Row or column major order you decide!
+    // Row Major Order
     // Matrix constructor with 9 scalar values.
     Matrix3D(float n00, float n01, float n02,
              float n10, float n11, float n12,
              float n20, float n21, float n22) {
         n[0][0] = n00;
-        n[0][1] = n10;
-        n[0][2] = n20;
-        n[1][0] = n01;
+        n[0][1] = n01;
+        n[0][2] = n02;
+        n[1][0] = n10;
         n[1][1] = n11;
-        n[1][2] = n21;
-        n[2][0] = n02;
-        n[2][1] = n12;
+        n[1][2] = n12;
+        n[2][0] = n20;
+        n[2][1] = n21;
         n[2][2] = n22;
     }
 
@@ -279,21 +281,5 @@ struct Matrix3D {
         return (*reinterpret_cast<const Vec2D*>(n[j]));
     }
 };
-
-// Matrix Multiplication
-inline Matrix3D operator*(const Matrix3D& A, const Matrix3D& B) {
-    // TODO:
-    Matrix3D result;
-
-    return result;
-}
-
-// Matrix multiply by a vector
-inline Vec2D operator*(const Matrix3D& M, const Vec2D& v) {
-    // TODO:
-    Vec2D vec;
-
-    return vec;
-}
 
 #endif
