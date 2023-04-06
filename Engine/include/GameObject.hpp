@@ -23,6 +23,9 @@ class GameObject {
     void Update();
     void Render(SDL_Renderer* renderer);
 
+    int GetSpeed();
+    void SetSpeed(int speed);
+
     int GetXVelocity();
     void SetXVelocity(int velocity);
 
@@ -53,6 +56,7 @@ class GameObject {
    private:
     int mXVelocity;
     int mYVelocity;
+    int mSpeed;
     int mXPos;
     int mYPos;
     int mWidth;

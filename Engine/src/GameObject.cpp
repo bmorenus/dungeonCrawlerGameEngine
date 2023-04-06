@@ -11,6 +11,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mFrame = frame;
     mXVelocity = 0;
     mYVelocity = 0;
+    mSpeed = 3;
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
 }
@@ -97,6 +98,14 @@ std::string GameObject::GetSequence() {
 
 void GameObject::SetSequence(std::string sequence) {
     mSequence = sequence;
+}
+
+int GameObject::GetSpeed() {
+    return mSpeed;
+}
+
+void GameObject::SetSpeed(int speed) {
+    mSpeed = speed;
 }
 
 void GameObject::AddComponent(Component* component) {

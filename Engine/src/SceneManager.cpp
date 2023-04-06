@@ -156,7 +156,6 @@ void SceneManager::AddTestGameObjects() {
     SpriteComponent* spriteComponent = CreateSpriteComponent(
         "./images/linkSprite.bmp");
 
-    std::cout << "Sprite Component created" << std::endl;
     AddTestFrameSequences(spriteComponent);
     GameObject* testCharacter = CreateGameObject(100, 100, TEMP_WIDTH,
                                                  TEMP_HEIGHT, 0);
@@ -193,7 +192,6 @@ void SceneManager::AddTestGameObjects() {
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
-    std::cout << "Accepting Input" << std::endl;
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
         SDL_GetMouseState(&x, &y);
@@ -213,16 +211,13 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
 }
 
 void SceneManager::Update() {
-    std::cout << "Updating" << std::endl;
     for (GameObject* gameObject : mGameObjects) {
         gameObject->Update();
     }
 }
 
 void SceneManager::Render() {
-    std::cout << "Rendering" << std::endl;
     for (GameObject* gameObject : mGameObjects) {
         gameObject->Render(mRenderer);
     }
-    std::cout << "Done Rendering" << std::endl;
 }

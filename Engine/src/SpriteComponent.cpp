@@ -18,27 +18,16 @@ void SpriteComponent::Update(GameObject& gameObject) {
 void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     SDL_Rect src, dest;
 
-    std::cout << "Rendering" << std::endl;
     std::string sequenceName = gameObject.GetSequence();
-    std::cout << "SequenceName: " << sequenceName << std::endl;
     std::unordered_map<std::string, std::vector<Frame*>>::iterator it;
 
     it = mFrameSequenceMap.find(sequenceName);
-    std::cout << "null check" << std::endl;
     std::vector<Frame*> frameSequence = it->second;
-    std::cout << "null checked" << std::endl;
-
-    for (int i = 0; i < frameSequence.size(); i++) {
-        std::cout << "Frame sequence x: " << frameSequence[i]->x << std::endl;
-    }
 
     int frameIndex = gameObject.GetFrame();
-    std::cout << "Frame index before: " << frameIndex << std::endl;
     if (frameIndex >= frameSequence.size()) {
         frameIndex = 0;
     }
-    std::cout << "Frame index after: " << frameIndex << std::endl;
-    std::cout << "Frame sequence size: " << frameSequence.size() << std::endl;
     Frame* frame = frameSequence[frameIndex];
     gameObject.SetFrame(frameIndex + 1);
 

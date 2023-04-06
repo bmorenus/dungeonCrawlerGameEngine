@@ -42,6 +42,8 @@ void Engine::Render(ImGuiIO& mIo) {
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     SDL_SetRenderTarget(mRenderer, mScreenTexture);
+    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
+    SDL_RenderClear(mRenderer);
     SceneManager::GetInstance().Render();
     ImGui::NewFrame();
     if (show_demo_window)
@@ -84,7 +86,7 @@ void Engine::MainGameLoop() {
 
     while (!quit) {
         Input(&quit);
-        SDL_Delay(100);  // Frame capping hack
+        SDL_Delay(80);  // Frame capping hack
         Update();
         Render(mIo);
     }
