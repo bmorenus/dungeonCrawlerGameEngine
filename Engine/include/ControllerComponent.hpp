@@ -1,7 +1,11 @@
 #ifndef CONTROLLERCOMPONENT_HPP
 #define CONTROLLERCOMPONENT_HPP
 
+#if defined(LINUX) || defined(MINGW)
+#include <SDL2/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #include "Component.hpp"
 

@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <ostream>
+#include <cassert>
 
 // Forward references of each of the structs
 struct Vec2D;
