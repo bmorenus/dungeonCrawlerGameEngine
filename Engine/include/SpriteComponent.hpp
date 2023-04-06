@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Component.hpp"
-#include "TinyMath.hpp"
 
 /**
  * A small class to demonstrate loading sprites.

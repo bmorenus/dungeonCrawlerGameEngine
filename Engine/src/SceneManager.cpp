@@ -10,6 +10,9 @@ int TILE_HEIGHT = 32;
 int MAP_X = 20;
 int MAP_Y = 11;
 
+int TEMP_WIDTH = 32;
+int TEMP_HEIGHT = 32;
+
 SceneManager::SceneManager() {
     std::cout << "Scene Manager Created" << std::endl;
 }
@@ -43,8 +46,10 @@ void SceneManager::AddGameObject(GameObject* gameObject) {
     mGameObjects.push_back(gameObject);
 }
 
-GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int frame) {
-    GameObject* gameObject = new GameObject(mRenderer, xPos, yPos, frame);
+GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int width,
+                                           int height, int frame) {
+    GameObject* gameObject = new GameObject(mRenderer, xPos, yPos, width,
+                                            height, frame);
     return gameObject;
 }
 
@@ -77,14 +82,18 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
 void SceneManager::AddTestGameObjects() {
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
+    mCollisionComponent = new CollisionComponent();
     SpriteComponent* spriteComponent = CreateSpriteComponent(
         "./images/sprite.bmp");
 
-    GameObject* testCharacter = CreateGameObject(100, 100, 0);
+    GameObject* testCharacter = CreateGameObject(100, 100, TEMP_WIDTH,
+                                                 TEMP_HEIGHT, 0);
     testCharacter->AddComponent(controllerComponent);
     testCharacter->AddComponent(transformComponent);
+    testCharacter->AddComponent(mCollisionComponent);
     testCharacter->AddComponent(spriteComponent);
 
+    PhysicsManager::GetInstance().AddCollisionObject(testCharacter);
     AddGameObject(testCharacter);
 
     mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
@@ -100,8 +109,11 @@ void SceneManager::AddTestGameObjects() {
             if (currentTile > -1) {
                 GameObject* gameObject = CreateGameObject(xPos * TILE_WIDTH,
                                                           yPos * TILE_HEIGHT,
+                                                          TEMP_WIDTH,
+                                                          TEMP_HEIGHT,
                                                           currentTile);
                 gameObject->AddComponent(mTileMapComponent);
+                PhysicsManager::GetInstance().AddCollisionObject(gameObject);
                 AddGameObject(gameObject);
             }
         }
@@ -112,14 +124,13 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
         SDL_GetMouseState(&x, &y);
-        std::cout << "x: " << x << std::endl;
-        std::cout << "y: " << y << std::endl;
-        std::cout << "x-fix: " << x - screenEditorPos.x << std::endl;
-        std::cout << "y-fix: " << y - screenEditorPos.y << std::endl;
         GameObject* gameObject = CreateGameObject(x - screenEditorPos.x,
                                                   y - screenEditorPos.y,
+                                                  TEMP_WIDTH,
+                                                  TEMP_HEIGHT,
                                                   12);
         gameObject->AddComponent(mTileMapComponent);
+        PhysicsManager::GetInstance().AddCollisionObject(gameObject);
         AddGameObject(gameObject);
     }
 
