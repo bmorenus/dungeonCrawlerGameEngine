@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "CollisionComponent.hpp"
 #include "ControllerComponent.hpp"
@@ -54,14 +55,6 @@ class SceneManager {
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
    private:
-    SceneManager();
-
-    ~SceneManager();
-
-    SceneManager(SceneManager const&);
-
-    void operator=(SceneManager const&);
-
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;

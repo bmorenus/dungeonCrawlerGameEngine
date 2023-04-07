@@ -16,25 +16,13 @@ int TEMP_HEIGHT = 50;
 int X_BORDER_PX_SIZE = 9;
 int Y_BORDER_PX_SIZE = 14;
 
-SceneManager::SceneManager() {
-    std::cout << "Scene Manager Created" << std::endl;
-}
-
-SceneManager::SceneManager(SceneManager const&) {
-}
-
-SceneManager::~SceneManager() {
-    std::cout << "Scene Manager Destroyed" << std::endl;
-}
-
 SceneManager& SceneManager::GetInstance() {
-    static SceneManager* sInstance = new SceneManager();
-    return *sInstance;
+    static SceneManager instance;
+    return instance;
 }
 
 void SceneManager::Initialize(SDL_Renderer* renderer) {
     mRenderer = renderer;
-    AddTestGameObjects();
 }
 
 void SceneManager::Shutdown() {
