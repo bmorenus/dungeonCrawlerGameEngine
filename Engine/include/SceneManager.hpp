@@ -41,13 +41,17 @@ class SceneManager {
 
     SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
 
+    void setTilePath(std::string TileFilePath);
+
     void AddTestGameObjects();
 
     void AddGameObject(GameObject* gameObject);
 
     void Shutdown();
 
-   private:
+    SDL_Texture *CreateTexture(std::string spritesheetFile);
+
+    private:
     SceneManager();
 
     ~SceneManager();
@@ -56,12 +60,11 @@ class SceneManager {
 
     void operator=(SceneManager const&);
 
-    SDL_Texture* CreateTexture(std::string spritesheetFile);
-
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;
     TileMapComponent* mTileMapComponent = nullptr;
+    std::string mTileFilePath = "./images/grass.bmp";
     CollisionComponent* mCollisionComponent = nullptr;
 };
 
