@@ -67,6 +67,7 @@ TileMapComponent* SceneManager::CreateTileMapComponent(std::string spritesheetFi
 }
 
 SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
+    std::cout << spritesheetFile << std::endl;
     ResourceManager::GetInstance().LoadResource(spritesheetFile);
     SDL_Surface* sdlSurface = ResourceManager::GetInstance().GetResource(spritesheetFile).get();
     if (nullptr == sdlSurface) {
@@ -124,12 +125,14 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
         SDL_GetMouseState(&x, &y);
+        // determine if click within the window
         GameObject* gameObject = CreateGameObject(x - screenEditorPos.x,
                                                   y - screenEditorPos.y,
                                                   TEMP_WIDTH,
                                                   TEMP_HEIGHT,
-                                                  12);
-        gameObject->AddComponent(mTileMapComponent);
+                                                  0);
+        TileMapComponent *tmpTileMapComponent = CreateTileMapComponent(mTileFilePath);
+        gameObject->AddComponent(tmpTileMapComponent);
         PhysicsManager::GetInstance().AddCollisionObject(gameObject);
         AddGameObject(gameObject);
     }
@@ -137,6 +140,10 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
     for (GameObject* gameObject : mGameObjects) {
         gameObject->AddEvent(e);
     }
+}
+
+void SceneManager::setTilePath(std::string TileFilePath) {
+    mTileFilePath = TileFilePath;
 }
 
 void SceneManager::Update() {

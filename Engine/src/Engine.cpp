@@ -5,9 +5,16 @@
 #include <memory>
 #include <string>
 
-bool show_demo_window = true;
+#include <filesystem>
+namespace fs = std::filesystem;
+
+bool show_demo_window = false;
 bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+std::vector<SDL_Texture *> tmpp;
+std::vector<std::string> vc;
+std::vector<int> tw, th;
 
 Engine::Engine() {
 }
@@ -44,8 +51,74 @@ void Engine::Render(ImGuiIO& mIo) {
     SDL_SetRenderTarget(mRenderer, mScreenTexture);
     SceneManager::GetInstance().Render();
     ImGui::NewFrame();
-    if (show_demo_window)
+
+    ImGuiWindowFlags window_flags = 1 << 10;
+    bool op = true;
+    if (false)
         ImGui::ShowDemoWindow(&show_demo_window);
+    else
+    {
+        ImGui::Begin("Dear ImGui Demo", &op, window_flags);
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("Tiles"))
+            {
+                ImGui::MenuItem("lol", NULL, true);
+                // ImGui::ListBox();
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+        if (ImGui::CollapsingHeader("Tiles")) {
+            static int item_current = 1;
+            const char *items[vc.size()];
+            for (int i = 0; i < vc.size(); i ++)
+                items[i] = vc[i].c_str();
+            static int item_current_idx = 0;
+            if(ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing()))) {
+                for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+                {
+                    const bool is_selected = (item_current_idx == n);
+                    if (ImGui::Selectable(items[n], is_selected))
+                        item_current_idx = n;
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (is_selected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                SceneManager::GetInstance().setTilePath(vc[item_current_idx]);
+                ImGui::EndListBox();
+            }
+        }
+
+        for (int i = 0; i < vc.size(); i++)
+        {
+            // UV coordinates are often (0.0f, 0.0f) and (1.0f, 1.0f) to display an entire textures.
+            // Here are trying to display only a 32x32 pixels area of the texture, hence the UV computation.
+            // Read about UV coordinates here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+            ImGui::PushID(i);
+            if (i > 0)
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(i - 1.0f, i - 1.0f));
+            ImVec2 size = ImVec2(32.0f, 32.0f);                      // Size of the image we want to make visible
+            ImVec2 uv0 = ImVec2(0.0f, 0.0f);                         // UV coordinates for lower-left
+            ImVec2 uv1 = ImVec2(32.0f / tw[i], 32.0f / th[i]);       // UV coordinates for (32,32) in our texture
+            ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);          // Black background
+            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);        // No tint
+            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col))
+            {
+                SceneManager::GetInstance().setTilePath(vc[i]);
+                // std::cout << vc[i] << std::endl;
+            }
+            if (i > 0)
+                ImGui::PopStyleVar();
+            ImGui::PopID();
+            ImGui::SameLine();
+        }
+
+        ImGui::PopItemWidth();
+        ImGui::End();
+    }
     {
         ImGui::Begin("Scene Editor", NULL, ImGuiWindowFlags_NoTitleBar);
         ImGui::Image(mScreenTexture, ImVec2(640, 360));
@@ -74,14 +147,13 @@ void Engine::MainGameLoop() {
     mIo.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    // ImGui::StyleColorsLight();
+    // ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(mWindow, mRenderer);
     ImGui_ImplSDLRenderer_Init(mRenderer);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
     while (!quit) {
         Input(&quit);
         SDL_Delay(10);  // Frame capping hack
@@ -95,6 +167,21 @@ void Engine::Start() {
         std::cout << "Initializing Graphics Subsystem\n";
     } else {
         std::cout << "No Graphics Subsystem initialized\n";
+    }
+
+    /* Save the texture of tiles to show in imgui */
+    for (const auto &imageFileEntry : std::filesystem::directory_iterator("images/"))
+    {
+        std::cout << imageFileEntry.path().generic_string() << std::endl;
+        vc.push_back(imageFileEntry.path().generic_string());
+    }
+    tw.resize(vc.size());
+    th.resize(vc.size());
+    for (int i = 0; i < vc.size(); i++)
+    {
+        auto t = SceneManager::GetInstance().CreateTexture(vc[i]);
+        tmpp.push_back(t);
+        SDL_QueryTexture(tmpp[i], nullptr, nullptr, &tw[i], &th[i]);
     }
 }
 
@@ -120,6 +207,7 @@ int Engine::InitializeGraphicsSubSystem() {
     mWindow = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     mScreenTexture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, 640, 360);
+
     if (mRenderer == NULL) {
         SDL_Log("Error creating SDL_Renderer!");
         return 0;
