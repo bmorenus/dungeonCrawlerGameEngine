@@ -23,7 +23,7 @@ ResourceManager& ResourceManager::GetInstance() {
 
 void ResourceManager::Initialize(std::string imageDirPath) {
     for (const auto& imageFileEntry : std::filesystem::directory_iterator(imageDirPath)) {
-        ResourceManager::GetInstance().LoadResource(imageFileEntry.path());
+        ResourceManager::GetInstance().LoadResource(imageFileEntry.path().generic_string());
     }
 }
 

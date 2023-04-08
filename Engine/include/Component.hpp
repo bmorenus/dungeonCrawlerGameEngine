@@ -1,7 +1,11 @@
 #ifndef COMPONENT_HPP
 #define COMPONENT_HPP
 
+#if defined(LINUX) || defined(MINGW)
+#include <SDL2/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 class GameObject;
 

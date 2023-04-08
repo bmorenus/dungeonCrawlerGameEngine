@@ -28,8 +28,8 @@ void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     int xPos = gameObject.GetX();
     int yPos = gameObject.GetY();
 
-    src.x = (frame % cols) * width;
-    src.y = (frame / rows) * height;
+    src.x = 0;
+    src.y = 0;
     src.w = width;
     src.h = height;
 
