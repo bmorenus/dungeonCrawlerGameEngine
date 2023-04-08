@@ -11,7 +11,7 @@ CollisionComponent::CollisionComponent() {
 CollisionComponent::~CollisionComponent() {
 }
 
-void CollisionComponent::Update(GameObject& gameObject, int frame) {
+void CollisionComponent::Update(GameObject& gameObject) {
     int* collisions = PhysicsManager::GetInstance().GetCollisionDirections(&gameObject);
     gameObject.SetCollisionDirections(collisions);
 }

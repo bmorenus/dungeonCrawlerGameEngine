@@ -12,31 +12,55 @@ SpriteComponent::~SpriteComponent() {
     SDL_DestroyTexture(mTexture);
 }
 
-void SpriteComponent::Update(GameObject& gameObject, int frame) {
-    int currentFrame = gameObject.GetFrame();
-    if (currentFrame > 6) {
-        gameObject.SetFrame(0);
-    } else {
-        gameObject.SetFrame(currentFrame + 1);
-    }
+void SpriteComponent::Update(GameObject& gameObject) {
 }
 
 void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
     SDL_Rect src, dest;
 
-    int currentFrame = gameObject.GetFrame();
+    std::string sequenceName = gameObject.GetSequence();
+    std::unordered_map<std::string, std::vector<Frame*>>::iterator it;
+
+    it = mFrameSequenceMap.find(sequenceName);
+    std::vector<Frame*> frameSequence = it->second;
+
+    int frameIndex = gameObject.GetFrame();
+    if (frameIndex >= frameSequence.size()) {
+        frameIndex = 0;
+    }
+    Frame* frame = frameSequence[frameIndex];
+    gameObject.SetFrame(frameIndex + 1);
+
     int xPos = gameObject.GetX();
     int yPos = gameObject.GetY();
 
-    src.x = currentFrame * 75;
-    src.y = 0;
-    src.w = 75;
-    src.h = 87;
+    src.x = frame->x;
+    src.y = frame->y;
+    src.w = frame->w;
+    src.h = frame->h;
 
-    dest.x = xPos;
-    dest.y = yPos;
-    dest.w = 128;
-    dest.h = 128;
+    SDL_RendererFlip flip;
+    if (!frame->reverse) {
+        flip = SDL_FLIP_NONE;
+    } else {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
 
-    SDL_RenderCopy(renderer, mTexture, &src, &dest);
+    dest.x = xPos - (gameObject.GetWidth() / 2);
+    dest.y = yPos - (gameObject.GetHeight() / 2);
+    dest.w = gameObject.GetWidth();
+    dest.h = gameObject.GetHeight();
+
+    SDL_RenderCopyEx(renderer,
+                     mTexture,
+                     &src,
+                     &dest,
+                     0,
+                     NULL,
+                     flip);
+}
+
+void SpriteComponent::AddFrameSequence(std::string name,
+                                       std::vector<Frame*> frameSequence) {
+    mFrameSequenceMap.insert({name, frameSequence});
 }

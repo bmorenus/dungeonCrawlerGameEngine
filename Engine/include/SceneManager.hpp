@@ -7,6 +7,7 @@
 #include <SDL.h>
 #endif
 
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -44,14 +45,15 @@ class SceneManager {
     void setTilePath(std::string TileFilePath);
 
     void AddTestGameObjects();
+    void AddTestFrameSequences(SpriteComponent* spriteComponent);
 
     void AddGameObject(GameObject* gameObject);
 
     void Shutdown();
 
-    SDL_Texture *CreateTexture(std::string spritesheetFile);
+    SDL_Texture* CreateTexture(std::string spritesheetFile);
 
-    private:
+   private:
     SceneManager();
 
     ~SceneManager();

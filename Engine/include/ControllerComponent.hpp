@@ -15,7 +15,7 @@ class ControllerComponent : public Component {
    public:
     ControllerComponent();
     ~ControllerComponent();
-    void Update(GameObject& gameObject, int frame) override;
+    void Update(GameObject& gameObject) override;
     void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
    private:

@@ -13,15 +13,18 @@
 #include "SpriteComponent.hpp"
 #include "TransformComponent.hpp"
 
-class GameObject
-{
-public:
-    GameObject(SDL_Renderer *renderer, int xPos, int yPos, int width, int height, int frame);
+class GameObject {
+   public:
+    GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
+               int height, int frame);
     ~GameObject();
 
-    void AddEvent(SDL_Event &e);
-    void Update(int frame);
-    void Render(SDL_Renderer *renderer);
+    void AddEvent(SDL_Event& e);
+    void Update();
+    void Render(SDL_Renderer* renderer);
+
+    int GetSpeed();
+    void SetSpeed(int speed);
 
     int GetXVelocity();
     void SetXVelocity(int velocity);
@@ -41,25 +44,30 @@ public:
     int GetFrame();
     void SetFrame(int frame);
 
-    int *GetCollisionDirections();
-    void SetCollisionDirections(int *collisionDirection);
+    std::string GetSequence();
+    void SetSequence(std::string sequence);
 
-    void AddComponent(Component *component);
+    int* GetCollisionDirections();
+    void SetCollisionDirections(int* collisionDirection);
+
+    void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
 
-private:
+   private:
     int mXVelocity;
     int mYVelocity;
+    int mSpeed;
     int mXPos;
     int mYPos;
     int mWidth;
     int mHeight;
     int mFrame;
-    int *mCollisionDirection;
+    std::string mSequence = "forward_standing";
+    int* mCollisionDirection;
 
-    SDL_Renderer *mRenderer;
+    SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;
-    std::vector<Component *> mComponents;
+    std::vector<Component*> mComponents;
     ControllerComponent mControllerComponent;
     TransformComponent mTransformComponent;
 };

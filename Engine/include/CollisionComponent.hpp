@@ -12,11 +12,11 @@
 class GameObject;
 
 class CollisionComponent : public Component {
-public:
+   public:
     CollisionComponent();
     ~CollisionComponent();
-    void Update(GameObject &gameObject, int frame) override;
-    void Render(GameObject &gameObject, SDL_Renderer *renderer) override;
+    void Update(GameObject& gameObject) override;
+    void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 };
 
 #endif
