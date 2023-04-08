@@ -38,8 +38,6 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
 }
 
 void SceneManager::Shutdown() {
-    delete mTileMapComponent;
-
     for (GameObject* gameObject : mGameObjects) {
         delete gameObject;
     }
@@ -162,6 +160,7 @@ void SceneManager::AddTestGameObjects() {
     AddTestFrameSequences(spriteComponent);
     GameObject* testCharacter = CreateGameObject(100, 100, TEMP_WIDTH,
                                                  TEMP_HEIGHT, 0);
+
     testCharacter->AddComponent(controllerComponent);
     testCharacter->AddComponent(transformComponent);
     testCharacter->AddComponent(mCollisionComponent);
@@ -174,8 +173,6 @@ void SceneManager::AddTestGameObjects() {
                            mRenderer);
 
     mTileMap->GenerateSimpleMap();
-
-    mTileMapComponent = CreateTileMapComponent("./images/Tiles1.bmp");
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
@@ -197,7 +194,8 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
                                                   TILE_HEIGHT,
                                                   12);
 
-        gameObject->AddComponent(mTileMapComponent);
+        TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mTileFilePath);
+        gameObject->AddComponent(tmpTileMapComponent);
         PhysicsManager::GetInstance().AddCollisionObject(gameObject);
         AddGameObject(gameObject);
     }
@@ -205,6 +203,10 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
     for (GameObject* gameObject : mGameObjects) {
         gameObject->AddEvent(e);
     }
+}
+
+void SceneManager::setTilePath(std::string TileFilePath) {
+    mTileFilePath = TileFilePath;
 }
 
 void SceneManager::Update() {
