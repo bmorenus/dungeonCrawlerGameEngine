@@ -17,6 +17,19 @@ int X_BORDER_PX_SIZE = 9;
 int Y_BORDER_PX_SIZE = 14;
 
 SceneManager::SceneManager() {
+    mCollisionComponent = new CollisionComponent();
+    mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
+                           mRenderer);
+
+    CharacterCreator* mainCharacterCreator =
+        new CharacterCreator("main-character",
+                             std::bind(&SceneManager::CreateMainCharacter,
+                                       this,
+                                       std::placeholders::_1,
+                                       std::placeholders::_2,
+                                       std::placeholders::_3,
+                                       std::placeholders::_4));
+
     std::cout << "Scene Manager Created" << std::endl;
 }
 
@@ -45,6 +58,23 @@ void SceneManager::Shutdown() {
 
 void SceneManager::AddGameObject(GameObject* gameObject) {
     mGameObjects.push_back(gameObject);
+}
+
+void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
+    ControllerComponent* controllerComponent = new ControllerComponent();
+    TransformComponent* transformComponent = new TransformComponent();
+    SpriteComponent* spriteComponent = CreateSpriteComponent(
+        "./images/linkSprite.bmp");
+
+    AddTestFrameSequences(spriteComponent);
+    GameObject* mainCharacter = CreateGameObject(x, y, width, height, 0);
+    mainCharacter->AddComponent(controllerComponent);
+    mainCharacter->AddComponent(transformComponent);
+    mainCharacter->AddComponent(mCollisionComponent);
+    mainCharacter->AddComponent(spriteComponent);
+
+    PhysicsManager::GetInstance().AddCollisionObject(mainCharacter);
+    AddGameObject(mainCharacter);
 }
 
 GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int width,
@@ -151,28 +181,7 @@ void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
 }
 
 void SceneManager::AddTestGameObjects() {
-    ControllerComponent* controllerComponent = new ControllerComponent();
-    TransformComponent* transformComponent = new TransformComponent();
-    mCollisionComponent = new CollisionComponent();
-    SpriteComponent* spriteComponent = CreateSpriteComponent(
-        "./images/linkSprite.bmp");
-
-    AddTestFrameSequences(spriteComponent);
-    GameObject* testCharacter = CreateGameObject(100, 100, TEMP_WIDTH,
-                                                 TEMP_HEIGHT, 0);
-
-    testCharacter->AddComponent(controllerComponent);
-    testCharacter->AddComponent(transformComponent);
-    testCharacter->AddComponent(mCollisionComponent);
-    testCharacter->AddComponent(spriteComponent);
-
-    PhysicsManager::GetInstance().AddCollisionObject(testCharacter);
-    AddGameObject(testCharacter);
-
-    mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y,
-                           mRenderer);
-
-    mTileMap->GenerateSimpleMap();
+    CreateMainCharacter(100, 100, TEMP_WIDTH, TEMP_HEIGHT);
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {

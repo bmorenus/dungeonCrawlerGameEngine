@@ -24,6 +24,17 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer.h"
 
+struct CharacterCreator {
+    std::string characterName;
+    std::function<void(int, int, int, int)> creationFunction;
+
+    CharacterCreator(std::string _name,
+                     std::function<void(int, int, int, int)> _creationFunction) {
+        characterName = _name;
+        creationFunction = _creationFunction;
+    }
+};
+
 class SceneManager {
    public:
     static SceneManager& GetInstance();
@@ -42,9 +53,14 @@ class SceneManager {
 
     SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
 
+    void CreateMainCharacter(int x, int y, int width, int height);
+
+    void CreateMapTile(int x, int y, int width, int height);
+
     void setTilePath(std::string TileFilePath);
 
     void AddTestGameObjects();
+
     void AddTestFrameSequences(SpriteComponent* spriteComponent);
 
     void AddGameObject(GameObject* gameObject);
@@ -65,9 +81,10 @@ class SceneManager {
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;
-    TileMapComponent* mTileMapComponent = nullptr;
     std::string mTileFilePath = "./images/grass.bmp";
     CollisionComponent* mCollisionComponent = nullptr;
+    CharacterCreator* mCurrentCreator = nullptr;
+    std::vector<CharacterCreator*> mCharacterCreators;
 };
 
 #endif
