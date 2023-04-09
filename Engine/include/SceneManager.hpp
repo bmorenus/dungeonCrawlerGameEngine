@@ -8,6 +8,7 @@
 #endif
 
 #include <filesystem>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -83,14 +84,6 @@ class SceneManager {
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
    private:
-    SceneManager();
-
-    ~SceneManager();
-
-    SceneManager(SceneManager const&);
-
-    void operator=(SceneManager const&);
-
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;

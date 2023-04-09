@@ -16,7 +16,13 @@ int TEMP_HEIGHT = 50;
 int X_BORDER_PX_SIZE = 9;
 int Y_BORDER_PX_SIZE = 14;
 
-SceneManager::SceneManager() {
+SceneManager& SceneManager::GetInstance() {
+    static SceneManager instance;
+    return instance;
+}
+
+void SceneManager::Initialize(SDL_Renderer* renderer) {
+    mRenderer = renderer;
     mCollisionComponent = new CollisionComponent();
     std::cout << mRenderer << std::endl;
     mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y);
@@ -59,29 +65,22 @@ SceneManager::SceneManager() {
                                        std::placeholders::_3,
                                        std::placeholders::_4));
 
+    CharacterCreator* flowerTile =
+        new CharacterCreator("flower-tile",
+                             "images/tiles/flower.bmp",
+                             TILE_WIDTH,
+                             TILE_HEIGHT,
+                             std::bind(&SceneManager::CreateMapTile,
+                                       this,
+                                       std::placeholders::_1,
+                                       std::placeholders::_2,
+                                       std::placeholders::_3,
+                                       std::placeholders::_4));
+
     mCharacterCreators.push_back(groundTile);
     mCharacterCreators.push_back(grassTile);
+    mCharacterCreators.push_back(flowerTile);
     mCharacterCreators.push_back(mainCharacterCreator);
-
-    std::cout << "Scene Manager Created" << std::endl;
-}
-
-SceneManager::SceneManager(SceneManager const&) {
-}
-
-SceneManager::~SceneManager() {
-    std::cout << "Scene Manager Destroyed" << std::endl;
-}
-
-SceneManager& SceneManager::GetInstance() {
-    static SceneManager* sInstance = new SceneManager();
-    return *sInstance;
-}
-
-void SceneManager::Initialize(SDL_Renderer* renderer) {
-    mRenderer = renderer;
-    std::cout << mRenderer << std::endl;
-    AddTestGameObjects();
 }
 
 void SceneManager::Shutdown() {
