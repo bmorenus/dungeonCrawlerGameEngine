@@ -18,7 +18,7 @@ class TileMap {
      * Constructor for a tilemap
      */
     TileMap(int rows, int cols, int _TileWidth, int _TileHeight, int _mapX,
-            int _mapY, SDL_Renderer* ren);
+            int _mapY);
     /**
      * Destructor for a tilemap
      */
