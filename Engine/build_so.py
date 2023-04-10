@@ -9,10 +9,10 @@ SOURCE = "./src/*.cpp"
 ARGUMENTS = "-D MAC -std=c++17 -shared -undefined dynamic_lookup"
 
 # Which directories do we want to include.
-INCLUDE_DIR = "-I ./include/ -I./ThirdParty/imgui/HeaderFiles/ -I/Library/Frameworks/SDL2.framework/Headers `python -m pybind11 --includes`"
+INCLUDE_DIR = "-I ./include/ -I./ThirdParty/imgui/HeaderFiles/ -I/Library/Frameworks/SDL2.framework/Headers `python3 -m pybind11 --includes`"
 
 # What libraries do we want to include
-LIBRARIES = "-F/Library/Frameworks -framework SDL2 `python-config --ldflags`"
+LIBRARIES = "-F/Library/Frameworks -framework SDL2 `python3-config --ldflags`"
 
 # The name of our executable
 EXECUTABLE = "mygameengine.so"

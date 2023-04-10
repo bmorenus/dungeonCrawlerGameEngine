@@ -1,11 +1,10 @@
-#include "Engine.hpp"
-#include "Renderer.hpp"
 #include <pybind11/pybind11.h>
+
+#include "Engine.hpp"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(mygameengine, m) {
-
     py::class_<Engine>(m, "Engine")
         .def(py::init<>())
         .def("Start", &Engine::Start)

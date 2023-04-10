@@ -14,11 +14,7 @@
 // number of tiles in the game that the player sees, not how many tiles
 // are in the actual sprite sheet file loaded.
 TileMap::TileMap(int rows, int cols, int _TileWidth, int _TileHeight,
-                 int _mapX, int _mapY, SDL_Renderer* ren) {
-    if (nullptr == ren) {
-        SDL_Log("No valid renderer found");
-    }
-
+                 int _mapX, int _mapY) {
     mRows = rows;
     mCols = cols;
     mTileWidth = _TileWidth;

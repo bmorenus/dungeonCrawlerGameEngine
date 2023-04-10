@@ -35,7 +35,7 @@ class PhysicsManager {
 
     std::vector<GameObject*> mGameObjects;
 
-    int mCollisionBuffer = 3;
+    int mCollisionBuffer = 4;
     int mStandoffBuffer = 17;
 };
 
