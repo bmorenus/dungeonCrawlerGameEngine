@@ -21,3 +21,5 @@ cmake-build-debug
 CMakeLists.txt
 
 *.ini
+
+mygameengine.so
