@@ -67,6 +67,10 @@ class SceneManager {
 
     void CreateMapTile(int x, int y, int width, int height);
 
+    void CreateGrassMapTile(int x, int y, int width, int height);
+
+    void CreateCoinMapTile(int x, int y, int width, int height);
+
     void setCharacterCreator(CharacterCreator* mCurrentCreator);
 
     void AddTestGameObjects();

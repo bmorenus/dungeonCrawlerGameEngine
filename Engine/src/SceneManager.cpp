@@ -58,7 +58,7 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
                              "images/tiles/grass.bmp",
                              TILE_WIDTH,
                              TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateMapTile,
+                             std::bind(&SceneManager::CreateGrassMapTile,
                                        this,
                                        std::placeholders::_1,
                                        std::placeholders::_2,
@@ -77,9 +77,22 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
                                        std::placeholders::_3,
                                        std::placeholders::_4));
 
+    CharacterCreator* coinTile =
+        new CharacterCreator("coin-tile",
+                             "images/tiles/coin.bmp",
+                             TILE_WIDTH,
+                             TILE_HEIGHT,
+                             std::bind(&SceneManager::CreateCoinMapTile,
+                                       this,
+                                       std::placeholders::_1,
+                                       std::placeholders::_2,
+                                       std::placeholders::_3,
+                                       std::placeholders::_4));
+
     mCharacterCreators.push_back(groundTile);
     mCharacterCreators.push_back(grassTile);
     mCharacterCreators.push_back(flowerTile);
+    mCharacterCreators.push_back(coinTile);
     mCharacterCreators.push_back(mainCharacterCreator);
 }
 
@@ -130,6 +143,48 @@ void SceneManager::CreateMapTile(int x, int y, int width, int height) {
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     gameObject->AddComponent(tmpTileMapComponent);
+    PhysicsManager::GetInstance().AddCollisionObject(gameObject);
+    AddGameObject(gameObject);
+}
+
+void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
+    int positionX = ((x - (x % width)) -
+                     X_BORDER_PX_SIZE + (width / 2));
+    int positionY = ((y - (y % height)) -
+                     Y_BORDER_PX_SIZE + (height / 2));
+
+    std::cout << "rcreating map tile" << std::endl;
+
+    GameObject* gameObject = CreateGameObject(positionX,
+                                              positionY,
+                                              width,
+                                              height,
+                                              12);
+
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    gameObject->AddComponent(tmpTileMapComponent);
+    gameObject->objectType = ObjectType::GRASS;
+    PhysicsManager::GetInstance().AddCollisionObject(gameObject);
+    AddGameObject(gameObject);
+}
+
+void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
+    int positionX = ((x - (x % width)) -
+                     X_BORDER_PX_SIZE + (width / 2));
+    int positionY = ((y - (y % height)) -
+                     Y_BORDER_PX_SIZE + (height / 2));
+
+    std::cout << "rcreating map tile" << std::endl;
+
+    GameObject* gameObject = CreateGameObject(positionX,
+                                              positionY,
+                                              width,
+                                              height,
+                                              12);
+
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    gameObject->AddComponent(tmpTileMapComponent);
+    gameObject->objectType = ObjectType::COIN;
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
     AddGameObject(gameObject);
 }
@@ -281,7 +336,7 @@ void SceneManager::Update() {
 }
 
 void SceneManager::Render() {
-    for (GameObject* gameObject : mGameObjects) {
-        gameObject->Render(mRenderer);
+    for (int i = mGameObjects.size() - 1; i >= 0; i--) {
+        mGameObjects.at(i)->Render(mRenderer);
     }
 }

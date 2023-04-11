@@ -30,8 +30,10 @@ void GameObject::Update() {
     }
 }
 void GameObject::Render(SDL_Renderer* renderer) {
-    for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Render(*this, renderer);
+    if (isRender) {
+        for (int i = 0; i < mComponents.size(); i++) {
+            mComponents[i]->Render(*this, renderer);
+        }
     }
 }
 
