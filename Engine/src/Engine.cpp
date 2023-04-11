@@ -59,58 +59,47 @@ void Engine::Render(ImGuiIO& mIo) {
     else {
         ImGui::Begin("Dear ImGui Demo", &op, window_flags);
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-        if (ImGui::BeginMenuBar()) {
-            if (ImGui::BeginMenu("Sprites")) {
-                ImGui::MenuItem("lol", NULL, true);
-                // ImGui::ListBox();
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar();
-        }
-        if (ImGui::CollapsingHeader("Sprite Selection")) {
-            const char* items[SceneManager::GetInstance().GetCharacterCreators().size()];
+        static int current_tile_index = 0;
+        if (ImGui::CollapsingHeader("Sprite Selection"))
+        {
+            static int item_current = 1;
+            const char *items[SceneManager::GetInstance().GetCharacterCreators().size()];
             for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++)
                 items[i] = SceneManager::GetInstance().GetCharacterCreators()[i]->characterName.c_str();
-            static int item_current_idx = 0;
-            if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing()))) {
-                for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
-                    const bool is_selected = (item_current_idx == n);
-                    if (ImGui::Selectable(items[n], is_selected))
-                        item_current_idx = n;
+            if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+            {
+                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+                {
+                    const bool is_selected = (current_tile_index == i);
+                    if (ImGui::Selectable(items[i], is_selected))
+                        current_tile_index = i;
 
-                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                    if (is_selected) {
+                    if (is_selected)
                         ImGui::SetItemDefaultFocus();
-                        SceneManager::GetInstance().setCharacterCreator(SceneManager::GetInstance().GetCharacterCreators()[item_current_idx]);
-                    }
                 }
                 ImGui::EndListBox();
             }
         }
 
-        for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++) {
-            // UV coordinates are often (0.0f, 0.0f) and (1.0f, 1.0f) to display an entire textures.
-            // Here are trying to display only a 32x32 pixels area of the texture, hence the UV computation.
-            // Read about UV coordinates here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+        for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++)
+        {
+            bool isClick = false;
             ImGui::PushID(i);
-            if (i > 0)
-                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(i - 1.0f, i - 1.0f));
-            ImVec2 size = ImVec2(32.0f, 32.0f);                 // Size of the image we want to make visible
-            ImVec2 uv0 = ImVec2(0.0f, 0.0f);                    // UV coordinates for lower-left
-            ImVec2 uv1 = ImVec2(32.0f / tw[i], 32.0f / th[i]);  // UV coordinates for (32,32) in our texture
-            ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);     // Black background
-            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col)) {
-                SceneManager::GetInstance().setCharacterCreator(SceneManager::GetInstance().GetCharacterCreators()[i]);
-                // std::cout << vc[i] << std::endl;
+            ImVec2 size = ImVec2(32.0f, 32.0f);
+            ImVec2 uv0 = ImVec2(0.0f, 0.0f);
+            ImVec2 uv1 = ImVec2(32.0f / tw[i], 32.0f / th[i]);
+            ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col))
+            {
+                current_tile_index = i;
             }
-            if (i > 0)
-                ImGui::PopStyleVar();
+            if (current_tile_index == i)
+                ImGui::SetItemDefaultFocus();
             ImGui::PopID();
-
             ImGui::SameLine();
         }
-
+        SceneManager::GetInstance().setCharacterCreator(SceneManager::GetInstance().GetCharacterCreators()[current_tile_index]);
         ImGui::PopItemWidth();
         ImGui::End();
     }
