@@ -67,6 +67,19 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
                 collisions[3] = 1;
             };
         }
+
+        if (object2->objectType == ObjectType::COIN) {
+            for (int i = 0; i < 4; i++) {
+                if (collisions[i] == 1)
+                    object2->isRender = false;
+                collisions[i] = 0;
+            }
+        }
+
+        if (object2->objectType == ObjectType::GRASS) {
+            for (int i = 0; i < 4; i++)
+                collisions[i] = 0;
+        }
     }
 
     return collisions;

@@ -13,6 +13,12 @@
 #include "SpriteComponent.hpp"
 #include "TransformComponent.hpp"
 
+enum ObjectType {
+    DEFAULT,
+    GRASS,
+    COIN
+};
+
 class GameObject {
    public:
     GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
@@ -52,6 +58,9 @@ class GameObject {
 
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
+
+    ObjectType objectType = ObjectType::DEFAULT;
+    bool isRender = true;
 
    private:
     int mXVelocity;
