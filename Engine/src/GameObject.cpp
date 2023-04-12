@@ -3,7 +3,7 @@
 #include <iostream>
 
 GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
-                       int height, int frame) {
+                       int height, ObjectType type, int frame) {
     mXPos = xPos;
     mYPos = yPos;
     mWidth = width;
@@ -14,6 +14,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mSpeed = 3;
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
+    mObjectType = type;
 }
 
 GameObject::~GameObject() {

@@ -58,7 +58,7 @@ class SceneManager {
 
     void Update();
 
-    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, int frame);
+    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, ObjectType type, int frame);
 
     TileMapComponent* CreateTileMapComponent(std::string spritesheetFile);
 
