@@ -30,10 +30,8 @@ void GameObject::Update() {
     }
 }
 void GameObject::Render(SDL_Renderer* renderer) {
-    if (isRender) {
-        for (int i = 0; i < mComponents.size(); i++) {
-            mComponents[i]->Render(*this, renderer);
-        }
+    for (int i = 0; i < mComponents.size(); i++) {
+        mComponents[i]->Render(*this, renderer);
     }
 }
 
@@ -108,6 +106,14 @@ int GameObject::GetSpeed() {
 
 void GameObject::SetSpeed(int speed) {
     mSpeed = speed;
+}
+
+bool GameObject::GetIsDeleted() {
+    return mIsDeleted;
+}
+
+void GameObject::SetIsDeleted(bool isDeleted) {
+    mIsDeleted = isDeleted;
 }
 
 void GameObject::AddComponent(Component* component) {

@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "CoinCollisionComponent.hpp"
 #include "CollisionComponent.hpp"
 #include "ControllerComponent.hpp"
 #include "GameObject.hpp"

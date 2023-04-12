@@ -163,7 +163,6 @@ void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     gameObject->AddComponent(tmpTileMapComponent);
-    gameObject->objectType = ObjectType::GRASS;
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
     AddGameObject(gameObject);
 }
@@ -183,8 +182,9 @@ void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
                                               12);
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    CoinCollisionComponent* coinCollisionComponent = new CoinCollisionComponent();
     gameObject->AddComponent(tmpTileMapComponent);
-    gameObject->objectType = ObjectType::COIN;
+    gameObject->AddComponent(coinCollisionComponent);
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
     AddGameObject(gameObject);
 }
@@ -330,8 +330,15 @@ std::vector<CharacterCreator*> SceneManager::GetTileCreators() {
 }
 
 void SceneManager::Update() {
-    for (GameObject* gameObject : mGameObjects) {
-        gameObject->Update();
+    for (auto it = mGameObjects.begin(); it != mGameObjects.end();) {
+        GameObject* gameObject = *it;
+        if (!gameObject->GetIsDeleted()) {
+            gameObject->Update();
+            ++it;
+        } else {
+            delete gameObject;
+            it = mGameObjects.erase(it);
+        }
     }
 }
 

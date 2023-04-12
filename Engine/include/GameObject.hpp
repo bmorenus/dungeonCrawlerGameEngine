@@ -13,12 +13,6 @@
 #include "SpriteComponent.hpp"
 #include "TransformComponent.hpp"
 
-enum ObjectType {
-    DEFAULT,
-    GRASS,
-    COIN
-};
-
 class GameObject {
    public:
     GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
@@ -50,6 +44,9 @@ class GameObject {
     int GetFrame();
     void SetFrame(int frame);
 
+    bool GetIsDeleted();
+    void SetIsDeleted(bool isDeleted);
+
     std::string GetSequence();
     void SetSequence(std::string sequence);
 
@@ -59,8 +56,6 @@ class GameObject {
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
 
-    ObjectType objectType = ObjectType::DEFAULT;
-    bool isRender = true;
 
    private:
     int mXVelocity;
@@ -73,6 +68,7 @@ class GameObject {
     int mFrame;
     std::string mSequence = "forward_standing";
     int* mCollisionDirection;
+    bool mIsDeleted = false;
 
     SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;
