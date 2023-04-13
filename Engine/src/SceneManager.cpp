@@ -346,6 +346,6 @@ void SceneManager::Update() {
 
 void SceneManager::Render() {
     for (int i = mGameObjects.size() - 1; i >= 0; i--) {
-        mGameObjects.at(i)->Render(mRenderer);
+        mGameObjects.at(i)->Render();
     }
 }

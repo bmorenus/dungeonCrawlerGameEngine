@@ -25,14 +25,16 @@ GameObject::~GameObject() {
 void GameObject::AddEvent(SDL_Event& e) {
     mEvents.push_back(e);
 }
+
 void GameObject::Update() {
     for (int i = 0; i < mComponents.size(); i++) {
         mComponents[i]->Update(*this);
     }
 }
-void GameObject::Render(SDL_Renderer* renderer) {
+
+void GameObject::Render() {
     for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Render(*this, renderer);
+        mComponents[i]->Render(*this, mRenderer);
     }
 }
 
