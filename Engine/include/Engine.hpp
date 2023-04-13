@@ -84,6 +84,8 @@ class Engine {
     SDL_Texture* mScreenTexture;
     ImVec2 mScreenEditorPos;
     bool mLevelSelectionOn = true;
+    std::string mCurrentLevelName = "Custom Level";
+    std::vector<std::string> mLevelNames;
 };
 
 #endif

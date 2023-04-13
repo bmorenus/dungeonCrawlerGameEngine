@@ -12,7 +12,9 @@ class FileManager {
 
     void Initialize();
 
-    int SaveLevel(std::string filename, GameLevel* gameLevel);
+    int SaveLevel(std::string filename, std::vector<std::vector<std::string>> gameLevel);
+
+    std::vector<std::vector<std::string>> LoadLevel(std::string filename);
 
     std::string FILE_PATH = "./LevelFiles/";
     std::string FILE_EXT = ".gamefile";

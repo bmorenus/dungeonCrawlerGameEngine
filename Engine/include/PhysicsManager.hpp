@@ -24,6 +24,8 @@ class PhysicsManager {
 
     int* GetCollisionDirections(GameObject* object1);
 
+    void ClearCollisionObjects();
+
    private:
     PhysicsManager();
 

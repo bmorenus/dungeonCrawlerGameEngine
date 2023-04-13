@@ -28,6 +28,10 @@ void PhysicsManager::AddCollisionObject(GameObject* collisionObject) {
     mGameObjects.push_back(collisionObject);
 }
 
+void PhysicsManager::ClearCollisionObjects() {
+    mGameObjects.clear();
+}
+
 int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
     int* collisions = new int[4]();
 

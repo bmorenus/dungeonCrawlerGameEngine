@@ -15,6 +15,7 @@ std::vector<SDL_Texture*> tmpp;
 std::vector<int> tw, th;
 
 Engine::Engine() {
+    mLevelNames.push_back("Custom Level");
 }
 
 Engine::~Engine() {
@@ -56,25 +57,7 @@ void Engine::Render(ImGuiIO& mIo) {
     bool op = true;
 
     static int selected_level = -1;
-    const char* names[] = {"Custom Level",
-                           "Level 1: The Awakening"};
     static bool toggles[] = {true, false, false, false};
-    {
-        ImGui::Begin("Level Section Menu", &op, window_flags);
-        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-        if (ImGui::TreeNode("Select your level:")) {
-            static int selected = 0;
-            for (int n = 0; n < 2; n++) {
-                char buf[32];
-                sprintf(buf, "%s", names[n]);
-                if (ImGui::Selectable(buf, selected == n))
-                    selected = n;
-            }
-            ImGui::TreePop();
-        }
-        ImGui::PopItemWidth();
-        ImGui::End();
-    }
     {
         ImGui::Begin("Dear ImGui Demo", &op, window_flags);
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
@@ -96,7 +79,9 @@ void Engine::Render(ImGuiIO& mIo) {
             ImGui::PopID();
             ImGui::SameLine();
         }
-        SceneManager::GetInstance().setCharacterCreator(SceneManager::GetInstance().GetCharacterCreators()[current_tile_index]);
+        SceneManager::GetInstance()
+            .setCharacterCreator(SceneManager::GetInstance()
+                                     .GetCharacterCreators()[current_tile_index]);
         ImGui::NewLine();
         static int clicked = 0;
         ImGui::SeparatorText("Level Save");
@@ -104,17 +89,26 @@ void Engine::Render(ImGuiIO& mIo) {
         ImGui::InputText(".gamefile", filename, 64);
         ImGui::NewLine();
         if (ImGui::Button("Save Level")) {
-            GameLevel* gameLevel = SceneManager::GetInstance().BuildGameLevel(filename);
-            FileManager::GetInstance().SaveLevel(filename, gameLevel);
+            std::vector<std::vector<std::string>> gameLevelData = SceneManager::GetInstance()
+                                                                      .EncodeGameLevel(filename);
+            FileManager::GetInstance().SaveLevel(filename, gameLevelData);
+            mLevelNames.push_back(filename);
         }
         ImGui::SeparatorText("Level Load");
         if (ImGui::TreeNode("Select your level:")) {
             static int selected = 0;
-            for (int n = 0; n < 2; n++) {
-                char buf[32];
-                sprintf(buf, "%s", names[n]);
-                if (ImGui::Selectable(buf, selected == n))
+            for (int n = 0; n < mLevelNames.size(); n++) {
+                char gameLevels[32];
+                sprintf(gameLevels, "%s", mLevelNames.at(n).c_str());
+                if (ImGui::Selectable(gameLevels, selected == n)) {
                     selected = n;
+                    if (mCurrentLevelName != mLevelNames.at(n)) {
+                        std::vector<std::vector<std::string>> gameLevelData =
+                            FileManager::GetInstance().LoadLevel(mLevelNames.at(n));
+                        SceneManager::GetInstance().BuildGameLevel(gameLevelData);
+                        mCurrentLevelName = mLevelNames.at(n);
+                    }
+                }
             }
             ImGui::TreePop();
         }
@@ -170,6 +164,11 @@ void Engine::Start() {
     } else {
         std::cout << "No Graphics Subsystem initialized\n";
     }
+
+    std::cout << "Loading startup game file\n";
+    std::vector<std::vector<std::string>> gameLevelData =
+        FileManager::GetInstance().LoadLevel(mCurrentLevelName);
+    SceneManager::GetInstance().BuildGameLevel(gameLevelData);
 
     tw.resize(SceneManager::GetInstance().GetCharacterCreators().size());
     th.resize(SceneManager::GetInstance().GetCharacterCreators().size());

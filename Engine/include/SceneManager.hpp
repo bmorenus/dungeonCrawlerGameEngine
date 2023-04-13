@@ -32,13 +32,13 @@ struct CharacterCreator {
     std::string imageFilePath;
     int width;
     int height;
-    std::function<void(int, int, int, int)> creationFunction;
+    std::function<GameObject*(int, int, int, int)> creationFunction;
 
     CharacterCreator(std::string _name,
                      std::string _filePath,
                      int _width,
                      int _height,
-                     std::function<void(int, int, int, int)> _creationFunction) {
+                     std::function<GameObject*(int, int, int, int)> _creationFunction) {
         characterName = _name;
         imageFilePath = _filePath;
         width = _width;
@@ -66,13 +66,15 @@ class SceneManager {
 
     SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
 
-    void CreateMainCharacter(int x, int y, int width, int height);
+    GameObject* CreateMainCharacter(int x, int y, int width, int height);
 
-    void CreateMapTile(int x, int y, int width, int height);
+    GameObject* CreateMapTile(int x, int y, int width, int height);
 
-    void CreateGrassMapTile(int x, int y, int width, int height);
+    GameObject* CreateGrassMapTile(int x, int y, int width, int height);
 
-    void CreateCoinMapTile(int x, int y, int width, int height);
+    GameObject* CreateCoinMapTile(int x, int y, int width, int height);
+
+    GameObject* CreateFlowerMapTile(int x, int y, int width, int height);
 
     void setCharacterCreator(CharacterCreator* mCurrentCreator);
 
@@ -82,7 +84,9 @@ class SceneManager {
 
     void AddGameObject(GameObject* gameObject);
 
-    GameLevel* BuildGameLevel(std::string filename);
+    std::vector<std::vector<std::string>> EncodeGameLevel(std::string filename);
+
+    int BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData);
 
     std::vector<CharacterCreator*> GetCharacterCreators();
 
@@ -100,6 +104,7 @@ class SceneManager {
     CharacterCreator* mCurrentCreator = nullptr;
     std::vector<CharacterCreator*> mCharacterCreators;
     std::vector<CharacterCreator*> mTileCreators;
+    std::unordered_map<std::string, CharacterCreator*> mCharacterCreatorsMap;
 };
 
 #endif

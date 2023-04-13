@@ -70,7 +70,7 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
                              "images/tiles/flower.bmp",
                              TILE_WIDTH,
                              TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateMapTile,
+                             std::bind(&SceneManager::CreateFlowerMapTile,
                                        this,
                                        std::placeholders::_1,
                                        std::placeholders::_2,
@@ -94,6 +94,12 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
     mCharacterCreators.push_back(flowerTile);
     mCharacterCreators.push_back(coinTile);
     mCharacterCreators.push_back(mainCharacterCreator);
+
+    mCharacterCreatorsMap.insert({"main-character", mainCharacterCreator});
+    mCharacterCreatorsMap.insert({"ground-tile", groundTile});
+    mCharacterCreatorsMap.insert({"grass-tile", grassTile});
+    mCharacterCreatorsMap.insert({"flower-tile", flowerTile});
+    mCharacterCreatorsMap.insert({"coin-tile", coinTile});
 }
 
 void SceneManager::Shutdown() {
@@ -106,7 +112,7 @@ void SceneManager::AddGameObject(GameObject* gameObject) {
     mGameObjects.push_back(gameObject);
 }
 
-void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
+GameObject* SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
     SpriteComponent* spriteComponent = CreateSpriteComponent(
@@ -126,10 +132,10 @@ void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
     mainCharacter->AddComponent(spriteComponent);
 
     PhysicsManager::GetInstance().AddCollisionObject(mainCharacter);
-    AddGameObject(mainCharacter);
+    return mainCharacter;
 }
 
-void SceneManager::CreateMapTile(int x, int y, int width, int height) {
+GameObject* SceneManager::CreateMapTile(int x, int y, int width, int height) {
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -141,15 +147,15 @@ void SceneManager::CreateMapTile(int x, int y, int width, int height) {
                                               height,
                                               ObjectType::TILE,
                                               12,
-                                              "map-tile");
+                                              "ground-tile");
 
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent("./images/tiles/ground.bmp");
     gameObject->AddComponent(tmpTileMapComponent);
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
-    AddGameObject(gameObject);
+    return gameObject;
 }
 
-void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
+GameObject* SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -163,12 +169,12 @@ void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
                                               12,
                                               "grass-tile");
 
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent("./images/tiles/grass.bmp");
     gameObject->AddComponent(tmpTileMapComponent);
-    AddGameObject(gameObject);
+    return gameObject;
 }
 
-void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
+GameObject* SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -182,12 +188,31 @@ void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
                                               12,
                                               "coin-tile");
 
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent("./images/tiles/coin.bmp");
     CoinCollisionComponent* coinCollisionComponent = new CoinCollisionComponent();
     gameObject->AddComponent(tmpTileMapComponent);
     gameObject->AddComponent(coinCollisionComponent);
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
-    AddGameObject(gameObject);
+    return gameObject;
+}
+
+GameObject* SceneManager::CreateFlowerMapTile(int x, int y, int width, int height) {
+    int positionX = ((x - (x % width)) -
+                     X_BORDER_PX_SIZE + (width / 2));
+    int positionY = ((y - (y % height)) -
+                     Y_BORDER_PX_SIZE + (height / 2));
+
+    GameObject* gameObject = CreateGameObject(positionX,
+                                              positionY,
+                                              width,
+                                              height,
+                                              ObjectType::TILE,
+                                              12,
+                                              "flower-tile");
+
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent("./images/tiles/flower.bmp");
+    gameObject->AddComponent(tmpTileMapComponent);
+    return gameObject;
 }
 
 GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int width,
@@ -307,10 +332,12 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
 
         std::cout << mCurrentCreator->imageFilePath << std::endl;
 
-        mCurrentCreator->creationFunction(screenPositionX,
-                                          screenPositionY,
-                                          mCurrentCreator->width,
-                                          mCurrentCreator->height);
+        GameObject* gameObject = mCurrentCreator->creationFunction(screenPositionX,
+                                                                   screenPositionY,
+                                                                   mCurrentCreator->width,
+                                                                   mCurrentCreator->height);
+
+        AddGameObject(gameObject);
     }
 
     for (GameObject* gameObject : mGameObjects) {
@@ -330,9 +357,47 @@ std::vector<CharacterCreator*> SceneManager::GetTileCreators() {
     return mTileCreators;
 }
 
-GameLevel* SceneManager::BuildGameLevel(std::string filename) {
-    GameLevel* gameLevel = new GameLevel(filename, mGameObjects);
-    return gameLevel;
+std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel(std::string filename) {
+    std::vector<std::vector<std::string>> gameLevelData;
+
+    for (GameObject* gameObject : mGameObjects) {
+        std::vector<std::string> gameObjectData;
+
+        gameObjectData.push_back(gameObject->GetTag());
+        gameObjectData.push_back(std::to_string(gameObject->GetX()));
+        gameObjectData.push_back(std::to_string(gameObject->GetY()));
+        gameObjectData.push_back(std::to_string(gameObject->GetWidth()));
+        gameObjectData.push_back(std::to_string(gameObject->GetHeight()));
+
+        gameLevelData.push_back(gameObjectData);
+    }
+    return gameLevelData;
+}
+
+int SceneManager::BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData) {
+    mGameObjects.clear();
+    PhysicsManager::GetInstance().ClearCollisionObjects();
+
+    for (std::vector<std::string> gameObjectData : gameLevelData) {
+        std::string gameObjectTag = gameObjectData.at(0);
+
+        std::unordered_map<std::string, CharacterCreator*>::iterator it;
+        it = mCharacterCreatorsMap.find(gameObjectTag);
+
+        if (it != mCharacterCreatorsMap.end()) {
+            int xPos = stoi(gameObjectData.at(1));
+            int yPos = stoi(gameObjectData.at(2));
+            int width = stoi(gameObjectData.at(3));
+            int height = stoi(gameObjectData.at(4));
+
+            CharacterCreator* creator = it->second;
+            GameObject* gameObject = creator->creationFunction(xPos, yPos, width, height);
+            AddGameObject(gameObject);
+        } else {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void SceneManager::Update() {

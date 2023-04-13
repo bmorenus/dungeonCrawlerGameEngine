@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-struct GameObject;
+class GameObject;
 
-struct GameLevel {
+class GameLevel {
     std::string filename;
     std::vector<GameObject*> gameObjects;
 
