@@ -118,16 +118,19 @@ void GameObject::SetIsDeleted(bool isDeleted) {
     mIsDeleted = isDeleted;
 }
 
+ObjectType GameObject::GetObjectType() {
+    return mObjectType;
+}
+void GameObject::SetObjectType(ObjectType objectType) {
+    mObjectType = objectType;
+}
+
 void GameObject::AddComponent(Component* component) {
     mComponents.push_back(component);
 }
 
 std::vector<SDL_Event> GameObject::GetEvents() {
     return mEvents;
-}
-
-ObjectType GameObject::GetObjectType() {
-    return mObjectType;
 }
 
 std::vector<Component*> GameObject::GetComponents() {
