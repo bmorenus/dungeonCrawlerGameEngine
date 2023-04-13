@@ -15,7 +15,6 @@ std::vector<SDL_Texture*> tmpp;
 std::vector<int> tw, th;
 
 Engine::Engine() {
-    mLevelNames.push_back("Custom Level");
 }
 
 Engine::~Engine() {
@@ -170,6 +169,10 @@ void Engine::Start() {
         FileManager::GetInstance().LoadLevel(mCurrentLevelName);
     SceneManager::GetInstance().BuildGameLevel(gameLevelData);
 
+    for (const auto& gameFileEntry : std::filesystem::directory_iterator("./LevelFiles")) {
+        AddToGameFiles(gameFileEntry.path().generic_string());
+    }
+
     tw.resize(SceneManager::GetInstance().GetCharacterCreators().size());
     th.resize(SceneManager::GetInstance().GetCharacterCreators().size());
     for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++) {
@@ -222,4 +225,10 @@ void Engine::InitializeSceneManagerSubSystem() {
 
 void Engine::InitializeFileManagerSubSystem() {
     FileManager::GetInstance().Initialize();
+}
+
+void Engine::AddToGameFiles(std::string filename) {
+    size_t extIndex = filename.find_last_of(".");
+    std::string gameLevelName = filename.substr(13, (extIndex - 13));
+    mLevelNames.push_back(gameLevelName);
 }

@@ -77,14 +77,14 @@ class Engine {
     void InitializeFileManagerSubSystem();
 
    private:
+    void AddToGameFiles(std::string filename);
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     SDL_Texture* mScreenTexture;
     ImVec2 mScreenEditorPos;
-    bool mLevelSelectionOn = true;
-    std::string mCurrentLevelName = "Custom Level";
+    std::string mCurrentLevelName = "Empty Level Template";
     std::vector<std::string> mLevelNames;
 };
 
