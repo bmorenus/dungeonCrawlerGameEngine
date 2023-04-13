@@ -3,7 +3,7 @@
 #include <iostream>
 
 GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
-                       int height, int frame) {
+                       int height, ObjectType type, int frame) {
     mXPos = xPos;
     mYPos = yPos;
     mWidth = width;
@@ -14,6 +14,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mSpeed = 3;
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
+    mObjectType = type;
 }
 
 GameObject::~GameObject() {
@@ -30,10 +31,8 @@ void GameObject::Update() {
     }
 }
 void GameObject::Render(SDL_Renderer* renderer) {
-    if (isRender) {
-        for (int i = 0; i < mComponents.size(); i++) {
-            mComponents[i]->Render(*this, renderer);
-        }
+    for (int i = 0; i < mComponents.size(); i++) {
+        mComponents[i]->Render(*this, renderer);
     }
 }
 
@@ -108,6 +107,21 @@ int GameObject::GetSpeed() {
 
 void GameObject::SetSpeed(int speed) {
     mSpeed = speed;
+}
+
+bool GameObject::GetIsDeleted() {
+    return mIsDeleted;
+}
+
+void GameObject::SetIsDeleted(bool isDeleted) {
+    mIsDeleted = isDeleted;
+}
+
+ObjectType GameObject::GetObjectType() {
+    return mObjectType;
+}
+void GameObject::SetObjectType(ObjectType objectType) {
+    mObjectType = objectType;
 }
 
 void GameObject::AddComponent(Component* component) {

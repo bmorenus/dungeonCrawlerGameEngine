@@ -32,6 +32,15 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
     int* collisions = new int[4]();
 
     for (GameObject* object2 : mGameObjects) {
+        if (object2->GetIsDeleted()) {
+            continue;
+        }
+
+        if ((object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::TILE) ||
+            (object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::COIN)) {
+            continue;
+        }
+
         // Collision is occuring to the right of the object
         if (((object1->GetX() + (object1->GetWidth() / 2)) > (object2->GetX() - (object2->GetWidth() / 2) - mCollisionBuffer)) &&
             ((object1->GetX() + (object1->GetWidth() / 2)) < (object2->GetX() - (object2->GetWidth() / 2)))) {
@@ -66,19 +75,6 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
                 (object1->GetX() < (object2->GetX() + std::max(object1->GetWidth() / 2, object2->GetWidth() / 2) + mStandoffBuffer))) {
                 collisions[3] = 1;
             };
-        }
-
-        if (object2->objectType == ObjectType::COIN) {
-            for (int i = 0; i < 4; i++) {
-                if (collisions[i] == 1)
-                    object2->isRender = false;
-                collisions[i] = 0;
-            }
-        }
-
-        if (object2->objectType == ObjectType::GRASS) {
-            for (int i = 0; i < 4; i++)
-                collisions[i] = 0;
         }
     }
 

@@ -15,14 +15,14 @@
 
 enum ObjectType {
     DEFAULT,
-    GRASS,
+    TILE,
     COIN
 };
 
 class GameObject {
    public:
     GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
-               int height, int frame);
+               int height, ObjectType type, int frame);
     ~GameObject();
 
     void AddEvent(SDL_Event& e);
@@ -50,6 +50,12 @@ class GameObject {
     int GetFrame();
     void SetFrame(int frame);
 
+    bool GetIsDeleted();
+    void SetIsDeleted(bool isDeleted);
+
+    ObjectType GetObjectType();
+    void SetObjectType(ObjectType objectType);
+
     std::string GetSequence();
     void SetSequence(std::string sequence);
 
@@ -59,8 +65,6 @@ class GameObject {
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
 
-    ObjectType objectType = ObjectType::DEFAULT;
-    bool isRender = true;
 
    private:
     int mXVelocity;
@@ -73,6 +77,8 @@ class GameObject {
     int mFrame;
     std::string mSequence = "forward_standing";
     int* mCollisionDirection;
+    bool mIsDeleted = false;
+    ObjectType mObjectType = ObjectType::DEFAULT;
 
     SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;
