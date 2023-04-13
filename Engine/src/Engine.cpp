@@ -54,35 +54,33 @@ void Engine::Render(ImGuiIO& mIo) {
 
     ImGuiWindowFlags window_flags = 1 << 10;
     bool op = true;
-    if (false)
-        ImGui::ShowDemoWindow(&show_demo_window);
-    else {
+
+    static int selected_level = -1;
+    const char* names[] = {"Custom Level",
+                           "Level 1: The Awakening"};
+    static bool toggles[] = {true, false, false, false};
+    {
+        ImGui::Begin("Level Section Menu", &op, window_flags);
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+        if (ImGui::TreeNode("Select your level:")) {
+            static int selected = 0;
+            for (int n = 0; n < 2; n++) {
+                char buf[32];
+                sprintf(buf, "%s", names[n]);
+                if (ImGui::Selectable(buf, selected == n))
+                    selected = n;
+            }
+            ImGui::TreePop();
+        }
+        ImGui::PopItemWidth();
+        ImGui::End();
+    }
+    {
         ImGui::Begin("Dear ImGui Demo", &op, window_flags);
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
         static int current_tile_index = 0;
-        if (ImGui::CollapsingHeader("Sprite Selection"))
-        {
-            static int item_current = 1;
-            const char *items[SceneManager::GetInstance().GetCharacterCreators().size()];
-            for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++)
-                items[i] = SceneManager::GetInstance().GetCharacterCreators()[i]->characterName.c_str();
-            if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
-            {
-                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
-                {
-                    const bool is_selected = (current_tile_index == i);
-                    if (ImGui::Selectable(items[i], is_selected))
-                        current_tile_index = i;
-
-                    if (is_selected)
-                        ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndListBox();
-            }
-        }
-
-        for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++)
-        {
+        ImGui::SeparatorText("Game Object Selection:");
+        for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++) {
             bool isClick = false;
             ImGui::PushID(i);
             ImVec2 size = ImVec2(32.0f, 32.0f);
@@ -90,8 +88,7 @@ void Engine::Render(ImGuiIO& mIo) {
             ImVec2 uv1 = ImVec2(32.0f / tw[i], 32.0f / th[i]);
             ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
             ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col))
-            {
+            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col)) {
                 current_tile_index = i;
             }
             if (current_tile_index == i)
@@ -100,6 +97,27 @@ void Engine::Render(ImGuiIO& mIo) {
             ImGui::SameLine();
         }
         SceneManager::GetInstance().setCharacterCreator(SceneManager::GetInstance().GetCharacterCreators()[current_tile_index]);
+        ImGui::NewLine();
+        static int clicked = 0;
+        ImGui::SeparatorText("Level Save");
+        static char filename[64] = "";
+        ImGui::InputText(".gamefile", filename, 64);
+        ImGui::NewLine();
+        if (ImGui::Button("Save Level")) {
+            GameLevel* gameLevel = SceneManager::GetInstance().BuildGameLevel(filename);
+            FileManager::GetInstance().SaveLevel(filename, gameLevel);
+        }
+        ImGui::SeparatorText("Level Load");
+        if (ImGui::TreeNode("Select your level:")) {
+            static int selected = 0;
+            for (int n = 0; n < 2; n++) {
+                char buf[32];
+                sprintf(buf, "%s", names[n]);
+                if (ImGui::Selectable(buf, selected == n))
+                    selected = n;
+            }
+            ImGui::TreePop();
+        }
         ImGui::PopItemWidth();
         ImGui::End();
     }
@@ -201,4 +219,8 @@ void Engine::InitializeResourceSubSystem() {
 
 void Engine::InitializeSceneManagerSubSystem() {
     SceneManager::GetInstance().Initialize(mRenderer);
+}
+
+void Engine::InitializeFileManagerSubSystem() {
+    FileManager::GetInstance().Initialize();
 }

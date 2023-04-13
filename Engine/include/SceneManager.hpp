@@ -15,6 +15,7 @@
 #include "CoinCollisionComponent.hpp"
 #include "CollisionComponent.hpp"
 #include "ControllerComponent.hpp"
+#include "GameLevel.hpp"
 #include "GameObject.hpp"
 #include "PhysicsManager.hpp"
 #include "ResourceManager.hpp"
@@ -58,7 +59,8 @@ class SceneManager {
 
     void Update();
 
-    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, ObjectType type, int frame);
+    GameObject* CreateGameObject(int xPos, int yPos, int width, int height,
+                                 ObjectType type, int frame, std::string tag);
 
     TileMapComponent* CreateTileMapComponent(std::string spritesheetFile);
 
@@ -79,6 +81,8 @@ class SceneManager {
     void AddTestFrameSequences(SpriteComponent* spriteComponent);
 
     void AddGameObject(GameObject* gameObject);
+
+    GameLevel* BuildGameLevel(std::string filename);
 
     std::vector<CharacterCreator*> GetCharacterCreators();
 

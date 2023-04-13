@@ -22,7 +22,8 @@ enum ObjectType {
 class GameObject {
    public:
     GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
-               int height, ObjectType type, int frame);
+               int height, ObjectType type, int frame, std::string tag);
+
     ~GameObject();
 
     void AddEvent(SDL_Event& e);
@@ -62,6 +63,11 @@ class GameObject {
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
 
+    ObjectType GetObjectType();
+    std::string GetTag();
+
+    std::vector<Component*> GetComponents();
+
     bool isRender = true;
     ObjectType mObjectType = ObjectType::DEFAULT;
 
@@ -77,12 +83,11 @@ class GameObject {
     std::string mSequence = "forward_standing";
     int* mCollisionDirection;
     bool mIsDeleted = false;
+    std::string mTag = "";
 
     SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;
     std::vector<Component*> mComponents;
-    ControllerComponent mControllerComponent;
-    TransformComponent mTransformComponent;
 };
 
 #endif

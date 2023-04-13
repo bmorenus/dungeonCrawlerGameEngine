@@ -107,24 +107,26 @@ void SceneManager::AddGameObject(GameObject* gameObject) {
 }
 
 void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
-    std::cout << "conrollting" << std::endl;
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
     SpriteComponent* spriteComponent = CreateSpriteComponent(
         "./images/spritesheets/linkSprite.bmp");
 
-    std::cout << "framing" << std::endl;
     AddTestFrameSequences(spriteComponent);
-    GameObject* mainCharacter = CreateGameObject(x, y, width, height, ObjectType::DEFAULT, 0);
+    GameObject* mainCharacter = CreateGameObject(x,
+                                                 y,
+                                                 width,
+                                                 height,
+                                                 ObjectType::DEFAULT,
+                                                 0,
+                                                 "main-character");
     mainCharacter->AddComponent(controllerComponent);
     mainCharacter->AddComponent(transformComponent);
     mainCharacter->AddComponent(mCollisionComponent);
     mainCharacter->AddComponent(spriteComponent);
 
-    std::cout << "colliding" << std::endl;
     PhysicsManager::GetInstance().AddCollisionObject(mainCharacter);
     AddGameObject(mainCharacter);
-    std::cout << "completed" << std::endl;
 }
 
 void SceneManager::CreateMapTile(int x, int y, int width, int height) {
@@ -133,14 +135,13 @@ void SceneManager::CreateMapTile(int x, int y, int width, int height) {
     int positionY = ((y - (y % height)) -
                      Y_BORDER_PX_SIZE + (height / 2));
 
-    std::cout << "rcreating map tile" << std::endl;
-
     GameObject* gameObject = CreateGameObject(positionX,
                                               positionY,
                                               width,
                                               height,
                                               ObjectType::TILE,
-                                              12);
+                                              12,
+                                              "map-tile");
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     gameObject->AddComponent(tmpTileMapComponent);
@@ -154,14 +155,13 @@ void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
     int positionY = ((y - (y % height)) -
                      Y_BORDER_PX_SIZE + (height / 2));
 
-    std::cout << "rcreating map tile" << std::endl;
-
     GameObject* gameObject = CreateGameObject(positionX,
                                               positionY,
                                               width,
                                               height,
                                               ObjectType::TILE,
-                                              12);
+                                              12,
+                                              "grass-tile");
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     gameObject->AddComponent(tmpTileMapComponent);
@@ -174,14 +174,13 @@ void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
     int positionY = ((y - (y % height)) -
                      Y_BORDER_PX_SIZE + (height / 2));
 
-    std::cout << "rcreating map tile" << std::endl;
-
     GameObject* gameObject = CreateGameObject(positionX,
                                               positionY,
                                               width,
                                               height,
                                               ObjectType::COIN,
-                                              12);
+                                              12,
+                                              "coin-tile");
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     CoinCollisionComponent* coinCollisionComponent = new CoinCollisionComponent();
@@ -192,9 +191,10 @@ void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
 }
 
 GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int width,
-                                           int height, ObjectType type, int frame) {
+                                           int height, ObjectType type,
+                                           int frame, std::string tag) {
     GameObject* gameObject = new GameObject(mRenderer, xPos, yPos, width,
-                                            height, type, frame);
+                                            height, type, frame, tag);
     return gameObject;
 }
 
@@ -217,7 +217,6 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
     if (nullptr == sdlSurface) {
         SDL_Log("Failed to allocate surface");
     } else {
-        SDL_Log("Allocated a bunch of memory to create identical game character");
         SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, sdlSurface);
         return texture;
     }
@@ -329,6 +328,11 @@ std::vector<CharacterCreator*> SceneManager::GetCharacterCreators() {
 
 std::vector<CharacterCreator*> SceneManager::GetTileCreators() {
     return mTileCreators;
+}
+
+GameLevel* SceneManager::BuildGameLevel(std::string filename) {
+    GameLevel* gameLevel = new GameLevel(filename, mGameObjects);
+    return gameLevel;
 }
 
 void SceneManager::Update() {

@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 
+#include "FileManager.hpp"
 #include "ResourceManager.hpp"
 #include "SceneManager.hpp"
 #include "imgui.h"
@@ -70,6 +71,11 @@ class Engine {
      */
     void InitializeSceneManagerSubSystem();
 
+    /**
+     * Request to startup the File Manager
+     */
+    void InitializeFileManagerSubSystem();
+
    private:
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
@@ -77,6 +83,7 @@ class Engine {
     SDL_Renderer* mRenderer;
     SDL_Texture* mScreenTexture;
     ImVec2 mScreenEditorPos;
+    bool mLevelSelectionOn = true;
 };
 
 #endif
