@@ -115,7 +115,7 @@ void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
 
     std::cout << "framing" << std::endl;
     AddTestFrameSequences(spriteComponent);
-    GameObject* mainCharacter = CreateGameObject(x, y, width, height, 0);
+    GameObject* mainCharacter = CreateGameObject(x, y, width, height, ObjectType::DEFAULT, 0);
     mainCharacter->AddComponent(controllerComponent);
     mainCharacter->AddComponent(transformComponent);
     mainCharacter->AddComponent(mCollisionComponent);
@@ -139,6 +139,7 @@ void SceneManager::CreateMapTile(int x, int y, int width, int height) {
                                               positionY,
                                               width,
                                               height,
+                                              ObjectType::TILE,
                                               12);
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
@@ -159,11 +160,11 @@ void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
                                               positionY,
                                               width,
                                               height,
+                                              ObjectType::TILE,
                                               12);
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     gameObject->AddComponent(tmpTileMapComponent);
-    PhysicsManager::GetInstance().AddCollisionObject(gameObject);
     AddGameObject(gameObject);
 }
 
@@ -179,6 +180,7 @@ void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
                                               positionY,
                                               width,
                                               height,
+                                              ObjectType::COIN,
                                               12);
 
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
@@ -190,9 +192,9 @@ void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
 }
 
 GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int width,
-                                           int height, int frame) {
+                                           int height, ObjectType type, int frame) {
     GameObject* gameObject = new GameObject(mRenderer, xPos, yPos, width,
-                                            height, frame);
+                                            height, type, frame);
     return gameObject;
 }
 

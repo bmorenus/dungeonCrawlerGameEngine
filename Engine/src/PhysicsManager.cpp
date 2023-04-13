@@ -32,6 +32,15 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
     int* collisions = new int[4]();
 
     for (GameObject* object2 : mGameObjects) {
+        if (object2->GetIsDeleted()) {
+            continue;
+        }
+
+        if ((object1->mObjectType == ObjectType::COIN && object2->mObjectType == ObjectType::TILE) ||
+            (object1->mObjectType == ObjectType::COIN && object2->mObjectType == ObjectType::COIN)) {
+            continue;
+        }
+
         // Collision is occuring to the right of the object
         if (((object1->GetX() + (object1->GetWidth() / 2)) > (object2->GetX() - (object2->GetWidth() / 2) - mCollisionBuffer)) &&
             ((object1->GetX() + (object1->GetWidth() / 2)) < (object2->GetX() - (object2->GetWidth() / 2)))) {
@@ -67,7 +76,6 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
                 collisions[3] = 1;
             };
         }
-
     }
 
     return collisions;
