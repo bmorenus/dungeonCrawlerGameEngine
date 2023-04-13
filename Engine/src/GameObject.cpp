@@ -117,6 +117,13 @@ void GameObject::SetIsDeleted(bool isDeleted) {
     mIsDeleted = isDeleted;
 }
 
+ObjectType GameObject::GetObjectType() {
+    return mObjectType;
+}
+void GameObject::SetObjectType(ObjectType objectType) {
+    mObjectType = objectType;
+}
+
 void GameObject::AddComponent(Component* component) {
     mComponents.push_back(component);
 }

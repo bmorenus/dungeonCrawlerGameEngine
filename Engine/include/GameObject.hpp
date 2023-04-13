@@ -53,6 +53,9 @@ class GameObject {
     bool GetIsDeleted();
     void SetIsDeleted(bool isDeleted);
 
+    ObjectType GetObjectType();
+    void SetObjectType(ObjectType objectType);
+
     std::string GetSequence();
     void SetSequence(std::string sequence);
 
@@ -62,8 +65,6 @@ class GameObject {
     void AddComponent(Component* component);
     std::vector<SDL_Event> GetEvents();
 
-    bool isRender = true;
-    ObjectType mObjectType = ObjectType::DEFAULT;
 
    private:
     int mXVelocity;
@@ -77,6 +78,7 @@ class GameObject {
     std::string mSequence = "forward_standing";
     int* mCollisionDirection;
     bool mIsDeleted = false;
+    ObjectType mObjectType = ObjectType::DEFAULT;
 
     SDL_Renderer* mRenderer;
     std::vector<SDL_Event> mEvents;

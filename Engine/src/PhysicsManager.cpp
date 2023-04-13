@@ -36,8 +36,8 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
             continue;
         }
 
-        if ((object1->mObjectType == ObjectType::COIN && object2->mObjectType == ObjectType::TILE) ||
-            (object1->mObjectType == ObjectType::COIN && object2->mObjectType == ObjectType::COIN)) {
+        if ((object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::TILE) ||
+            (object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::COIN)) {
             continue;
         }
 
