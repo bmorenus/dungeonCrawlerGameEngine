@@ -84,6 +84,8 @@ class SceneManager {
 
     void AddGameObject(GameObject* gameObject);
 
+    int GetNumberOfCoins();
+
     std::vector<std::vector<std::string>> EncodeGameLevel(std::string filename);
 
     int BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData);
@@ -97,6 +99,7 @@ class SceneManager {
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
    private:
+    int numberOfCoins;
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;

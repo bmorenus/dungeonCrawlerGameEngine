@@ -11,6 +11,8 @@ bool show_demo_window = false;
 bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+bool coinHasPlaced = false;
+bool gameRunning = true;
 std::vector<SDL_Texture*> tmpp;
 std::vector<int> tw, th;
 
@@ -23,9 +25,23 @@ Engine::~Engine() {
 void Engine::Input(bool* quit) {
     SDL_Event e;
     SDL_StartTextInput();
+    std::cout << SceneManager::GetInstance().GetNumberOfCoins() << std::endl;
+    std::cout << coinHasPlaced << std::endl;
+    if (gameRunning && coinHasPlaced && SceneManager::GetInstance().GetNumberOfCoins() == 0) {
+        std::cout << "You have collected all coins!! Press R to restart"
+                  << "\n";
+        gameRunning = false;
+    }
     while (SDL_PollEvent(&e) != 0) {
         ImGui_ImplSDL2_ProcessEvent(&e);
-
+        if (!gameRunning && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+            coinHasPlaced = false;
+            gameRunning = true;
+            std::vector<std::vector<std::string>> gameLevelData =
+                FileManager::GetInstance().LoadLevel(mCurrentLevelName);
+            SceneManager::GetInstance().BuildGameLevel(gameLevelData);
+            break;
+        }
         if (e.type == SDL_QUIT) {
             *quit = true;
         }
@@ -40,7 +56,10 @@ void Engine::Input(bool* quit) {
 }
 
 void Engine::Update() {
-    SceneManager::GetInstance().Update();
+    if (gameRunning) {
+        coinHasPlaced = SceneManager::GetInstance().GetNumberOfCoins() > 0;
+        SceneManager::GetInstance().Update();
+    }
 }
 
 void Engine::Render(ImGuiIO& mIo) {
@@ -201,7 +220,7 @@ int Engine::InitializeGraphicsSubSystem() {
     }
 
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    mWindow = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    mWindow = SDL_CreateWindow("Seattle Game Engine!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     mScreenTexture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, 640, 360);
 

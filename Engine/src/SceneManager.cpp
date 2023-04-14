@@ -23,6 +23,7 @@ SceneManager& SceneManager::GetInstance() {
 
 void SceneManager::Initialize(SDL_Renderer* renderer) {
     mRenderer = renderer;
+    numberOfCoins = 0;
     mCollisionComponent = new CollisionComponent();
     std::cout << mRenderer << std::endl;
     mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y);
@@ -322,6 +323,10 @@ void SceneManager::AddTestGameObjects() {
     CreateMainCharacter(100, 100, TEMP_WIDTH, TEMP_HEIGHT);
 }
 
+int SceneManager::GetNumberOfCoins() {
+    return numberOfCoins;
+}
+
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
@@ -329,6 +334,11 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
 
         int screenPositionX = x - screenEditorPos.x;
         int screenPositionY = y - screenEditorPos.y;
+
+        if ((0 > screenPositionX || screenPositionX > 640) ||
+            (0 > screenPositionY || screenPositionY > 360)) {
+            return;
+        }
 
         std::cout << mCurrentCreator->imageFilePath << std::endl;
 
@@ -338,6 +348,7 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
                                                                    mCurrentCreator->height);
 
         AddGameObject(gameObject);
+        return;
     }
 
     for (GameObject* gameObject : mGameObjects) {
@@ -376,6 +387,7 @@ std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel(std::string 
 
 int SceneManager::BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData) {
     mGameObjects.clear();
+    int count = 0;
     PhysicsManager::GetInstance().ClearCollisionObjects();
 
     for (std::vector<std::string> gameObjectData : gameLevelData) {
@@ -401,16 +413,21 @@ int SceneManager::BuildGameLevel(std::vector<std::vector<std::string>> gameLevel
 }
 
 void SceneManager::Update() {
+    int count = 0;
     for (auto it = mGameObjects.begin(); it != mGameObjects.end();) {
         GameObject* gameObject = *it;
         if (!gameObject->GetIsDeleted()) {
             gameObject->Update();
             ++it;
+            if (gameObject->GetObjectType() == ObjectType::COIN) {
+                count++;
+            }
         } else {
             delete gameObject;
             it = mGameObjects.erase(it);
         }
     }
+    numberOfCoins = count;
 }
 
 void SceneManager::Render() {
