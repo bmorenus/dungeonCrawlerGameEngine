@@ -16,6 +16,9 @@ bool gameRunning = true;
 std::vector<SDL_Texture*> tmpp;
 std::vector<int> tw, th;
 
+const int SCREEN_FPS = 20;
+const float SCREEN_TICKS_PER_FRAME = 1000.0f / (float)SCREEN_FPS;
+
 Engine::Engine() {
 }
 
@@ -168,11 +171,26 @@ void Engine::MainGameLoop() {
     ImGui_ImplSDL2_InitForSDLRenderer(mWindow, mRenderer);
     ImGui_ImplSDLRenderer_Init(mRenderer);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+    // Ticks for calculating millisecond difference between frames
+    int64_t prevTick;
+    int64_t currTick;
+
     while (!quit) {
         Input(&quit);
-        SDL_Delay(80);  // Frame capping hack
+
+        prevTick = SDL_GetTicks64();
+        
         Update();
         Render(mIo);
+
+        currTick = SDL_GetTicks64();
+
+        const float tickElapsed = (float)(currTick - prevTick);
+
+        if (tickElapsed < SCREEN_TICKS_PER_FRAME) {
+            SDL_Delay(floorf(SCREEN_TICKS_PER_FRAME - tickElapsed));
+        }
     }
 }
 

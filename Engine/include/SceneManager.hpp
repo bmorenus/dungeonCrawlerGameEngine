@@ -8,6 +8,7 @@
 #endif
 
 #include <filesystem>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -48,7 +49,7 @@ struct CharacterCreator {
 };
 
 class SceneManager {
-   public:
+public:
     static SceneManager& GetInstance();
 
     void Initialize(SDL_Renderer* renderer);
@@ -59,8 +60,17 @@ class SceneManager {
 
     void Update();
 
-    GameObject* CreateGameObject(int xPos, int yPos, int width, int height,
-                                 ObjectType type, int frame, std::string tag);
+    void CreateComponentWrapper(const std::string& keyName, const std::string& componentType);
+
+    void CreateGameObjectWrapper(const std::string& keyName, const std::string& objectType, int x, int y, int width, int height);
+
+    void AddComponentWrapper(const std::string& gameObjectKeyName, const std::string& componentKeyName);
+
+    void AddGameObjectWrapper(const std::string& gameObjectKeyName);
+
+    void AddCollisionObjectWrapper(const std::string& gameObjectKeyName);
+
+    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, ObjectType type, int frame, std::string tag);
 
     TileMapComponent* CreateTileMapComponent(std::string spritesheetFile);
 
@@ -76,9 +86,9 @@ class SceneManager {
 
     GameObject* CreateFlowerMapTile(int x, int y, int width, int height);
 
-    void setCharacterCreator(CharacterCreator* mCurrentCreator);
+    GameObject* CreateMapTileWithType(int x, int y, int width, int height, ObjectType type, bool addCollision);
 
-    void AddTestGameObjects();
+    void setCharacterCreator(CharacterCreator* mCurrentCreator);
 
     void AddTestFrameSequences(SpriteComponent* spriteComponent);
 
@@ -98,7 +108,7 @@ class SceneManager {
 
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
-   private:
+private:
     int numberOfCoins;
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
@@ -108,6 +118,8 @@ class SceneManager {
     std::vector<CharacterCreator*> mCharacterCreators;
     std::vector<CharacterCreator*> mTileCreators;
     std::unordered_map<std::string, CharacterCreator*> mCharacterCreatorsMap;
+    std::map<std::string, Component*> mComponentMap;
+    std::map<std::string, GameObject*> mGameObjectMap;
 };
 
 #endif
