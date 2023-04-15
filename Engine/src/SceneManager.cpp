@@ -71,7 +71,7 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
                              "images/tiles/flower.bmp",
                              TILE_WIDTH,
                              TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateFlowerMapTile,
+                             std::bind(&SceneManager::CreateMapTile,
                                        this,
                                        std::placeholders::_1,
                                        std::placeholders::_2,
@@ -113,7 +113,56 @@ void SceneManager::AddGameObject(GameObject* gameObject) {
     mGameObjects.push_back(gameObject);
 }
 
+void SceneManager::CreateComponentWrapper(const std::string& keyName, const std::string& componentType) {
+    Component* component;
+
+    if (componentType == "CONTROLLER") {
+        component = new ControllerComponent();
+    } else if (componentType == "TRANSFORM") {
+        component = new TransformComponent();
+    } else if (componentType == "SPRITE") {
+        SpriteComponent* spriteComponent = CreateSpriteComponent("./images/spritesheets/linkSprite.bmp");
+        AddTestFrameSequences(spriteComponent);
+        component = spriteComponent;
+    } else if (componentType == "COLLISION") {
+        component = mCollisionComponent;
+    } else {
+        return;
+    }
+
+    mComponentMap[keyName] = component;
+}
+
+void SceneManager::CreateGameObjectWrapper(const std::string& keyName, const std::string& objectType, int x, int y, int width, int height) {
+    GameObject* gameObject;
+
+    if (objectType == "DEFAULT") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::DEFAULT, 0, "main-character");
+    } else if (objectType == "TILE") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::TILE, 12, "ground-tile");
+    } else if (objectType == "COIN") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::COIN, 12, "coin-tile");
+    } else {
+        return;
+    }
+
+    mGameObjectMap[keyName] = gameObject;
+}
+
+void SceneManager::AddComponentWrapper(const std::string& gameObjectKeyName, const std::string& componentKeyName) {
+    mGameObjectMap[gameObjectKeyName]->AddComponent(mComponentMap[componentKeyName]);
+}
+
+void SceneManager::AddGameObjectWrapper(const std::string& gameObjectKeyName) {
+    mGameObjects.push_back(mGameObjectMap[gameObjectKeyName]);
+}
+
+void SceneManager::AddCollisionObjectWrapper(const std::string& gameObjectKeyName) {
+    PhysicsManager::GetInstance().AddCollisionObject(mGameObjectMap[gameObjectKeyName]);
+}
+
 GameObject* SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
+    std::cout << "conrollting" << std::endl;
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
     SpriteComponent* spriteComponent = CreateSpriteComponent(
@@ -250,77 +299,33 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
 }
 
 void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
-    // Left Standing Frame
+    // Standing Frames
     Frame* left_standing = new Frame(1, 8, 22, 21, true);
-
-    // Right Standing Frame
     Frame* right_standing = new Frame(1, 8, 22, 21, false);
-
-    // Forward Standing Frame
     Frame* forward_standing = new Frame(49, 8, 22, 21, false);
-
-    // Backward Standing Frame
     Frame* backward_standing = new Frame(73, 8, 22, 21, false);
 
-    // Left Walking Frame
+    // Walking Frames
     Frame* left_walking = new Frame(25, 8, 22, 21, true);
-
-    // Right Walking Frame
     Frame* right_walking = new Frame(25, 8, 22, 21, false);
-
-    // Forward Walking Frame
     Frame* forward_walking = new Frame(49, 32, 22, 21, false);
-
-    // Backward Walking Frame
     Frame* backward_walking = new Frame(73, 56, 22, 21, false);
 
-    // Left Standing Sequence
-    std::vector<Frame*> left_standing_sequence;
-    left_standing_sequence.push_back(left_standing);
-    spriteComponent->AddFrameSequence("left_standing", left_standing_sequence);
+    // Frame Sequences
+    std::vector<Frame*> left_sequence{left_standing, left_walking};
+    std::vector<Frame*> right_sequence{right_standing, right_walking};
+    std::vector<Frame*> forward_sequence{forward_standing, forward_walking};
+    std::vector<Frame*> backward_sequence{backward_standing, backward_walking};
 
-    // Right Standing Sequence
-    std::vector<Frame*> right_standing_sequence;
-    right_standing_sequence.push_back(right_standing);
-    spriteComponent->AddFrameSequence("right_standing", right_standing_sequence);
-
-    // Forward Standing Sequence
-    std::vector<Frame*> forward_standing_sequence;
-    forward_standing_sequence.push_back(forward_standing);
-    spriteComponent->AddFrameSequence("forward_standing", forward_standing_sequence);
-
-    // Backward Standing Sequence
-    std::vector<Frame*> backward_standing_sequence;
-    backward_standing_sequence.push_back(backward_standing);
-    spriteComponent->AddFrameSequence("backward_standing", backward_standing_sequence);
-
-    // Left Walking Sequence
-    std::vector<Frame*> left_walking_sequence;
-    left_walking_sequence.push_back(left_standing);
-    left_walking_sequence.push_back(left_walking);
-    spriteComponent->AddFrameSequence("left_walking", left_walking_sequence);
-
-    // Right Walking Sequence
-    std::vector<Frame*> right_walking_sequence;
-    right_walking_sequence.push_back(right_standing);
-    right_walking_sequence.push_back(right_walking);
-    spriteComponent->AddFrameSequence("right_walking", right_walking_sequence);
-
-    // Forward Walking Sequence
-    std::vector<Frame*> forward_walking_sequence;
-    forward_walking_sequence.push_back(forward_standing);
-    forward_walking_sequence.push_back(forward_walking);
-    spriteComponent->AddFrameSequence("forward_walking", forward_walking_sequence);
-
-    // Backward Walking Sequence
-    std::vector<Frame*> backward_walking_sequence;
-    backward_walking_sequence.push_back(backward_standing);
-    backward_walking_sequence.push_back(backward_walking);
-    spriteComponent->AddFrameSequence("backward_walking", backward_walking_sequence);
-}
-
-void SceneManager::AddTestGameObjects() {
-    CreateMainCharacter(100, 100, TEMP_WIDTH, TEMP_HEIGHT);
+    // Add frame sequences
+    spriteComponent->AddFrameSequence("left_standing", {left_standing});
+    spriteComponent->AddFrameSequence("right_standing", {right_standing});
+    spriteComponent->AddFrameSequence("forward_standing", {forward_standing});
+    spriteComponent->AddFrameSequence("backward_standing", {backward_standing});
+    spriteComponent->AddFrameSequence("left_walking", left_sequence);
+    spriteComponent->AddFrameSequence("right_walking", right_sequence);
+    spriteComponent->AddFrameSequence("forward_walking", forward_sequence);
+    spriteComponent->AddFrameSequence("backward_walking", backward_sequence);
 }
 
 int SceneManager::GetNumberOfCoins() {
@@ -432,6 +437,6 @@ void SceneManager::Update() {
 
 void SceneManager::Render() {
     for (int i = mGameObjects.size() - 1; i >= 0; i--) {
-        mGameObjects.at(i)->Render(mRenderer);
+        mGameObjects.at(i)->Render();
     }
 }

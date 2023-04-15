@@ -20,6 +20,8 @@ class ControllerComponent : public Component {
 
    private:
     void ResetEvents(GameObject& gameObject);
+    void HandleEvents(GameObject& gameObject);
+    void HandleMovement(GameObject& gameObject);
 
     const float ACCELERATION = 1;
 };

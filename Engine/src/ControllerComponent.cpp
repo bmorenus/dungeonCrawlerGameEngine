@@ -11,12 +11,12 @@ ControllerComponent::~ControllerComponent() {
 }
 
 void ControllerComponent::Update(GameObject& gameObject) {
+    HandleEvents(gameObject);
+    HandleMovement(gameObject);
+}
+
+void ControllerComponent::HandleEvents(GameObject& gameObject) {
     std::vector<SDL_Event> events = gameObject.GetEvents();
-    int speed = gameObject.GetSpeed();
-
-    const Uint8* currentKey = SDL_GetKeyboardState(NULL);
-    int* collisionDirection = gameObject.GetCollisionDirections();
-
     for (SDL_Event e : events) {
         if (e.type == SDL_KEYUP) {
             switch (e.key.keysym.sym) {
@@ -37,45 +37,35 @@ void ControllerComponent::Update(GameObject& gameObject) {
             }
         }
     }
+    ResetEvents(gameObject);
+}
 
-    if (currentKey[SDL_SCANCODE_D]) {
+void ControllerComponent::HandleMovement(GameObject& gameObject) {
+    const Uint8* currentKey = SDL_GetKeyboardState(NULL);
+    int* collisionDirection = gameObject.GetCollisionDirections();
+
+    int xVelocity = 0;
+    int yVelocity = 0;
+
+    if (currentKey[SDL_SCANCODE_D] && collisionDirection[0] != 1) {
         gameObject.SetSequence("right_walking");
-        if (collisionDirection[0] != 1) {
-            gameObject.SetXVelocity(speed);
-            gameObject.SetYVelocity(0);
-        } else {
-            gameObject.SetXVelocity(0);
-        }
-    } else if (currentKey[SDL_SCANCODE_A]) {
+        xVelocity = gameObject.GetSpeed();
+    } else if (currentKey[SDL_SCANCODE_A] && collisionDirection[1] != 1) {
         gameObject.SetSequence("left_walking");
-        if (collisionDirection[1] != 1) {
-            gameObject.SetXVelocity(-speed);
-            gameObject.SetYVelocity(0);
-        } else {
-            gameObject.SetXVelocity(0);
-        }
-    } else if (currentKey[SDL_SCANCODE_S]) {
+        xVelocity = -gameObject.GetSpeed();
+    } else if (currentKey[SDL_SCANCODE_S] && collisionDirection[2] != 1) {
         gameObject.SetSequence("forward_walking");
-        if (collisionDirection[2] != 1) {
-            gameObject.SetYVelocity(speed);
-            gameObject.SetXVelocity(0);
-        } else {
-            gameObject.SetYVelocity(0);
-        }
-    } else if (currentKey[SDL_SCANCODE_W]) {
+        yVelocity = gameObject.GetSpeed();
+    } else if (currentKey[SDL_SCANCODE_W] && collisionDirection[3] != 1) {
         gameObject.SetSequence("backward_walking");
-        if (collisionDirection[3] != 1) {
-            gameObject.SetYVelocity(-speed);
-            gameObject.SetXVelocity(0);
-        } else {
-            gameObject.SetYVelocity(0);
-        }
+        yVelocity = -gameObject.GetSpeed();
     } else {
         gameObject.SetXVelocity(0);
         gameObject.SetYVelocity(0);
     }
 
-    ResetEvents(gameObject);
+    gameObject.SetXVelocity(xVelocity);
+    gameObject.SetYVelocity(yVelocity);
 }
 
 void ControllerComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
