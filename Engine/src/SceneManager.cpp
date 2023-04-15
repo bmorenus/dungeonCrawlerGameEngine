@@ -27,73 +27,19 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
     std::cout << mRenderer << std::endl;
     mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y);
 
-    CharacterCreator* mainCharacterCreator =
-        new CharacterCreator("main-character",
-                             "images/sprites/linkSpriteImage.bmp",
-                             TEMP_WIDTH,
-                             TEMP_HEIGHT,
-                             std::bind(&SceneManager::CreateMainCharacter,
-                                       this,
-                                       std::placeholders::_1,
-                                       std::placeholders::_2,
-                                       std::placeholders::_3,
-                                       std::placeholders::_4));
+    auto createMainCharacter = std::bind(&SceneManager::CreateMainCharacter, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+    auto createMapTile = std::bind(&SceneManager::CreateMapTile, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+    auto createGrassMapTile = std::bind(&SceneManager::CreateGrassMapTile, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+    auto createCoinMapTile = std::bind(&SceneManager::CreateCoinMapTile, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 
-    mCurrentCreator = mainCharacterCreator;
+    mCharacterCreators = {
+        new CharacterCreator("ground-tile", "images/tiles/ground.bmp", TILE_WIDTH, TILE_HEIGHT, createMapTile),
+        new CharacterCreator("grass-tile", "images/tiles/grass.bmp", TILE_WIDTH, TILE_HEIGHT, createGrassMapTile),
+        new CharacterCreator("flower-tile", "images/tiles/flower.bmp", TILE_WIDTH, TILE_HEIGHT, createMapTile),
+        new CharacterCreator("coin-tile", "images/tiles/coin.bmp", TILE_WIDTH, TILE_HEIGHT, createCoinMapTile),
+        new CharacterCreator("main-character", "images/sprites/linkSpriteImage.bmp", TEMP_WIDTH, TEMP_HEIGHT, createMainCharacter)};
 
-    CharacterCreator* groundTile =
-        new CharacterCreator("ground-tile",
-                             "images/tiles/ground.bmp",
-                             TILE_WIDTH,
-                             TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateMapTile,
-                                       this,
-                                       std::placeholders::_1,
-                                       std::placeholders::_2,
-                                       std::placeholders::_3,
-                                       std::placeholders::_4));
-
-    CharacterCreator* grassTile =
-        new CharacterCreator("grass-tile",
-                             "images/tiles/grass.bmp",
-                             TILE_WIDTH,
-                             TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateGrassMapTile,
-                                       this,
-                                       std::placeholders::_1,
-                                       std::placeholders::_2,
-                                       std::placeholders::_3,
-                                       std::placeholders::_4));
-
-    CharacterCreator* flowerTile =
-        new CharacterCreator("flower-tile",
-                             "images/tiles/flower.bmp",
-                             TILE_WIDTH,
-                             TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateMapTile,
-                                       this,
-                                       std::placeholders::_1,
-                                       std::placeholders::_2,
-                                       std::placeholders::_3,
-                                       std::placeholders::_4));
-
-    CharacterCreator* coinTile =
-        new CharacterCreator("coin-tile",
-                             "images/tiles/coin.bmp",
-                             TILE_WIDTH,
-                             TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateCoinMapTile,
-                                       this,
-                                       std::placeholders::_1,
-                                       std::placeholders::_2,
-                                       std::placeholders::_3,
-                                       std::placeholders::_4));
-
-    mCharacterCreators.push_back(groundTile);
-    mCharacterCreators.push_back(grassTile);
-    mCharacterCreators.push_back(flowerTile);
-    mCharacterCreators.push_back(coinTile);
-    mCharacterCreators.push_back(mainCharacterCreator);
+    mCurrentCreator = mCharacterCreators.back();
 }
 
 void SceneManager::Shutdown() {
@@ -104,6 +50,54 @@ void SceneManager::Shutdown() {
 
 void SceneManager::AddGameObject(GameObject* gameObject) {
     mGameObjects.push_back(gameObject);
+}
+
+void SceneManager::CreateComponentWrapper(const std::string& keyName, const std::string& componentType) {
+    Component* component;
+
+    if (componentType == "CONTROLLER") {
+        component = new ControllerComponent();
+    } else if (componentType == "TRANSFORM") {
+        component = new TransformComponent();
+    } else if (componentType == "SPRITE") {
+        SpriteComponent* spriteComponent = CreateSpriteComponent("./images/spritesheets/linkSprite.bmp");
+        AddTestFrameSequences(spriteComponent);
+        component = spriteComponent;
+    } else if (componentType == "COLLISION") {
+        component = mCollisionComponent;
+    } else {
+        return;
+    }
+
+    mComponentMap[keyName] = component;
+}
+
+void SceneManager::CreateGameObjectWrapper(const std::string& keyName, const std::string& objectType, int x, int y, int width, int height) {
+    GameObject* gameObject;
+
+    if (objectType == "DEFAULT") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::DEFAULT, 0);
+    } else if (objectType == "TILE") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::TILE, 12);
+    } else if (objectType == "COIN") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::COIN, 12);
+    } else {
+        return;
+    }
+
+    mGameObjectMap[keyName] = gameObject;
+}
+
+void SceneManager::AddComponentWrapper(const std::string& gameObjectKeyName, const std::string& componentKeyName) {
+    mGameObjectMap[gameObjectKeyName]->AddComponent(mComponentMap[componentKeyName]);
+}
+
+void SceneManager::AddGameObjectWrapper(const std::string& gameObjectKeyName) {
+    mGameObjects.push_back(mGameObjectMap[gameObjectKeyName]);
+}
+
+void SceneManager::AddCollisionObjectWrapper(const std::string& gameObjectKeyName) {
+    PhysicsManager::GetInstance().AddCollisionObject(mGameObjectMap[gameObjectKeyName]);
 }
 
 void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
@@ -128,66 +122,36 @@ void SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
 }
 
 void SceneManager::CreateMapTile(int x, int y, int width, int height) {
-    int positionX = ((x - (x % width)) -
-                     X_BORDER_PX_SIZE + (width / 2));
-    int positionY = ((y - (y % height)) -
-                     Y_BORDER_PX_SIZE + (height / 2));
-
-    std::cout << "rcreating map tile" << std::endl;
-
-    GameObject* gameObject = CreateGameObject(positionX,
-                                              positionY,
-                                              width,
-                                              height,
-                                              ObjectType::TILE,
-                                              12);
-
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
-    gameObject->AddComponent(tmpTileMapComponent);
-    PhysicsManager::GetInstance().AddCollisionObject(gameObject);
-    AddGameObject(gameObject);
+    CreateMapTileWithType(x, y, width, height, ObjectType::TILE, true);
 }
 
 void SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
-    int positionX = ((x - (x % width)) -
-                     X_BORDER_PX_SIZE + (width / 2));
-    int positionY = ((y - (y % height)) -
-                     Y_BORDER_PX_SIZE + (height / 2));
-
-    std::cout << "rcreating map tile" << std::endl;
-
-    GameObject* gameObject = CreateGameObject(positionX,
-                                              positionY,
-                                              width,
-                                              height,
-                                              ObjectType::TILE,
-                                              12);
-
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
-    gameObject->AddComponent(tmpTileMapComponent);
-    AddGameObject(gameObject);
+    CreateMapTileWithType(x, y, width, height, ObjectType::TILE, false);
 }
 
 void SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
-    int positionX = ((x - (x % width)) -
-                     X_BORDER_PX_SIZE + (width / 2));
-    int positionY = ((y - (y % height)) -
-                     Y_BORDER_PX_SIZE + (height / 2));
+    CreateMapTileWithType(x, y, width, height, ObjectType::COIN, true);
+}
 
-    std::cout << "rcreating map tile" << std::endl;
+void SceneManager::CreateMapTileWithType(int x, int y, int width, int height, ObjectType type, bool addCollision) {
+    int positionX = (x - (x % width)) - X_BORDER_PX_SIZE + (width / 2);
+    int positionY = (y - (y % height)) - Y_BORDER_PX_SIZE + (height / 2);
 
-    GameObject* gameObject = CreateGameObject(positionX,
-                                              positionY,
-                                              width,
-                                              height,
-                                              ObjectType::COIN,
-                                              12);
+    std::cout << "creating map tile" << std::endl;
 
+    GameObject* gameObject = CreateGameObject(positionX, positionY, width, height, type, 12);
     TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
-    CoinCollisionComponent* coinCollisionComponent = new CoinCollisionComponent();
     gameObject->AddComponent(tmpTileMapComponent);
-    gameObject->AddComponent(coinCollisionComponent);
-    PhysicsManager::GetInstance().AddCollisionObject(gameObject);
+
+    if (type == ObjectType::COIN) {
+        CoinCollisionComponent* coinCollisionComponent = new CoinCollisionComponent();
+        gameObject->AddComponent(coinCollisionComponent);
+    }
+
+    if (addCollision) {
+        PhysicsManager::GetInstance().AddCollisionObject(gameObject);
+    }
+
     AddGameObject(gameObject);
 }
 
@@ -225,77 +189,33 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
 }
 
 void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
-    // Left Standing Frame
+    // Standing Frames
     Frame* left_standing = new Frame(1, 8, 22, 21, true);
-
-    // Right Standing Frame
     Frame* right_standing = new Frame(1, 8, 22, 21, false);
-
-    // Forward Standing Frame
     Frame* forward_standing = new Frame(49, 8, 22, 21, false);
-
-    // Backward Standing Frame
     Frame* backward_standing = new Frame(73, 8, 22, 21, false);
 
-    // Left Walking Frame
+    // Walking Frames
     Frame* left_walking = new Frame(25, 8, 22, 21, true);
-
-    // Right Walking Frame
     Frame* right_walking = new Frame(25, 8, 22, 21, false);
-
-    // Forward Walking Frame
     Frame* forward_walking = new Frame(49, 32, 22, 21, false);
-
-    // Backward Walking Frame
     Frame* backward_walking = new Frame(73, 56, 22, 21, false);
 
-    // Left Standing Sequence
-    std::vector<Frame*> left_standing_sequence;
-    left_standing_sequence.push_back(left_standing);
-    spriteComponent->AddFrameSequence("left_standing", left_standing_sequence);
+    // Frame Sequences
+    std::vector<Frame*> left_sequence{left_standing, left_walking};
+    std::vector<Frame*> right_sequence{right_standing, right_walking};
+    std::vector<Frame*> forward_sequence{forward_standing, forward_walking};
+    std::vector<Frame*> backward_sequence{backward_standing, backward_walking};
 
-    // Right Standing Sequence
-    std::vector<Frame*> right_standing_sequence;
-    right_standing_sequence.push_back(right_standing);
-    spriteComponent->AddFrameSequence("right_standing", right_standing_sequence);
-
-    // Forward Standing Sequence
-    std::vector<Frame*> forward_standing_sequence;
-    forward_standing_sequence.push_back(forward_standing);
-    spriteComponent->AddFrameSequence("forward_standing", forward_standing_sequence);
-
-    // Backward Standing Sequence
-    std::vector<Frame*> backward_standing_sequence;
-    backward_standing_sequence.push_back(backward_standing);
-    spriteComponent->AddFrameSequence("backward_standing", backward_standing_sequence);
-
-    // Left Walking Sequence
-    std::vector<Frame*> left_walking_sequence;
-    left_walking_sequence.push_back(left_standing);
-    left_walking_sequence.push_back(left_walking);
-    spriteComponent->AddFrameSequence("left_walking", left_walking_sequence);
-
-    // Right Walking Sequence
-    std::vector<Frame*> right_walking_sequence;
-    right_walking_sequence.push_back(right_standing);
-    right_walking_sequence.push_back(right_walking);
-    spriteComponent->AddFrameSequence("right_walking", right_walking_sequence);
-
-    // Forward Walking Sequence
-    std::vector<Frame*> forward_walking_sequence;
-    forward_walking_sequence.push_back(forward_standing);
-    forward_walking_sequence.push_back(forward_walking);
-    spriteComponent->AddFrameSequence("forward_walking", forward_walking_sequence);
-
-    // Backward Walking Sequence
-    std::vector<Frame*> backward_walking_sequence;
-    backward_walking_sequence.push_back(backward_standing);
-    backward_walking_sequence.push_back(backward_walking);
-    spriteComponent->AddFrameSequence("backward_walking", backward_walking_sequence);
-}
-
-void SceneManager::AddTestGameObjects() {
-    CreateMainCharacter(100, 100, TEMP_WIDTH, TEMP_HEIGHT);
+    // Add frame sequences
+    spriteComponent->AddFrameSequence("left_standing", {left_standing});
+    spriteComponent->AddFrameSequence("right_standing", {right_standing});
+    spriteComponent->AddFrameSequence("forward_standing", {forward_standing});
+    spriteComponent->AddFrameSequence("backward_standing", {backward_standing});
+    spriteComponent->AddFrameSequence("left_walking", left_sequence);
+    spriteComponent->AddFrameSequence("right_walking", right_sequence);
+    spriteComponent->AddFrameSequence("forward_walking", forward_sequence);
+    spriteComponent->AddFrameSequence("backward_walking", backward_sequence);
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
@@ -346,6 +266,6 @@ void SceneManager::Update() {
 
 void SceneManager::Render() {
     for (int i = mGameObjects.size() - 1; i >= 0; i--) {
-        mGameObjects.at(i)->Render(mRenderer);
+        mGameObjects.at(i)->Render();
     }
 }

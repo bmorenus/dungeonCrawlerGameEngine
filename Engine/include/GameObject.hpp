@@ -27,7 +27,7 @@ class GameObject {
 
     void AddEvent(SDL_Event& e);
     void Update();
-    void Render(SDL_Renderer* renderer);
+    void Render();
 
     int GetSpeed();
     void SetSpeed(int speed);

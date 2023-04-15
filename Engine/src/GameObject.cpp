@@ -11,7 +11,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mFrame = frame;
     mXVelocity = 0;
     mYVelocity = 0;
-    mSpeed = 3;
+    mSpeed = 1;
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
     mObjectType = type;
@@ -25,14 +25,16 @@ GameObject::~GameObject() {
 void GameObject::AddEvent(SDL_Event& e) {
     mEvents.push_back(e);
 }
+
 void GameObject::Update() {
     for (int i = 0; i < mComponents.size(); i++) {
         mComponents[i]->Update(*this);
     }
 }
-void GameObject::Render(SDL_Renderer* renderer) {
+
+void GameObject::Render() {
     for (int i = 0; i < mComponents.size(); i++) {
-        mComponents[i]->Render(*this, renderer);
+        mComponents[i]->Render(*this, mRenderer);
     }
 }
 
