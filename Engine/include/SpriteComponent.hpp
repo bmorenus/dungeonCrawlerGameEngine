@@ -2,8 +2,8 @@
 #define SPRITE_H
 
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "Component.hpp"
 
@@ -29,18 +29,23 @@ class SpriteComponent : public Component {
      */
     SpriteComponent(SDL_Texture* texture);
     /**
-     * Constructor
+     * Destructor
      */
     ~SpriteComponent();
+
     /**
      * Update the sprites position and frame
      */
     void Update(GameObject& gameObject) override;
+
     /**
      * Render the sprite
      */
     void Render(GameObject& gameObject, SDL_Renderer* renderer) override;
 
+    /*!
+     * Adds the provided frame sequence to the map of potential animations that the Sprite Component can render
+     */
     void AddFrameSequence(std::string sequenceName, std::vector<Frame*> frameSequence);
 
    private:

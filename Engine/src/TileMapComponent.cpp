@@ -5,42 +5,18 @@
 #include "GameObject.hpp"
 
 TileMapComponent::TileMapComponent(SDL_Texture* texture, TileMap* tileMap) {
-    /*!
-     * Constructor for the TileMapComponent that displays a game tile in
-     *   accordance with the specifications / grid of the provided tile map
-     *
-     * Arguments: SDL_Texture* texture, the texture of the tile map
-     *            TileMap* tileMap, object that specifies the grid structure
-     *              of the game scene
-     */
     mTexture = texture;
     mTileMap = tileMap;
 }
 
 TileMapComponent::~TileMapComponent() {
-    /*!
-     * Destructor for the TileMapComponent
-     */
     SDL_DestroyTexture(mTexture);
 }
 
 void TileMapComponent::Update(GameObject& gameObject) {
-    /*!
-     * Updates the provided game object
-     *
-     * Arguments: GameObject& gameObject, the game object to update
-     * Returns: void
-     */
 }
 
 void TileMapComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
-    /*!
-     * Renders the provided game object
-     *
-     * Arguments: GameObject& gameObject, the game object to render
-     *            SDL_Renderer& renderer, the renderer for the scene manager
-     * Returns: void
-     */
     SDL_Rect src, dest;
 
     int width = mTileMap->GetTileWidth();

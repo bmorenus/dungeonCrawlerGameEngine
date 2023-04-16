@@ -13,9 +13,6 @@ int WIDTH_INDEX = 3;
 int HEIGHT_INDEX = 4;
 
 FileManager::FileManager() {
-    /*!
-     * Singleton FileManager class that manages file processing in the game engine
-     */
     std::cout << "File Manager Created" << std::endl;
 }
 
@@ -23,40 +20,19 @@ FileManager::FileManager(FileManager const&) {
 }
 
 FileManager::~FileManager() {
-    /*!
-     * Destructor Function for the FileManager class
-     */
     std::cout << "File Manager Destroyed" << std::endl;
 }
 
 FileManager& FileManager::GetInstance() {
-    /*!
-     * Returns the singleton instance of the FileManager class for the game engine
-
-     * Arguments: None
-     * Returns: FileManager&, the instance of the FileManager class
-     */
     static FileManager* sInstance = new FileManager();
     return *sInstance;
 }
 
 void FileManager::Initialize() {
-    /*!
-     * Performs all initializing functions for the FileManager class
-     * Arguments: None
-     * Returns: void
-     */
 }
 
 int FileManager::SaveLevel(std::string filename,
                            std::vector<std::vector<std::string>> gameLevelData) {
-    /*!
-     * Saves the currently created level of in the SceneManager to the local directory
-     * Arguments: string, the filename of the level
-     *            std::vector<std::vector<std::string>>, the game data for all
-     *              game objects in the level
-     * Returns: int, success/failure notification
-     */
     std::fstream gameFile;
 
     gameFile.open(FILE_PATH + filename + FILE_EXT, std::ios::out);
@@ -78,13 +54,6 @@ int FileManager::SaveLevel(std::string filename,
 }
 
 std::vector<std::vector<std::string>> FileManager::LoadLevel(std::string filename) {
-    /*!
-     * Loads the provided level name to the SceneManager from the local directory
-     *
-     * Arguments: string, the filename of the desired level
-     * Returns: std::vector<std::vector<std::string>>, encoded game object data
-     *   for the level
-     */
     std::fstream gameFile;
 
     gameFile.open(FILE_PATH + filename + FILE_EXT, std::ios::in);

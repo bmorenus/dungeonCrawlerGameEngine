@@ -6,9 +6,6 @@
 #include "TinyMath.hpp"
 
 PhysicsManager::PhysicsManager() {
-    /*!
-     * Singleton PhysicsManager class that manages physics processing for the game engine
-     */
     std::cout << "Physics Manager Created" << std::endl;
 }
 
@@ -16,55 +13,26 @@ PhysicsManager::PhysicsManager(PhysicsManager const&) {
 }
 
 PhysicsManager::~PhysicsManager() {
-    /*!
-     * Destructor Function for the PhysicsManager class
-     */
     std::cout << "Physics Manager Destroyed" << std::endl;
 }
 
 PhysicsManager& PhysicsManager::GetInstance() {
-    /*!
-     * Returns the singleton instance of the PhysicsManager class for the game engine
-     * Arguments: None
-     * Returns: PhysicsManager&, the instance of the PhysicsManager class
-     */
     static PhysicsManager* sInstance = new PhysicsManager();
     return *sInstance;
 }
 
 void PhysicsManager::Initialize() {
-    /*!
-     * Performs all initializing functions for the PhysicsManager class
-     * Arguments: None
-     * Returns: void
-     */
 }
 
 void PhysicsManager::AddCollisionObject(GameObject* collisionObject) {
-    /*!
-     * Adds a game objects to the list of tracked game objects for collisions
-     * Arguments: GameObject*, the game object to track for collisions
-     * Returns: void
-     */
     mGameObjects.push_back(collisionObject);
 }
 
 void PhysicsManager::ClearCollisionObjects() {
-    /*!
-     * Clears list of tracked game objects for collisions
-     * Arguments: None
-     * Returns: void
-     */
     mGameObjects.clear();
 }
 
 int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
-    /*!
-     * Returns an array of 4 integers that specify where, if any, collisions
-     *   are taking place with the given game obejct
-     * Arguments: GameObject*, the game object to check for collisions
-     * Returns: int*, an array of collision indications (1 if collision, 0 if not)
-     */
     int* collisions = new int[4]();
 
     for (GameObject* object2 : mGameObjects) {

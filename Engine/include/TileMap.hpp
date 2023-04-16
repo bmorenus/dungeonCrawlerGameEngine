@@ -24,12 +24,24 @@ class TileMap {
      */
     ~TileMap();
 
+    /*!
+     * Returns the number of rows of the tile map
+     */
     int GetRows();
 
+    /*!
+     * Returns the number of columns of the tile map
+     */
     int GetCols();
 
+    /*!
+     * Returns the width of the tile map
+     */
     int GetTileWidth();
 
+    /*!
+     * Returns the height of the tile map
+     */
     int GetTileHeight();
 
    private:
