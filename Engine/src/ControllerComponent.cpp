@@ -5,17 +5,39 @@
 #include "GameObject.hpp"
 
 ControllerComponent::ControllerComponent() {
+    /*!
+     * Constructor for the ControllerComponent that sets the behavior of
+     *   components when an event input occurs by the user
+     *
+     * Arguments: None
+     */
 }
 
 ControllerComponent::~ControllerComponent() {
+    /*!
+     * Destructor for the ControllerComponent
+     */
 }
 
 void ControllerComponent::Update(GameObject& gameObject) {
+    /*!
+     * Updates the provided game object
+     *
+     * Arguments: GameObject& gameObject, the game object to update
+     * Returns: void
+     */
     HandleEvents(gameObject);
     HandleMovement(gameObject);
 }
 
 void ControllerComponent::HandleEvents(GameObject& gameObject) {
+    /*!
+     * Handles the non-movement events found added to the mEvents vector of
+     *   the game object
+     *
+     * Arguments: GameObject& gameObject, the game object to handle events for
+     * Returns: void
+     */
     std::vector<SDL_Event> events = gameObject.GetEvents();
     for (SDL_Event e : events) {
         if (e.type == SDL_KEYUP) {
@@ -41,6 +63,13 @@ void ControllerComponent::HandleEvents(GameObject& gameObject) {
 }
 
 void ControllerComponent::HandleMovement(GameObject& gameObject) {
+    /*!
+     * Handles the movement events found added to the mEvents vector of
+     *   the game object
+     *
+     * Arguments: GameObject& gameObject, the game object to handle movements for
+     * Returns: void
+     */
     const Uint8* currentKey = SDL_GetKeyboardState(NULL);
     int* collisionDirection = gameObject.GetCollisionDirections();
 
@@ -69,8 +98,21 @@ void ControllerComponent::HandleMovement(GameObject& gameObject) {
 }
 
 void ControllerComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
+    /*!
+     * Renders the provided game object
+     *
+     * Arguments: GameObject& gameObject, the game object to render
+     *            SDL_Renderer& renderer, the renderer for the scene manager
+     * Returns: void
+     */
 }
 
 void ControllerComponent::ResetEvents(GameObject& gameObject) {
+    /*!
+     * Clears events in the mEvents vector of the game object
+     *
+     * Arguments: GameObject& gameObject, the game object to reset events of
+     * Returns: void
+     */
     gameObject.GetEvents().clear();
 }

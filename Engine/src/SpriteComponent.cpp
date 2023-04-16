@@ -5,17 +5,40 @@
 #include "GameObject.hpp"
 
 SpriteComponent::SpriteComponent(SDL_Texture* texture) {
+    /*!
+     * Constructor for the SpriteComponent that renders the game object that
+     *    calls it with the provided texture in the constructorr
+     *
+     * Arguments: SDL_Texture* texture, the desired texture to render the
+     *   game object with
+     */
     mTexture = texture;
 }
 
 SpriteComponent::~SpriteComponent() {
+    /*!
+     * Destructor for the SpriteComponent
+     */
     SDL_DestroyTexture(mTexture);
 }
 
 void SpriteComponent::Update(GameObject& gameObject) {
+    /*!
+     * Updates the provided game object
+     *
+     * Arguments: GameObject& gameObject, the game object to update
+     * Returns: void
+     */
 }
 
 void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
+    /*!
+     * Renders the provided game object
+     *
+     * Arguments: GameObject& gameObject, the game object to render
+     *            SDL_Renderer& renderer, the renderer for the scene manager
+     * Returns: void
+     */
     SDL_Rect src, dest;
 
     std::string sequenceName = gameObject.GetSequence();
@@ -62,5 +85,14 @@ void SpriteComponent::Render(GameObject& gameObject, SDL_Renderer* renderer) {
 
 void SpriteComponent::AddFrameSequence(std::string name,
                                        std::vector<Frame*> frameSequence) {
+    /*!
+     * Adds the provided frame sequence to the map of potential animations that
+     *   the Sprite Component can render
+     *
+     * Arguments: String name, the name of the frame sequence for easy look-up
+     *            std::vector<Frame*> frameSequence, the vector containing the
+     *              frames to iterate over to animate
+     * Returns: void
+     */
     mFrameSequenceMap.insert({name, frameSequence});
 }

@@ -49,7 +49,7 @@ struct CharacterCreator {
 };
 
 class SceneManager {
-public:
+   public:
     static SceneManager& GetInstance();
 
     void Initialize(SDL_Renderer* renderer);
@@ -96,7 +96,7 @@ public:
 
     int GetNumberOfCoins();
 
-    std::vector<std::vector<std::string>> EncodeGameLevel(std::string filename);
+    std::vector<std::vector<std::string>> EncodeGameLevel();
 
     int BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData);
 
@@ -108,7 +108,7 @@ public:
 
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
-private:
+   private:
     int numberOfCoins;
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;

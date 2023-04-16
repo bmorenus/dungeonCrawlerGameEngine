@@ -17,11 +17,21 @@ int X_BORDER_PX_SIZE = 9;
 int Y_BORDER_PX_SIZE = 14;
 
 SceneManager& SceneManager::GetInstance() {
+    /*!
+     * Returns the singleton instance of the SceneManager class for the game engine
+     * Arguments: None
+     * Returns: SceneManager&, the instance of the SceneManager class
+     */
     static SceneManager instance;
     return instance;
 }
 
 void SceneManager::Initialize(SDL_Renderer* renderer) {
+    /*!
+     * Performs all initializing functions for the SceneManager class
+     * Arguments: SDL_Renderer*, the renderer to render game objects in game scenes
+     * Returns: void
+     */
     mRenderer = renderer;
     numberOfCoins = 0;
     mCollisionComponent = new CollisionComponent();
@@ -104,16 +114,34 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
 }
 
 void SceneManager::Shutdown() {
+    /*!
+     * Performs game engine shutdown actions for the SceneManager class
+     * Arguments: None
+     * Returns: void
+     */
     for (GameObject* gameObject : mGameObjects) {
         delete gameObject;
     }
 }
 
 void SceneManager::AddGameObject(GameObject* gameObject) {
+    /*!
+     * Adds the provided game object to the current update / render loop for
+     *   the scene
+     * Arguments: GameObject*, the game object to add to the scene
+     * Returns: void
+     */
     mGameObjects.push_back(gameObject);
 }
 
 void SceneManager::CreateComponentWrapper(const std::string& keyName, const std::string& componentType) {
+    /*!
+     * Wraps the given component by name / type to allow it to be accessed in
+     *   the PyBind API
+     * Arguments: const std::string& keyName, the name of the component key
+     *            const std::string& componentType, the type of the component
+     * Returns: void
+     */
     Component* component;
 
     if (componentType == "CONTROLLER") {
@@ -133,7 +161,23 @@ void SceneManager::CreateComponentWrapper(const std::string& keyName, const std:
     mComponentMap[keyName] = component;
 }
 
-void SceneManager::CreateGameObjectWrapper(const std::string& keyName, const std::string& objectType, int x, int y, int width, int height) {
+void SceneManager::CreateGameObjectWrapper(const std::string& keyName,
+                                           const std::string& objectType,
+                                           int x,
+                                           int y,
+                                           int width,
+                                           int height) {
+    /*!
+     * Wraps the given object by name / type to allow it to be accessed in
+     *   the PyBind API
+     * Arguments: const std::string& keyName, the name of the object key
+     *            const std::string& objectType, the type of the object
+     *            int x, the x position of the game object
+     *            int y, the y position of the game object
+     *            int width, the width of the game object
+     *            int height, the height of the game object
+     * Returns: void
+     */
     GameObject* gameObject;
 
     if (objectType == "DEFAULT") {
@@ -150,18 +194,46 @@ void SceneManager::CreateGameObjectWrapper(const std::string& keyName, const std
 }
 
 void SceneManager::AddComponentWrapper(const std::string& gameObjectKeyName, const std::string& componentKeyName) {
+    /*!
+     * Adds the component wrapper by the given object by name / type to allow
+     *   access to the component through the PyBind API
+     * Arguments: const std::string& gameObjectKeyName, the name of the object key
+     *            const std::string& componentKeyName, the name of the component key
+     * Returns: void
+     */
     mGameObjectMap[gameObjectKeyName]->AddComponent(mComponentMap[componentKeyName]);
 }
 
 void SceneManager::AddGameObjectWrapper(const std::string& gameObjectKeyName) {
+    /*!
+     * Adds the game object wrapper by the given object by name / type to allow
+     *   access to the component through the PyBind API
+     * Arguments: const std::string& gameObjectKeyName, the name of the object key
+     * Returns: void
+     */
     mGameObjects.push_back(mGameObjectMap[gameObjectKeyName]);
 }
 
 void SceneManager::AddCollisionObjectWrapper(const std::string& gameObjectKeyName) {
+    /*!
+     * Adds the colllision object wrapper by the given object key name to allow
+     *   access to the component through the PyBind API
+     * Arguments: const std::string& gameObjectKeyName, the name of the object key
+     * Returns: void
+     */
     PhysicsManager::GetInstance().AddCollisionObject(mGameObjectMap[gameObjectKeyName]);
 }
 
 GameObject* SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
+    /*!
+     * Creation function for the main character game object that assigns x, y,
+     *   width, and height fields to the main character
+     * Arguments: int x, the x-position of the main character
+     *            int y, the y-position of the main character
+     *            int width, the width of the main character
+     *            int height, the height of the main character
+     * Returns: GameObject*, the created game object
+     */
     std::cout << "conrollting" << std::endl;
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
@@ -186,6 +258,15 @@ GameObject* SceneManager::CreateMainCharacter(int x, int y, int width, int heigh
 }
 
 GameObject* SceneManager::CreateMapTile(int x, int y, int width, int height) {
+    /*!
+     * Creation function for the ground map tile game object that assigns x, y,
+     *   width, and height fields to the tile
+     * Arguments: int x, the x-position of the tile
+     *            int y, the y-position of the tile
+     *            int width, the width of the tile
+     *            int height, the height of the tile
+     * Returns: GameObject*, the created game object
+     */
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -206,6 +287,15 @@ GameObject* SceneManager::CreateMapTile(int x, int y, int width, int height) {
 }
 
 GameObject* SceneManager::CreateGrassMapTile(int x, int y, int width, int height) {
+    /*!
+     * Creation function for the grass map tile game object that assigns x, y,
+     *   width, and height fields to the tile
+     * Arguments: int x, the x-position of the grass tile
+     *            int y, the y-position of the grass tile
+     *            int width, the width of the grass tile
+     *            int height, the height of the grass tile
+     * Returns: GameObject*, the created game object
+     */
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -225,6 +315,15 @@ GameObject* SceneManager::CreateGrassMapTile(int x, int y, int width, int height
 }
 
 GameObject* SceneManager::CreateCoinMapTile(int x, int y, int width, int height) {
+    /*!
+     * Creation function for the coin map tile game object that assigns x, y,
+     *   width, and height fields to the tile
+     * Arguments: int x, the x-position of the coin tile
+     *            int y, the y-position of the coin tile
+     *            int width, the width of the coin tile
+     *            int height, the height of the coin tile
+     * Returns: GameObject*, the created game object
+     */
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -247,6 +346,15 @@ GameObject* SceneManager::CreateCoinMapTile(int x, int y, int width, int height)
 }
 
 GameObject* SceneManager::CreateFlowerMapTile(int x, int y, int width, int height) {
+    /*!
+     * Creation function for the flower map tile game object that assigns x, y,
+     *   width, and height fields to the tile
+     * Arguments: int x, the x-position of the flower tile
+     *            int y, the y-position of the flower tile
+     *            int width, the width of the flower tile
+     *            int height, the height of the flower tile
+     * Returns: GameObject*, the created game object
+     */
     int positionX = ((x - (x % width)) -
                      X_BORDER_PX_SIZE + (width / 2));
     int positionY = ((y - (y % height)) -
@@ -268,18 +376,40 @@ GameObject* SceneManager::CreateFlowerMapTile(int x, int y, int width, int heigh
 GameObject* SceneManager::CreateGameObject(int xPos, int yPos, int width,
                                            int height, ObjectType type,
                                            int frame, std::string tag) {
+    /*!
+     * Creates function for a game objects that assigns the provided fields
+     *   to the constructor of the game object
+     * Arguments: int xPos, the x-position of the game object
+     *            int yPos, the y-position of the game object
+     *            int width, the width of the game object
+     *            int height, the height of the game object
+     *            int type, the object type of the game object
+     *            int frame, the frame of the game object
+     *            int tag, the tag name of the game object creation function
+     * Returns: GameObject*, the created game object
+     */
     GameObject* gameObject = new GameObject(mRenderer, xPos, yPos, width,
                                             height, type, frame, tag);
     return gameObject;
 }
 
 SpriteComponent* SceneManager::CreateSpriteComponent(std::string spritesheetFile) {
+    /*!
+     * Creates a Sprite Component based on the provided sprite sheet file
+     * Arguments: string spritesheetFile, the file with the sprite animations
+     * Returns: SpriteComponent*
+     */
     SDL_Texture* texture = CreateTexture(spritesheetFile);
     SpriteComponent* spriteComponent = new SpriteComponent(texture);
     return spriteComponent;
 }
 
 TileMapComponent* SceneManager::CreateTileMapComponent(std::string spritesheetFile) {
+    /*!
+     * Creates a TileMap Component based on the provided sprite sheet file
+     * Arguments: string spritesheetFile, the file with the sprite animations
+     * Returns: TileMapComponent*
+     */
     SDL_Texture* texture = CreateTexture(spritesheetFile);
     TileMapComponent* tileMapComponent = new TileMapComponent(texture,
                                                               mTileMap);
@@ -287,6 +417,11 @@ TileMapComponent* SceneManager::CreateTileMapComponent(std::string spritesheetFi
 }
 
 SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
+    /*!
+     * Creates an SDL_Texture* based on the provided sprite sheet file
+     * Arguments: string spritesheetFile, the file with the sprite animations
+     * Returns: SDL_Texture*, an SDL Texture pointer
+     */
     ResourceManager::GetInstance().LoadResource(spritesheetFile);
     SDL_Surface* sdlSurface = ResourceManager::GetInstance().GetResource(spritesheetFile).get();
     if (nullptr == sdlSurface) {
@@ -299,6 +434,13 @@ SDL_Texture* SceneManager::CreateTexture(std::string spritesheetFile) {
 }
 
 void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
+    /*!
+     * Adds a frame sequence to the provided sprite component for animation
+     *
+     * Arguments: SpriteComponent* spriteComponent, a sprite component to add
+     *   frame animations to
+     * Returns: void
+     */
     // Standing Frames
     Frame* left_standing = new Frame(1, 8, 22, 21, true);
     Frame* right_standing = new Frame(1, 8, 22, 21, false);
@@ -329,10 +471,23 @@ void SceneManager::AddTestFrameSequences(SpriteComponent* spriteComponent) {
 }
 
 int SceneManager::GetNumberOfCoins() {
+    /*!
+     * Returns the number of coins remaining in the scene
+     *
+     * Arguments: None
+     * Returns: int, the number of coins remaining on the screen
+     */
     return numberOfCoins;
 }
 
 void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
+    /*!
+     * Accepts the user input and acts on the provided input according
+     *
+     * Arguments: SDL_Event& e, the provided SDL_Event to act upon
+     *            ImVect2 screenEditorPos, the screen position of the event
+     * Returns: void
+     */
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         int x, y;
         SDL_GetMouseState(&x, &y);
@@ -362,18 +517,45 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
 }
 
 void SceneManager::setCharacterCreator(CharacterCreator* characterCreator) {
+    /*!
+     * Sets the current character creator struct/function to use whenever a
+     *   mouse click occurs
+     *
+     * Arguments: CharacterCreator* characterCreator, current character creator
+     * Returns: void
+     */
     mCurrentCreator = characterCreator;
 }
 
 std::vector<CharacterCreator*> SceneManager::GetCharacterCreators() {
+    /*!
+     * Returns the list of character creator structs to reference
+     *
+     * Arguments: None
+     * Returns: std::vector<CharacterCreator*>, vector of Character creators
+     */
     return mCharacterCreators;
 }
 
 std::vector<CharacterCreator*> SceneManager::GetTileCreators() {
+    /*!
+     * Returns the list of tile creator structs to reference
+     *
+     * Arguments: None
+     * Returns: std::vector<CharacterCreator*>, vector of tile creators
+     */
     return mTileCreators;
 }
 
-std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel(std::string filename) {
+std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel() {
+    /*!
+     * Converts the current game objects found in the scene and into a vector
+     *  returns them with their respective x, y, width, height fields
+     *
+     * Arguments: None
+     * Returns: std::vector<std::vector<std::string>>, vector of game objects
+     *   with their respective fields
+     */
     std::vector<std::vector<std::string>> gameLevelData;
 
     for (GameObject* gameObject : mGameObjects) {
@@ -391,6 +573,14 @@ std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel(std::string 
 }
 
 int SceneManager::BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData) {
+    /*!
+     * Converts the provided game level data from a vector into the corresponding
+     *  game objects with their respective x, y, width, height fields
+     *
+     * Arguments: None
+     * Returns: std::vector<std::vector<std::string>> gameLevelData, vector of
+     *   game objects with their respective fields
+     */
     mGameObjects.clear();
     int count = 0;
     PhysicsManager::GetInstance().ClearCollisionObjects();
@@ -418,6 +608,12 @@ int SceneManager::BuildGameLevel(std::vector<std::vector<std::string>> gameLevel
 }
 
 void SceneManager::Update() {
+    /*!
+     * Updates all game objects found within the scene
+     *
+     * Arguments: None
+     * Returns: void
+     */
     int count = 0;
     for (auto it = mGameObjects.begin(); it != mGameObjects.end();) {
         GameObject* gameObject = *it;
@@ -436,6 +632,12 @@ void SceneManager::Update() {
 }
 
 void SceneManager::Render() {
+    /*!
+     * Updates all renderable game objects found within the scene
+     *
+     * Arguments: None
+     * Returns: void
+     */
     for (int i = mGameObjects.size() - 1; i >= 0; i--) {
         mGameObjects.at(i)->Render();
     }

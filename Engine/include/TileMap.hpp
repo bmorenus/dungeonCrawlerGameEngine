@@ -23,23 +23,6 @@ class TileMap {
      * Destructor for a tilemap
      */
     ~TileMap();
-    /**
-     * Temporary function for generating a simple
-     * map to display some tiles
-     */
-    void GenerateSimpleMap();
-    /**
-     * Function for printing text to console
-     */
-    void PrintMap();
-    /**
-     * Set the 'type' of tile at an x and y position
-     */
-    void SetTile(int x, int y, int type);
-    /**
-     * Return the tile type at an x and y position
-     */
-    int GetTileType(int x, int y);
 
     int GetRows();
 
@@ -48,10 +31,6 @@ class TileMap {
     int GetTileWidth();
 
     int GetTileHeight();
-
-    int GetTileCols();
-
-    int GetTileRows();
 
    private:
     // Dimensions of our TileMap and individual tiles.

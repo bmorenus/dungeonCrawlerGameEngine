@@ -3,18 +3,19 @@
 #include <iomanip>
 #include <iostream>
 
-// Creates a new tile map.
-// rows and cols are how many different tiles there are in the sprite sheet
-//
-// _TileWidth and _TileHeight are the size of each individual
-// tile in the sprite sheet.
-// (Typically this works best if they are square for this implementation.)
-//
-// _mapX, and _mapY are the size of the tilemap. This is the actual
-// number of tiles in the game that the player sees, not how many tiles
-// are in the actual sprite sheet file loaded.
 TileMap::TileMap(int rows, int cols, int _TileWidth, int _TileHeight,
                  int _mapX, int _mapY) {
+    /*!
+     * Constructor for the TileMap that specifies the dimensions of the tile
+     *   grid used by the scene manager to place tiles in the correct area
+     *
+     * Arguments: int rows, the number of rows in the tile map
+     *            int cols, the number of columns in the tile map
+     *            int _TileWidth, the width of a single tile in the grid
+     *            int _TileHeight, the height of a single tile in the grid
+     *            int _mapX, the number of tiles in a row
+     *            int _mapY, the height of tiles in a column
+     */
     mRows = rows;
     mCols = cols;
     mTileWidth = _TileWidth;
@@ -29,61 +30,50 @@ TileMap::TileMap(int rows, int cols, int _TileWidth, int _TileHeight,
 }
 
 TileMap::~TileMap() {
+    /*!
+     * Destructor for the TileMap
+     */
     SDL_DestroyTexture(mTexture);
     std::cout << "Deleting TileMap" << std::endl;
     delete[] mTiles;
 }
 
-void TileMap::GenerateSimpleMap() {
-    for (int y = 0; y < mMapY; y++) {
-        for (int x = 0; x < mMapX; x++) {
-            if (y == 0) {
-                SetTile(x, y, 12);
-            }
-            if (y == mMapY - 1) {
-                SetTile(x, y, 0);
-            }
-        }
-    }
-}
-
-void TileMap::PrintMap() {
-    for (int y = 0; y < mMapY; y++) {
-        for (int x = 0; x < mMapX; x++) {
-            std::cout << std::setw(3) << GetTileType(x, y);
-        }
-        std::cout << "\n";
-    }
-}
-
-void TileMap::SetTile(int x, int y, int type) {
-    mTiles[y * mMapX + x] = type;
-}
-
-int TileMap::GetTileType(int x, int y) {
-    return mTiles[y * mMapX + x];
-}
-
 int TileMap::GetRows() {
+    /*!
+     * Returns the number of rows of the tile map
+     *
+     * Arguments: None
+     * Returns: int, the number of rows of the tile map
+     */
     return mRows;
 }
 
 int TileMap::GetCols() {
+    /*!
+     * Returns the number of columns of the tile map
+     *
+     * Arguments: None
+     * Returns: int, the number of columns of the tile map
+     */
     return mCols;
 }
 
 int TileMap::GetTileWidth() {
+    /*!
+     * Returns the width of the tile map
+     *
+     * Arguments: None
+     * Returns: int, the width of the tile map
+     */
     return mTileWidth;
 }
 
 int TileMap::GetTileHeight() {
+    /*!
+     * Returns the height of the tile map
+     *
+     * Arguments: None
+     * Returns: int, the height of the tile map
+     */
     return mTileHeight;
-}
-
-int TileMap::GetTileCols() {
-    return mMapX;
-}
-
-int TileMap::GetTileRows() {
-    return mMapY;
 }
