@@ -68,10 +68,6 @@ class GameObject {
 
     std::string GetTag();
 
-    std::vector<Component*> GetComponents();
-
-    bool isRender = true;
-
    private:
     int mXVelocity;
     int mYVelocity;

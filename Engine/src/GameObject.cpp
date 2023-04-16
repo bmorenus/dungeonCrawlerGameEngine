@@ -316,16 +316,6 @@ std::vector<SDL_Event> GameObject::GetEvents() {
     return mEvents;
 }
 
-std::vector<Component*> GameObject::GetComponents() {
-    /*!
-     * Returns a vector of current components to process on the game object
-     *
-     * Arguments: None
-     * Returns: std::vector<Component*>, vector of components to process
-     */
-    return mComponents;
-}
-
 std::string GameObject::GetTag() {
     /*!
      * Returns a String tag that denotes the create function of the game object
