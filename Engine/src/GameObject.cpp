@@ -3,7 +3,7 @@
 #include <iostream>
 
 GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
-                       int height, ObjectType type, int frame) {
+                       int height, ObjectType type, int frame, std::string tag) {
     mXPos = xPos;
     mYPos = yPos;
     mWidth = width;
@@ -15,6 +15,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
     mObjectType = type;
+    mTag = tag;
 }
 
 GameObject::~GameObject() {
@@ -132,4 +133,12 @@ void GameObject::AddComponent(Component* component) {
 
 std::vector<SDL_Event> GameObject::GetEvents() {
     return mEvents;
+}
+
+std::vector<Component*> GameObject::GetComponents() {
+    return mComponents;
+}
+
+std::string GameObject::GetTag() {
+    return mTag;
 }

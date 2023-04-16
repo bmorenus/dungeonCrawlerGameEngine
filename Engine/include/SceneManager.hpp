@@ -16,6 +16,7 @@
 #include "CoinCollisionComponent.hpp"
 #include "CollisionComponent.hpp"
 #include "ControllerComponent.hpp"
+#include "GameLevel.hpp"
 #include "GameObject.hpp"
 #include "PhysicsManager.hpp"
 #include "ResourceManager.hpp"
@@ -32,13 +33,13 @@ struct CharacterCreator {
     std::string imageFilePath;
     int width;
     int height;
-    std::function<void(int, int, int, int)> creationFunction;
+    std::function<GameObject*(int, int, int, int)> creationFunction;
 
     CharacterCreator(std::string _name,
                      std::string _filePath,
                      int _width,
                      int _height,
-                     std::function<void(int, int, int, int)> _creationFunction) {
+                     std::function<GameObject*(int, int, int, int)> _creationFunction) {
         characterName = _name;
         imageFilePath = _filePath;
         width = _width;
@@ -48,7 +49,7 @@ struct CharacterCreator {
 };
 
 class SceneManager {
-   public:
+public:
     static SceneManager& GetInstance();
 
     void Initialize(SDL_Renderer* renderer);
@@ -62,34 +63,42 @@ class SceneManager {
     void CreateComponentWrapper(const std::string& keyName, const std::string& componentType);
 
     void CreateGameObjectWrapper(const std::string& keyName, const std::string& objectType, int x, int y, int width, int height);
-    
+
     void AddComponentWrapper(const std::string& gameObjectKeyName, const std::string& componentKeyName);
 
     void AddGameObjectWrapper(const std::string& gameObjectKeyName);
 
     void AddCollisionObjectWrapper(const std::string& gameObjectKeyName);
 
-    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, ObjectType type, int frame);
+    GameObject* CreateGameObject(int xPos, int yPos, int width, int height, ObjectType type, int frame, std::string tag);
 
     TileMapComponent* CreateTileMapComponent(std::string spritesheetFile);
 
     SpriteComponent* CreateSpriteComponent(std::string spritesheetFile);
 
-    void CreateMainCharacter(int x, int y, int width, int height);
+    GameObject* CreateMainCharacter(int x, int y, int width, int height);
 
-    void CreateMapTile(int x, int y, int width, int height);
+    GameObject* CreateMapTile(int x, int y, int width, int height);
 
-    void CreateGrassMapTile(int x, int y, int width, int height);
+    GameObject* CreateGrassMapTile(int x, int y, int width, int height);
 
-    void CreateCoinMapTile(int x, int y, int width, int height);
+    GameObject* CreateCoinMapTile(int x, int y, int width, int height);
 
-    void CreateMapTileWithType(int x, int y, int width, int height, ObjectType type, bool addCollision);
+    GameObject* CreateFlowerMapTile(int x, int y, int width, int height);
+
+    GameObject* CreateMapTileWithType(int x, int y, int width, int height, ObjectType type, bool addCollision);
 
     void setCharacterCreator(CharacterCreator* mCurrentCreator);
 
     void AddTestFrameSequences(SpriteComponent* spriteComponent);
 
     void AddGameObject(GameObject* gameObject);
+
+    int GetNumberOfCoins();
+
+    std::vector<std::vector<std::string>> EncodeGameLevel(std::string filename);
+
+    int BuildGameLevel(std::vector<std::vector<std::string>> gameLevelData);
 
     std::vector<CharacterCreator*> GetCharacterCreators();
 
@@ -99,7 +108,8 @@ class SceneManager {
 
     SDL_Texture* CreateTexture(std::string spritesheetFile);
 
-   private:
+private:
+    int numberOfCoins;
     std::vector<GameObject*> mGameObjects;
     SDL_Renderer* mRenderer = nullptr;
     TileMap* mTileMap = nullptr;
@@ -107,6 +117,7 @@ class SceneManager {
     CharacterCreator* mCurrentCreator = nullptr;
     std::vector<CharacterCreator*> mCharacterCreators;
     std::vector<CharacterCreator*> mTileCreators;
+    std::unordered_map<std::string, CharacterCreator*> mCharacterCreatorsMap;
     std::map<std::string, Component*> mComponentMap;
     std::map<std::string, GameObject*> mGameObjectMap;
 };

@@ -11,6 +11,8 @@ bool show_demo_window = false;
 bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+bool coinHasPlaced = false;
+bool gameRunning = true;
 std::vector<SDL_Texture*> tmpp;
 std::vector<int> tw, th;
 
@@ -26,9 +28,23 @@ Engine::~Engine() {
 void Engine::Input(bool* quit) {
     SDL_Event e;
     SDL_StartTextInput();
+    std::cout << SceneManager::GetInstance().GetNumberOfCoins() << std::endl;
+    std::cout << coinHasPlaced << std::endl;
+    if (gameRunning && coinHasPlaced && SceneManager::GetInstance().GetNumberOfCoins() == 0) {
+        std::cout << "You have collected all coins!! Press R to restart"
+                  << "\n";
+        gameRunning = false;
+    }
     while (SDL_PollEvent(&e) != 0) {
         ImGui_ImplSDL2_ProcessEvent(&e);
-
+        if (!gameRunning && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+            coinHasPlaced = false;
+            gameRunning = true;
+            std::vector<std::vector<std::string>> gameLevelData =
+                FileManager::GetInstance().LoadLevel(mCurrentLevelName);
+            SceneManager::GetInstance().BuildGameLevel(gameLevelData);
+            break;
+        }
         if (e.type == SDL_QUIT) {
             *quit = true;
         }
@@ -43,7 +59,10 @@ void Engine::Input(bool* quit) {
 }
 
 void Engine::Update() {
-    SceneManager::GetInstance().Update();
+    if (gameRunning) {
+        coinHasPlaced = SceneManager::GetInstance().GetNumberOfCoins() > 0;
+        SceneManager::GetInstance().Update();
+    }
 }
 
 void Engine::Render(ImGuiIO& mIo) {
@@ -57,35 +76,15 @@ void Engine::Render(ImGuiIO& mIo) {
 
     ImGuiWindowFlags window_flags = 1 << 10;
     bool op = true;
-    if (false)
-        ImGui::ShowDemoWindow(&show_demo_window);
-    else {
+
+    static int selected_level = -1;
+    static bool toggles[] = {true, false, false, false};
+    {
         ImGui::Begin("Dear ImGui Demo", &op, window_flags);
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
         static int current_tile_index = 0;
-        if (ImGui::CollapsingHeader("Sprite Selection"))
-        {
-            static int item_current = 1;
-            const char *items[SceneManager::GetInstance().GetCharacterCreators().size()];
-            for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++)
-                items[i] = SceneManager::GetInstance().GetCharacterCreators()[i]->characterName.c_str();
-            if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
-            {
-                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
-                {
-                    const bool is_selected = (current_tile_index == i);
-                    if (ImGui::Selectable(items[i], is_selected))
-                        current_tile_index = i;
-
-                    if (is_selected)
-                        ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndListBox();
-            }
-        }
-
-        for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++)
-        {
+        ImGui::SeparatorText("Game Object Selection:");
+        for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++) {
             bool isClick = false;
             ImGui::PushID(i);
             ImVec2 size = ImVec2(32.0f, 32.0f);
@@ -93,8 +92,7 @@ void Engine::Render(ImGuiIO& mIo) {
             ImVec2 uv1 = ImVec2(32.0f / tw[i], 32.0f / th[i]);
             ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
             ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col))
-            {
+            if (ImGui::ImageButton("", tmpp[i], size, uv0, uv1, bg_col, tint_col)) {
                 current_tile_index = i;
             }
             if (current_tile_index == i)
@@ -102,7 +100,39 @@ void Engine::Render(ImGuiIO& mIo) {
             ImGui::PopID();
             ImGui::SameLine();
         }
-        SceneManager::GetInstance().setCharacterCreator(SceneManager::GetInstance().GetCharacterCreators()[current_tile_index]);
+        SceneManager::GetInstance()
+            .setCharacterCreator(SceneManager::GetInstance()
+                                     .GetCharacterCreators()[current_tile_index]);
+        ImGui::NewLine();
+        static int clicked = 0;
+        ImGui::SeparatorText("Level Save");
+        static char filename[64] = "";
+        ImGui::InputText(".gamefile", filename, 64);
+        ImGui::NewLine();
+        if (ImGui::Button("Save Level")) {
+            std::vector<std::vector<std::string>> gameLevelData = SceneManager::GetInstance()
+                                                                      .EncodeGameLevel(filename);
+            FileManager::GetInstance().SaveLevel(filename, gameLevelData);
+            mLevelNames.push_back(filename);
+        }
+        ImGui::SeparatorText("Level Load");
+        if (ImGui::TreeNode("Select your level:")) {
+            static int selected = 0;
+            for (int n = 0; n < mLevelNames.size(); n++) {
+                char gameLevels[32];
+                sprintf(gameLevels, "%s", mLevelNames.at(n).c_str());
+                if (ImGui::Selectable(gameLevels, selected == n)) {
+                    selected = n;
+                    if (mCurrentLevelName != mLevelNames.at(n)) {
+                        std::vector<std::vector<std::string>> gameLevelData =
+                            FileManager::GetInstance().LoadLevel(mLevelNames.at(n));
+                        SceneManager::GetInstance().BuildGameLevel(gameLevelData);
+                        mCurrentLevelName = mLevelNames.at(n);
+                    }
+                }
+            }
+            ImGui::TreePop();
+        }
         ImGui::PopItemWidth();
         ImGui::End();
     }
@@ -171,6 +201,15 @@ void Engine::Start() {
         std::cout << "No Graphics Subsystem initialized\n";
     }
 
+    std::cout << "Loading startup game file\n";
+    std::vector<std::vector<std::string>> gameLevelData =
+        FileManager::GetInstance().LoadLevel(mCurrentLevelName);
+    SceneManager::GetInstance().BuildGameLevel(gameLevelData);
+
+    for (const auto& gameFileEntry : std::filesystem::directory_iterator("./LevelFiles")) {
+        AddToGameFiles(gameFileEntry.path().generic_string());
+    }
+
     tw.resize(SceneManager::GetInstance().GetCharacterCreators().size());
     th.resize(SceneManager::GetInstance().GetCharacterCreators().size());
     for (int i = 0; i < SceneManager::GetInstance().GetCharacterCreators().size(); i++) {
@@ -199,7 +238,7 @@ int Engine::InitializeGraphicsSubSystem() {
     }
 
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    mWindow = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    mWindow = SDL_CreateWindow("Seattle Game Engine!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     mScreenTexture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, 640, 360);
 
@@ -219,4 +258,14 @@ void Engine::InitializeResourceSubSystem() {
 
 void Engine::InitializeSceneManagerSubSystem() {
     SceneManager::GetInstance().Initialize(mRenderer);
+}
+
+void Engine::InitializeFileManagerSubSystem() {
+    FileManager::GetInstance().Initialize();
+}
+
+void Engine::AddToGameFiles(std::string filename) {
+    size_t extIndex = filename.find_last_of(".");
+    std::string gameLevelName = filename.substr(13, (extIndex - 13));
+    mLevelNames.push_back(gameLevelName);
 }

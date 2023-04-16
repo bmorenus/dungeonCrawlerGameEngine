@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 
+#include "FileManager.hpp"
 #include "ResourceManager.hpp"
 #include "SceneManager.hpp"
 #include "imgui.h"
@@ -70,13 +71,21 @@ class Engine {
      */
     void InitializeSceneManagerSubSystem();
 
+    /**
+     * Request to startup the File Manager
+     */
+    void InitializeFileManagerSubSystem();
+
    private:
+    void AddToGameFiles(std::string filename);
     // Engine Subsystem
     // Setup the Graphics Rendering Engine
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     SDL_Texture* mScreenTexture;
     ImVec2 mScreenEditorPos;
+    std::string mCurrentLevelName = "Empty Level Template";
+    std::vector<std::string> mLevelNames;
 };
 
 #endif
