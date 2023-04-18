@@ -20,7 +20,8 @@
 
 enum ObjectType {
     DEFAULT,
-    TILE,
+    PASSABLE_TILE,
+    BLOCKABLE_TILE,
     COIN
 };
 

@@ -11,7 +11,7 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
     mFrame = frame;
     mXVelocity = 0;
     mYVelocity = 0;
-    mSpeed = 1;
+    mSpeed = 3;
     mCollisionDirection = new int[4]();
     mRenderer = renderer;
     mObjectType = type;

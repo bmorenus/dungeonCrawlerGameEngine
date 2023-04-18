@@ -25,6 +25,7 @@ void PhysicsManager::Initialize() {
 }
 
 void PhysicsManager::AddCollisionObject(GameObject* collisionObject) {
+    std::cout << "object: " << collisionObject->GetTag() << std::endl;
     mGameObjects.push_back(collisionObject);
 }
 
@@ -40,7 +41,8 @@ int* PhysicsManager::GetCollisionDirections(GameObject* object1) {
             continue;
         }
 
-        if ((object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::TILE) ||
+        if ((object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::PASSABLE_TILE) ||
+            (object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::BLOCKABLE_TILE) ||
             (object1->GetObjectType() == ObjectType::COIN && object2->GetObjectType() == ObjectType::COIN)) {
             continue;
         }

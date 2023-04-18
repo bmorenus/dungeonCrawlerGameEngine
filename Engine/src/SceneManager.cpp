@@ -23,9 +23,9 @@ SceneManager& SceneManager::GetInstance() {
 
 void SceneManager::Initialize(SDL_Renderer* renderer) {
     mRenderer = renderer;
+
     numberOfCoins = 0;
     mCollisionComponent = new CollisionComponent();
-    std::cout << mRenderer << std::endl;
     mTileMap = new TileMap(ROWS, COLS, TILE_WIDTH, TILE_HEIGHT, MAP_X, MAP_Y);
 
     CharacterCreator* mainCharacterCreator =
@@ -71,7 +71,7 @@ void SceneManager::Initialize(SDL_Renderer* renderer) {
                              "images/tiles/flower.bmp",
                              TILE_WIDTH,
                              TILE_HEIGHT,
-                             std::bind(&SceneManager::CreateMapTile,
+                             std::bind(&SceneManager::CreateFlowerMapTile,
                                        this,
                                        std::placeholders::_1,
                                        std::placeholders::_2,
@@ -143,8 +143,11 @@ void SceneManager::CreateGameObjectWrapper(const std::string& keyName,
 
     if (objectType == "DEFAULT") {
         gameObject = CreateGameObject(x, y, width, height, ObjectType::DEFAULT, 0, "main-character");
-    } else if (objectType == "TILE") {
-        gameObject = CreateGameObject(x, y, width, height, ObjectType::TILE, 12, "ground-tile");
+    } else if (objectType == "BLOCKABLE_TILE") {
+        std::cout << "test" << std::endl;
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::BLOCKABLE_TILE, 12, "ground-tile");
+    } else if (objectType == "PASSABLE_TILE") {
+        gameObject = CreateGameObject(x, y, width, height, ObjectType::PASSABLE_TILE, 12, "flower-tile");
     } else if (objectType == "COIN") {
         gameObject = CreateGameObject(x, y, width, height, ObjectType::COIN, 12, "coin-tile");
     } else {
@@ -167,7 +170,6 @@ void SceneManager::AddCollisionObjectWrapper(const std::string& gameObjectKeyNam
 }
 
 GameObject* SceneManager::CreateMainCharacter(int x, int y, int width, int height) {
-    std::cout << "conrollting" << std::endl;
     ControllerComponent* controllerComponent = new ControllerComponent();
     TransformComponent* transformComponent = new TransformComponent();
     SpriteComponent* spriteComponent = CreateSpriteComponent(
@@ -200,11 +202,11 @@ GameObject* SceneManager::CreateMapTile(int x, int y, int width, int height) {
                                               positionY,
                                               width,
                                               height,
-                                              ObjectType::TILE,
+                                              ObjectType::BLOCKABLE_TILE,
                                               12,
                                               "ground-tile");
 
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent("./images/tiles/ground.bmp");
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
     gameObject->AddComponent(tmpTileMapComponent);
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
     return gameObject;
@@ -216,11 +218,13 @@ GameObject* SceneManager::CreateGrassMapTile(int x, int y, int width, int height
     int positionY = ((y - (y % height)) -
                      Y_BORDER_PX_SIZE + (height / 2));
 
+    std::cout << "test tile" << std::endl;
+
     GameObject* gameObject = CreateGameObject(positionX,
                                               positionY,
                                               width,
                                               height,
-                                              ObjectType::TILE,
+                                              ObjectType::PASSABLE_TILE,
                                               12,
                                               "grass-tile");
 
@@ -261,7 +265,7 @@ GameObject* SceneManager::CreateFlowerMapTile(int x, int y, int width, int heigh
                                               positionY,
                                               width,
                                               height,
-                                              ObjectType::TILE,
+                                              ObjectType::PASSABLE_TILE,
                                               12,
                                               "flower-tile");
 
@@ -351,6 +355,7 @@ void SceneManager::AcceptInput(SDL_Event& e, ImVec2 screenEditorPos) {
         }
 
         std::cout << mCurrentCreator->imageFilePath << std::endl;
+        std::cout << mCurrentCreator->characterName << std::endl;
 
         GameObject* gameObject = mCurrentCreator->creationFunction(screenPositionX,
                                                                    screenPositionY,

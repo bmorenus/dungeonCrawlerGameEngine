@@ -28,8 +28,6 @@ Engine::~Engine() {
 void Engine::Input(bool* quit) {
     SDL_Event e;
     SDL_StartTextInput();
-    std::cout << SceneManager::GetInstance().GetNumberOfCoins() << std::endl;
-    std::cout << coinHasPlaced << std::endl;
     if (gameRunning && coinHasPlaced && SceneManager::GetInstance().GetNumberOfCoins() == 0) {
         std::cout << "You have collected all coins!! Press R to restart"
                   << "\n";
@@ -246,7 +244,6 @@ int Engine::InitializeGraphicsSubSystem() {
         SDL_Log("Error creating SDL_Renderer!");
         return 0;
     }
-    std::cout << mRenderer << mRenderer;
     std::cout << "Graphics System Initialized" << std::endl;
     return 1;
 }
