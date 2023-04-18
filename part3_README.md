@@ -63,6 +63,11 @@ The following are the requirements for a 1-page .html page.
 4. A link to your binary
 5. A short post mortem (i.e. A few paragraphs describing how you would take the project further, what went well, and what you would change if given another month on the project) should be put together on a 1-page .html page. 
 
+**Compilation Instructions**
+
+1. Go to ./Engine
+2. Run: rm -f mygameengine.so && python3 build_so.py && python3 main.py
+
 This website will be the first place I look to grab your project files and binaries. 
 
 [Seattle Adventure Game Engine portfolio website](https://bmorenus.github.io/)
