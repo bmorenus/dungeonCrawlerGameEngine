@@ -206,7 +206,7 @@ GameObject* SceneManager::CreateMapTile(int x, int y, int width, int height) {
                                               12,
                                               "ground-tile");
 
-    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent(mCurrentCreator->imageFilePath);
+    TileMapComponent* tmpTileMapComponent = CreateTileMapComponent("./images/tiles/ground.bmp");
     gameObject->AddComponent(tmpTileMapComponent);
     PhysicsManager::GetInstance().AddCollisionObject(gameObject);
     return gameObject;
@@ -418,6 +418,7 @@ int SceneManager::BuildGameLevel(std::vector<std::vector<std::string>> gameLevel
             int height = stoi(gameObjectData.at(4));
 
             CharacterCreator* creator = it->second;
+            std::cout << creator->imageFilePath << std::endl;
             GameObject* gameObject = creator->creationFunction(xPos, yPos, width, height);
             AddGameObject(gameObject);
         } else {
