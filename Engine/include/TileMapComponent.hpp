@@ -10,12 +10,12 @@ class GameObject;
 
 class TileMapComponent : public Component {
    public:
-    /**
-     * Constructor
+    /*!
+     * Constructor for the TileMapComponent that displays a game tile in accordance with the specifications / grid of the provided tile map
      */
     TileMapComponent(SDL_Texture* texture, TileMap* tileMap);
-    /**
-     * Constructor
+    /*!
+     * Destructor for the TileMapComponent
      */
     ~TileMapComponent();
     /**

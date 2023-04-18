@@ -133,7 +133,12 @@ void SceneManager::CreateComponentWrapper(const std::string& keyName, const std:
     mComponentMap[keyName] = component;
 }
 
-void SceneManager::CreateGameObjectWrapper(const std::string& keyName, const std::string& objectType, int x, int y, int width, int height) {
+void SceneManager::CreateGameObjectWrapper(const std::string& keyName,
+                                           const std::string& objectType,
+                                           int x,
+                                           int y,
+                                           int width,
+                                           int height) {
     GameObject* gameObject;
 
     if (objectType == "DEFAULT") {
@@ -373,7 +378,7 @@ std::vector<CharacterCreator*> SceneManager::GetTileCreators() {
     return mTileCreators;
 }
 
-std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel(std::string filename) {
+std::vector<std::vector<std::string>> SceneManager::EncodeGameLevel() {
     std::vector<std::vector<std::string>> gameLevelData;
 
     for (GameObject* gameObject : mGameObjects) {

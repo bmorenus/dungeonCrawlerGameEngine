@@ -111,7 +111,7 @@ void Engine::Render(ImGuiIO& mIo) {
         ImGui::NewLine();
         if (ImGui::Button("Save Level")) {
             std::vector<std::vector<std::string>> gameLevelData = SceneManager::GetInstance()
-                                                                      .EncodeGameLevel(filename);
+                                                                      .EncodeGameLevel();
             FileManager::GetInstance().SaveLevel(filename, gameLevelData);
             mLevelNames.push_back(filename);
         }
@@ -180,7 +180,7 @@ void Engine::MainGameLoop() {
         Input(&quit);
 
         prevTick = SDL_GetTicks64();
-        
+
         Update();
         Render(mIo);
 

@@ -11,9 +11,23 @@ class GameObject;
 
 class Component {
    public:
+    /*!
+     * Constructor for the Component
+     */
     Component();
+    /*!
+     * Destructor for the Component
+     */
     virtual ~Component();
+
+    /*!
+     * Updates the provided game object
+     */
     virtual void Update(GameObject& gameObject) = 0;
+
+    /*!
+     * Renders the provided game object
+     */
     virtual void Render(GameObject& gameObject, SDL_Renderer* renderer) = 0;
 };
 

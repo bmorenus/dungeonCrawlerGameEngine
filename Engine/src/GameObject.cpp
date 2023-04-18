@@ -19,7 +19,6 @@ GameObject::GameObject(SDL_Renderer* renderer, int xPos, int yPos, int width,
 }
 
 GameObject::~GameObject() {
-    // Make components a shared pointer
     delete mCollisionDirection;
 }
 
@@ -133,10 +132,6 @@ void GameObject::AddComponent(Component* component) {
 
 std::vector<SDL_Event> GameObject::GetEvents() {
     return mEvents;
-}
-
-std::vector<Component*> GameObject::GetComponents() {
-    return mComponents;
 }
 
 std::string GameObject::GetTag() {
